@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeltaHyperbolicity", "Delta
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DSweep", "DSweep\DSweep.vcxproj", "{4E0A605D-2188-40B4-8DD4-81BF11FEA99B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BruteForce", "BruteForce\BruteForce.vcxproj", "{8EFB8F40-2EAA-4D51-A5FC-C3ADEA3A3E72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -38,6 +40,10 @@ Global
 		{4E0A605D-2188-40B4-8DD4-81BF11FEA99B}.Debug|Win32.Build.0 = Debug|Win32
 		{4E0A605D-2188-40B4-8DD4-81BF11FEA99B}.Release|Win32.ActiveCfg = Release|Win32
 		{4E0A605D-2188-40B4-8DD4-81BF11FEA99B}.Release|Win32.Build.0 = Release|Win32
+		{8EFB8F40-2EAA-4D51-A5FC-C3ADEA3A3E72}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8EFB8F40-2EAA-4D51-A5FC-C3ADEA3A3E72}.Debug|Win32.Build.0 = Debug|Win32
+		{8EFB8F40-2EAA-4D51-A5FC-C3ADEA3A3E72}.Release|Win32.ActiveCfg = Release|Win32
+		{8EFB8F40-2EAA-4D51-A5FC-C3ADEA3A3E72}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

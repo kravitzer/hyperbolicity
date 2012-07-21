@@ -1,3 +1,8 @@
+/*
+ * Written by Eran Kravitz
+ * Email: kravitzer@gmail.com
+ */
+
 #ifndef DELTAHYPER_EXCEPT_H
 #define DELTAHYPER_EXCEPT_H
 
@@ -5,13 +10,17 @@
 
 namespace graphs
 {
-
+	/* 
+	 * @brief	A general delta hyperbolicity exception.
+	 */
 	class DeltaHyperbolicityException : public std::exception
 	{
 	public:
 		DeltaHyperbolicityException() : std::exception() {}
 		DeltaHyperbolicityException(const char* what) : std::exception(what) {}
 	};
+
+	/* the rest of these exceptions are pretty self explanatory... */
 
 	class OutOfBoundsException : public DeltaHyperbolicityException
 	{

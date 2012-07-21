@@ -1,3 +1,8 @@
+/*
+ * Written by Eran Kravitz
+ * Email: kravitzer@gmail.com
+ */
+
 #ifndef DELTAHYPER_GRAPH_ALGORITHMS_H
 #define DELTAHYPER_GRAPH_ALGORITHMS_H
 
@@ -7,6 +12,9 @@
 
 namespace graphs
 {
+	/*
+	 * @brief	A collection of some useful graph methods.
+	 */
 	class GraphAlgorithms
 	{
 	public:

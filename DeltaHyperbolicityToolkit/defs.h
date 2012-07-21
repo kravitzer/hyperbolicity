@@ -1,3 +1,8 @@
+/*
+ * Written by Eran Kravitz
+ * Email: kravitzer@gmail.com
+ */
+
 #ifndef DELTAHYPER_DEFS_H
 #define DELTAHYPER_DEFS_H
 

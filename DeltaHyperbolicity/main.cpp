@@ -1,39 +1,18 @@
+#include "AlgRunner.h"
 #include <iostream>
 #include <Windows.h>
 #include <string>
 #include <time.h>
 #include <sstream>
-#include "GraphAlgorithms.h"
-#include "defs.h"
-#include "IGraphAlg.h"
+#include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
+#include "DeltaHyperbolicityToolkit\defs.h"
+#include "DeltaHyperbolicityToolkit\IGraphAlg.h"
 
 using namespace std;
 using namespace graphs;
 
-typedef IGraphAlg* (*AlgCreationMethod)();
-typedef void (*AlgReleaseMethod)(IGraphAlg*);
-
 graph_ptr_t graph;
 
-/*
- * @returns	The algorithm loaded from the given dll.
- * @throws	std::exception	Upon any error (missing dll / expected methods).
- */
-shared_ptr<IGraphAlg> loadAlgorithm(LPCSTR algDllPath)
-{
-	cout << "Loading " << algDllPath << "..." << endl;
-
-	shared_ptr<HINSTANCE__> alg(LoadLibrary(algDllPath), &CloseHandle);
-	if (nullptr == alg.get()) throw std::exception("Failed loading dll");
-
-	AlgCreationMethod createAlg = reinterpret_cast<AlgCreationMethod>(GetProcAddress(alg.get(), "CreateAlgorithm"));
-	if (nullptr == createAlg) throw std::exception("Failed to get the algorithm creation method");
-
-	AlgReleaseMethod releaseAlg = reinterpret_cast<AlgReleaseMethod>(GetProcAddress(alg.get(), "ReleaseAlgorithm"));
-	if (nullptr == releaseAlg) throw std::exception("Failed to get the algorithm release method");
-
-	return shared_ptr<IGraphAlg>(createAlg(), releaseAlg);
-}
 
 void printMenu()
 {
@@ -83,9 +62,9 @@ void runAlgorithm()
 	try
 	{
 		//load & run the algorithm
-		shared_ptr<IGraphAlg> alg = loadAlgorithm(input.c_str());
+		AlgRunner alg(input);
 		clock_t t1 = clock();
-		DeltaHyperbolicity delta = alg->run(graph);
+		DeltaHyperbolicity delta = alg.run(graph);
 		double timeElapsed = (clock() - t1) / static_cast<double>(CLOCKS_PER_SEC);
 		cout << "Run with no initial state:" << endl;
 		cout << "Delta: " << delta.getDelta() << endl;

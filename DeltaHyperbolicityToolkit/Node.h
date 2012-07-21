@@ -1,3 +1,8 @@
+/*
+ * Written by Eran Kravitz
+ * Email: kravitzer@gmail.com
+ */
+
 #ifndef DELTAHYPER_NODE_H
 #define DELTAHYPER_NODE_H
 

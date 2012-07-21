@@ -3,8 +3,8 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_DDSWEEP_H
-#define DELTAHYPER_DDSWEEP_H
+#ifndef DELTAHYPER_BRUTEFORCE_H
+#define DELTAHYPER_BRUTEFORCE_H
 
 #include "DeltaHyperbolicityToolkit\IGraphAlg.h"
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
@@ -12,14 +12,14 @@
 namespace graphs
 {
 	/*
-	 * @brief	Implementation for the double-double-sweep algorithm. This algorithm runs a double-sweep on the graph,
-	 *			and then repeatedly runs another double-sweep until receiving 4 total different nodes. It then uses these
-	 *			4 nodes to calculate the delta hyperbolicity, and returns the result.
+	 * @brief	Implementation for the brute-force solution for finding delta hyperbolicity. Obviously takes a significant amount of time
+	 *			even on small graphs, so it should only be run on VERY small graphs. Simply goes over all 4-node combinations,
+	 *			looking for the one that produces that maximal delta hyperbolicity.
 	 */
-	class DDSweep : public IGraphAlg
+	class BruteForce : public IGraphAlg
 	{
 	public:
-		DDSweep() : IGraphAlg() {}
+		BruteForce() : IGraphAlg() {}
 
 		/*
 		 * @brief	See documentation in IGraphAlg and in the class description above.
@@ -36,4 +36,4 @@ namespace graphs
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
 } // namespace graphs
 
-#endif //DELTAHYPER_DDSWEEP_H
+#endif //DELTAHYPER_BRUTEFORCE_H
