@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <string>
+#include <time.h>
 #include "GraphAlgorithms.h"
 #include "defs.h"
 #include "IGraphAlg.h"
@@ -37,14 +38,14 @@ int main()
 	try
 	{
 		//load the graph
-		graph_ptr_t g = GraphAlgorithms::LoadGraphFromFile("C:\\Users\\Eran\\Dropbox\\University\\Thesis\\Shavitt\\Code\\Graphs\\100-300\\2.dat");
+		graph_ptr_t g = GraphAlgorithms::LoadGraphFromFile("C:\\Users\\Eran\\Dropbox\\University\\Thesis\\Shavitt\\Code\\Graphs\\Generated\\100_300\\2.txt");
 	
 		//display stats before & after pruning trees
 		cout << "Graph loaded, " << g->size() << " nodes and " << g->edgeCount() << " edges have been loaded!" << endl;
 		cout << "Pruning..." << endl;
 		GraphAlgorithms::PruneTrees(g);
 		cout << "Graph now has " << g->size() << " nodes and " << g->edgeCount() << " edges." << endl;
-
+		cout << endl;
 
 		string input;
 		cout << "Enter algorithm dll path: ";
@@ -58,9 +59,18 @@ int main()
 				//load & run the algorithm
 				shared_ptr<IGraphAlg> alg = loadAlgorithm(input.c_str());
 				cout << endl;
-				cout << alg->run(g).getDelta() << endl;
-				node_quad_t quad;
-				cout << alg->runWithInitialState(g, quad).getDelta() << endl;	
+				clock_t t1 = clock();
+				DeltaHyperbolicity delta = alg->run(g);
+				double timeElapsed = (clock() - t1) / static_cast<double>(CLOCKS_PER_SEC);
+				cout << "Run with no initial state:" << endl;
+				cout << "Delta: " << delta.getDelta() << endl;
+				cout << "Nodes: ";
+				for (unsigned int i = 0; i < NodeQuadCount-1; ++i)
+				{
+					cout << delta.getNodes()[i]->getIndex() << ", ";
+				}
+				cout << delta.getNodes()[NodeQuadCount-1]->getIndex() << endl;
+				cout << "Run time: " << timeElapsed << endl;
 			}
 			catch (const std::exception& ex)
 			{

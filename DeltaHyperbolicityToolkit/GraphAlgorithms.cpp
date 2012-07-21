@@ -4,7 +4,6 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
-#include <time.h>
 
 using namespace std;
 
@@ -88,6 +87,11 @@ namespace graphs
 		distance_t d2 = v0dists[state[2]->getIndex()] + v1dists[state[3]->getIndex()];
 		distance_t d3 = v0dists[state[3]->getIndex()] + v1dists[state[2]->getIndex()];
 
+		return CalculateDeltaFromDistances(d1, d2, d3);
+	}
+
+	delta_t GraphAlgorithms::CalculateDeltaFromDistances(distance_t d1, distance_t d2, distance_t d3)
+	{
 		//find largest and second-largest distances out of the 3 options
 		distance_t& largest = d1, secondLargest = d1;
 		if (d2 > largest)
@@ -208,9 +212,6 @@ namespace graphs
 
 	GraphAlgorithms::DoubleSweepResult GraphAlgorithms::DoubleSweep(const graph_ptr_t graph, const node_ptr_t origin /* = node_ptr_t(nullptr) */)
 	{
-		//initialize random seed
-		srand(static_cast<unsigned int>(time(nullptr)));
-
 		node_ptr_t startNode = origin;
 		if (nullptr == startNode.get())
 		{
@@ -219,15 +220,17 @@ namespace graphs
 		}
 
 		//perform the double sweep
-		node_ptr_t firstSweepNode = Sweep(graph, startNode, nullptr);
+		node_ptr_t firstSweepNode = Sweep(graph, startNode, nullptr, nullptr);
 		distance_t dist = 0;
-		node_ptr_t secondSweepNode = Sweep(graph, firstSweepNode, &dist);
+		distance_dict_t distanceCollection;
+		node_ptr_t secondSweepNode = Sweep(graph, firstSweepNode, &dist, &distanceCollection);
 
 		//prepare the result structure and return it to caller
 		GraphAlgorithms::DoubleSweepResult res = {0};
 		res.u = firstSweepNode;
 		res.v = secondSweepNode;
 		res.dist = dist;
+		res.uDistances = distanceCollection;
 
 		return res;
 	}
@@ -273,9 +276,10 @@ namespace graphs
 		return nodesRemoved;
 	}
 
-	node_ptr_t GraphAlgorithms::Sweep(const graph_ptr_t graph, const node_ptr_t origin, distance_t* dist)
+	node_ptr_t GraphAlgorithms::Sweep(const graph_ptr_t graph, const node_ptr_t origin, distance_t* dist, distance_dict_t* distancesFromU)
 	{
 		distance_dict_t startNodeDistances = Dijkstra(graph, origin);
+		if (distancesFromU) *distancesFromU = startNodeDistances;
 
 		//find the maximal distance
 		distance_t maxDistance = 0;

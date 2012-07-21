@@ -15,6 +15,7 @@ namespace graphs
 			node_ptr_t u;
 			node_ptr_t v;
 			distance_t dist;
+			distance_dict_t uDistances;
 		};
 
 		/*
@@ -42,6 +43,17 @@ namespace graphs
 		 * @returns	The calculated delta hyperbolicity value.
 		 */
 		static delta_t CalculateDelta(const graph_ptr_t graph, const node_quad_t& state);
+
+		/*
+		 * @brief	Delta calculation considers all possible distances between 4 nodes (3 pairs of distances).
+		 *			E.g. d1 = dist(v1, v2) + dist(v3, v4)
+		 *				 d2 = dist(v1, v3) + dist(v2, v4)
+		 *				 d3 = dist(v1, v4) + dist(v2, v3)
+		 *			We then take the two largest numbers and the absolute value of their difference, over 2, is the delta hyperbolicity
+		 *			for that node quad. This method calculates this value based on the 3 distance pairs.
+		 * @returns	The delta obtained from the 3 distance pairs.
+		 */
+		static delta_t CalculateDeltaFromDistances(distance_t d1, distance_t d2, distance_t d3);
 
 		/*
 		 * @brief	Runs Dijkstra's algorithm, to find the distance between the given origin node and the various given
@@ -80,6 +92,8 @@ namespace graphs
 		 * @param	origin	The node from which the double-sweep process starts. Optional. If not specified, the origin node is randomly selected.
 		 * @returns	A DoubleSweepResult structure, holding the result of this process.
 		 * @throws	InvalidParamException	If any of the nodes is invalid (i.e. null) or if they are not part of the graph.
+		 * @note	IMPORTANT! You must initialize a random seed (by calling srand() with some random seed) before calling this method, otherwise
+		 *			you might get the same results each run!
 		 */
 		static DoubleSweepResult DoubleSweep(const graph_ptr_t graph, const node_ptr_t origin = node_ptr_t(nullptr));
 
@@ -116,12 +130,13 @@ namespace graphs
 
 		/*
 		 * @brief Performs a single sweep on the graph - i.e. takes the origin node and randomly selects one of the nodes furthest away from it.
-		 * @param	graph	The graph to run on.
-		 * @param	origin	The node to perform the sweep from.
-		 * @param	dist	Optional. Will be set to the distance of the node returned from the original node.
+		 * @param	graph			The graph to run on.
+		 * @param	origin			The node to perform the sweep from.
+		 * @param	dist			Optional. Will be set to the distance of the node returned from the original node.
+		 * @param	distancesFromU	Optional. Will be set to the distance collection from the origin node.
 		 * @returns	The node selected from the sweep process.
 		 */
-		static node_ptr_t Sweep(const graph_ptr_t graph, const node_ptr_t origin, distance_t* dist);
+		static node_ptr_t Sweep(const graph_ptr_t graph, const node_ptr_t origin, distance_t* dist, distance_dict_t* distancesFromU);
 
 		/*
 		 * @brief	Opens the given file.

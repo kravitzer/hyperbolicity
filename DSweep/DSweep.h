@@ -1,15 +1,15 @@
-#ifndef DELTAHYPER_DDSWEEP_H
-#define DELTAHYPER_DDSWEEP_H
+#ifndef DELTAHYPER_DSWEEP_H
+#define DELTAHYPER_DSWEEP_H
 
 #include "DeltaHyperbolicityToolkit\IGraphAlg.h"
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 
 namespace graphs
 {
-	class DDSweep : public IGraphAlg
+	class DSweep : public IGraphAlg
 	{
 	public:
-		DDSweep() : IGraphAlg() {}
+		DSweep() : IGraphAlg() {}
 		virtual DeltaHyperbolicity run(const graph_ptr_t graph);
 		virtual DeltaHyperbolicity runWithInitialState(const graph_ptr_t graph, const node_quad_t& initialState);
 
@@ -22,4 +22,4 @@ namespace graphs
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
 } // namespace graphs
 
-#endif //DELTAHYPER_DDSWEEP_H
+#endif //DELTAHYPER_DSWEEP_H

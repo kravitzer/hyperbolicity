@@ -1,6 +1,8 @@
 #include "DDSweep.h"
-#include "DeltaHyperbolicity.h"
-#include "GraphAlgorithms.h"
+#include "DeltaHyperbolicityToolkit\defs.h"
+#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
+#include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
+#include <time.h>
 
 namespace graphs
 {
@@ -38,6 +40,9 @@ namespace graphs
 
 	IGraphAlg* CreateAlgorithm()
 	{
+		//initialize random seed (necessary before calling DoubleSweep() )
+		srand(static_cast<unsigned int>(time(nullptr)));
+
 		IGraphAlg* alg = new DDSweep();
 		return alg;
 	}
