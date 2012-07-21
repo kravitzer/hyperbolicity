@@ -15,40 +15,46 @@ public:
 	/*
 	 * @param	delta	The delta hyperbolicity value.
 	 */
-	DeltaHyperbolicity(delta_t delta);
+	DeltaHyperbolicity(delta_t delta) : _delta(delta), _nodesAvailable(false), _nodes() 
+	{
+		//empty
+	}
 
 	/*
 	 * @param	delta	The delta hyperbolicity value.
 	 * @param	nodes	The nodes that convey the delta value.
 	 * @note	No check is made to make sure the nodes given in face produce the given delta value.
 	 */
-	DeltaHyperbolicity(delta_t delta, node_quad_t nodes);
+	DeltaHyperbolicity(delta_t delta, node_quad_t nodes) : _delta(delta), _nodesAvailable(true)
+	{
+		for (unsigned int i = 0; i < NodeQuadCount; ++i)
+		{
+			_nodes[i] = nodes[i];
+		}
+	}
 
 	/*
 	 * @returns	The delta value represented by this instance.
 	 */
-	delta_t getDelta() const;
+	delta_t getDelta() const
+	{
+		return _delta;
+	}
 
 	/*
 	 * @returns	The nodes that produce this instance's delta value.
 	 * @throws	DataUnavailableException	If this instance was created without specifying these nodes.
 	 */
-	const node_quad_t& getNodes() const;
+	const node_quad_t& getNodes() const
+	{
+		return _nodes;
+	}
 
-	//---------------- Helper Methods ----------------//
-	
-	/*
-	 * @brief	Calculates the delta value of the given state nodes.
-	 * @param	state	The state for which we need to calculate the delta value.
-	 * @returns	The calculated delta hyperbolicity value.
-	 */
-	static delta_t calculateDelta(const node_quad_t& state);
+	//allow default copy ctor / assignment operator
+	//DeltaHyperbolicity(const DeltaHyperbolicity&);
+	//DeltaHyperbolicity& operator=(const DeltaHyperbolicity&);
 
 private:
-	//do *not* allow copy ctor / assignment operator
-	DeltaHyperbolicity(const DeltaHyperbolicity&);
-	DeltaHyperbolicity& operator=(const DeltaHyperbolicity&);
-
 	//the delta hyperbolicity value
 	delta_t _delta;
 	//the nodes that give the current delta hyperbolicity value

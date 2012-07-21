@@ -1,9 +1,44 @@
 #include <iostream>
+#include <Windows.h>
 #include "GraphAlgorithms.h"
 #include "defs.h"
+#include "IGraphAlg.h"
 
 using namespace std;
 using namespace graphs;
+
+typedef IGraphAlg* (*AlgCreationMethod)();
+typedef void (*AlgReleaseMethod)(IGraphAlg*);
+
+shared_ptr<IGraphAlg> loadAlgorithm(LPTSTR algDllPath)
+{
+	shared_ptr<HINSTANCE__> alg(LoadLibrary(algDllPath), &CloseHandle);
+	if (nullptr == alg.get()) throw std::exception("Failed loading dll");
+
+	AlgCreationMethod createAlg = reinterpret_cast<AlgCreationMethod>(GetProcAddress(alg.get(), "CreateAlgorithm"));
+	if (nullptr == createAlg) throw std::exception("Failed to get the algorithm creation method");
+
+	AlgReleaseMethod releaseAlg = reinterpret_cast<AlgReleaseMethod>(GetProcAddress(alg.get(), "ReleaseAlgorithm"));
+	if (nullptr == releaseAlg) throw std::exception("Failed to get the algorithm release method");
+
+	return shared_ptr<IGraphAlg>(createAlg(), releaseAlg);
+}
+
+DeltaHyperbolicity runAlgorithm(LPTSTR algDllPath, const graph_ptr_t graph)
+{
+	wcout << TEXT("Loading ") << algDllPath << "..." << endl;
+		
+	shared_ptr<IGraphAlg> alg = loadAlgorithm(algDllPath);
+	return alg->run(graph);
+}
+
+DeltaHyperbolicity runAlgorithmWithInitialState(LPTSTR algDllPath, const graph_ptr_t graph, const node_quad_t& state)
+{
+	cout << "Loading ddsweep dll..." << endl;
+		
+	shared_ptr<IGraphAlg> alg = loadAlgorithm(algDllPath);
+	return alg->runWithInitialState(graph, state);
+}
 
 unsigned int countEdges(const graph_ptr_t graph)
 {
@@ -39,6 +74,12 @@ int main()
 
 		GraphAlgorithms::DoubleSweepResult res = GraphAlgorithms::DoubleSweep(g);
 		cout << res.u->getIndex() << "->" << res.v->getIndex() << ", distance: " << res.dist << endl;
+
+		cout << endl << endl;
+
+		cout << runAlgorithm(TEXT("ddsweep.dll"), g).getDelta() << endl;
+		node_quad_t quad;
+		cout << runAlgorithmWithInitialState(TEXT("ddsweep.dll"), g, quad).getDelta() << endl;
 	}
 	catch (const std::exception& e)
 	{

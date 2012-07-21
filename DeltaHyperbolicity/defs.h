@@ -16,7 +16,8 @@ namespace graphs
 	typedef std::vector<node_ptr_t>				node_collection_t;
 
 	typedef double								delta_t;
-	typedef node_ptr_t							node_quad_t[4];
+	const unsigned int							NodeQuadCount = 4;
+	typedef node_ptr_t							node_quad_t[NodeQuadCount];
 
 	typedef std::shared_ptr<Graph>				graph_ptr_t;
 

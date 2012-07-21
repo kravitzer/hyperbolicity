@@ -2,6 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeltaHyperbolicity", "DeltaHyperbolicity\DeltaHyperbolicity.vcxproj", "{4FE837FE-AC12-42B9-9275-72691CAE5D27}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C1B84FAB-FD7E-45E9-9E4D-A571CA440A30} = {C1B84FAB-FD7E-45E9-9E4D-A571CA440A30}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DDSweep", "DDSweep\DDSweep.vcxproj", "{C1B84FAB-FD7E-45E9-9E4D-A571CA440A30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +18,10 @@ Global
 		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Debug|Win32.Build.0 = Debug|Win32
 		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Release|Win32.ActiveCfg = Release|Win32
 		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Release|Win32.Build.0 = Release|Win32
+		{C1B84FAB-FD7E-45E9-9E4D-A571CA440A30}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C1B84FAB-FD7E-45E9-9E4D-A571CA440A30}.Debug|Win32.Build.0 = Debug|Win32
+		{C1B84FAB-FD7E-45E9-9E4D-A571CA440A30}.Release|Win32.ActiveCfg = Release|Win32
+		{C1B84FAB-FD7E-45E9-9E4D-A571CA440A30}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

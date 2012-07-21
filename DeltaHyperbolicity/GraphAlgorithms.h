@@ -36,6 +36,14 @@ namespace graphs
 		static graph_ptr_t LoadGraphFromFile(const std::string& path);
 
 		/*
+		 * @brief	Calculates the delta value of the given state nodes.
+		 * @param	graph	The graph to calculate delta for.
+		 * @param	state	The state for which we need to calculate the delta value.
+		 * @returns	The calculated delta hyperbolicity value.
+		 */
+		static delta_t CalculateDelta(const graph_ptr_t graph, const node_quad_t& state);
+
+		/*
 		 * @brief	Runs Dijkstra's algorithm, to find the distance between the given origin node and the various given
 		 *			destination nodes.
 		 * @param	graph	The graph to run on.

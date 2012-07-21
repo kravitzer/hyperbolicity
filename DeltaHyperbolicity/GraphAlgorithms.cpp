@@ -63,6 +63,38 @@ namespace graphs
 		return g;
 	}
 
+	delta_t GraphAlgorithms::CalculateDelta(const graph_ptr_t graph, const node_quad_t& state)
+	{
+		node_collection_t nodeCollection;
+		nodeCollection.push_back(state[1]);
+		nodeCollection.push_back(state[2]);
+		nodeCollection.push_back(state[3]);
+
+		//calculate distances from v0 to v1, v2, v3
+		distance_dict_t v0dists = GraphAlgorithms::Dijkstra(graph, state[0], nodeCollection);
+
+		//calculate distances from v1 to v2, v3
+		nodeCollection.erase(nodeCollection.begin());
+		distance_dict_t v1dists = GraphAlgorithms::Dijkstra(graph, state[1], nodeCollection);
+
+		//calculate distances from v2 to v3
+		nodeCollection.erase(nodeCollection.begin());
+		distance_dict_t v2dists = GraphAlgorithms::Dijkstra(graph, state[2], nodeCollection);
+
+		//d1 = dist(v0, v1) + dist(v2, v3)
+		//d2 = dist(v0, v2) + dist(v1, v3)
+		//d3 = dist(v0, v3) + dist(v1, v2)
+		distance_t d1 = v0dists[state[1]->getIndex()] + v2dists[state[3]->getIndex()];
+		distance_t d2 = v0dists[state[2]->getIndex()] + v1dists[state[3]->getIndex()];
+		distance_t d3 = v0dists[state[3]->getIndex()] + v1dists[state[2]->getIndex()];
+
+		distance_t sum = d1 + d2 + d3;
+		distance_t minDistance = (d1 < d2 ? d1 : d2);
+		minDistance = (d3 < minDistance ? d3 : minDistance);
+
+		return static_cast<delta_t>(sum-minDistance)/2;
+	}
+
 	distance_dict_t GraphAlgorithms::Dijkstra(const graph_ptr_t graph, const node_ptr_t origin, const node_collection_t& destination)
 	{
 		if (nullptr == origin.get()) throw InvalidParamException("Origin node is null");
