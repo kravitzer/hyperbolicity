@@ -15,40 +15,25 @@ public:
 	/*
 	 * @param	delta	The delta hyperbolicity value.
 	 */
-	DeltaHyperbolicity(delta_t delta) : _delta(delta), _nodesAvailable(false), _nodes() 
-	{
-		//empty
-	}
+	DeltaHyperbolicity(delta_t delta);
 
 	/*
 	 * @param	delta	The delta hyperbolicity value.
 	 * @param	nodes	The nodes that convey the delta value.
 	 * @note	No check is made to make sure the nodes given in face produce the given delta value.
 	 */
-	DeltaHyperbolicity(delta_t delta, node_quad_t nodes) : _delta(delta), _nodesAvailable(true)
-	{
-		for (unsigned int i = 0; i < NodeQuadCount; ++i)
-		{
-			_nodes[i] = nodes[i];
-		}
-	}
+	DeltaHyperbolicity(delta_t delta, node_quad_t nodes);
 
 	/*
 	 * @returns	The delta value represented by this instance.
 	 */
-	delta_t getDelta() const
-	{
-		return _delta;
-	}
+	delta_t getDelta() const;
 
 	/*
 	 * @returns	The nodes that produce this instance's delta value.
 	 * @throws	DataUnavailableException	If this instance was created without specifying these nodes.
 	 */
-	const node_quad_t& getNodes() const
-	{
-		return _nodes;
-	}
+	const node_quad_t& getNodes() const;
 
 	//allow default copy ctor / assignment operator
 	//DeltaHyperbolicity(const DeltaHyperbolicity&);

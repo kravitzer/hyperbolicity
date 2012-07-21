@@ -30,6 +30,18 @@ namespace graphs
 		return _nodes.size();
 	}
 
+	unsigned int Graph::edgeCount() const
+	{
+		unsigned int edgeCount = 0;
+		for (unsigned int i = 0; i < size(); ++i)
+		{
+			edgeCount += getNode(i)->getEdges().size();
+		}
+
+		return edgeCount;
+	}
+
+
 	void Graph::removeNode(node_index_t index)
 	{
 		assertIndexInBounds(index);

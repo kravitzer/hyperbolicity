@@ -88,11 +88,29 @@ namespace graphs
 		distance_t d2 = v0dists[state[2]->getIndex()] + v1dists[state[3]->getIndex()];
 		distance_t d3 = v0dists[state[3]->getIndex()] + v1dists[state[2]->getIndex()];
 
-		distance_t sum = d1 + d2 + d3;
-		distance_t minDistance = (d1 < d2 ? d1 : d2);
-		minDistance = (d3 < minDistance ? d3 : minDistance);
+		//find largest and second-largest distances out of the 3 options
+		distance_t& largest = d1, secondLargest = d1;
+		if (d2 > largest)
+		{
+			largest = d2;
+		}
+		else
+		{
+			secondLargest = d2;
+		}
 
-		return static_cast<delta_t>(sum-minDistance)/2;
+		if (d3 > largest)
+		{
+			secondLargest = largest;
+			largest = d3;
+		}
+		else
+		{
+			if (d3 > secondLargest) secondLargest = d3;
+		}
+
+		//return the delta value
+		return static_cast<delta_t>(largest-secondLargest)/2;
 	}
 
 	distance_dict_t GraphAlgorithms::Dijkstra(const graph_ptr_t graph, const node_ptr_t origin, const node_collection_t& destination)

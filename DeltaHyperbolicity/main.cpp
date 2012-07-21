@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Windows.h>
+#include <string>
 #include "GraphAlgorithms.h"
 #include "defs.h"
 #include "IGraphAlg.h"
@@ -10,8 +11,14 @@ using namespace graphs;
 typedef IGraphAlg* (*AlgCreationMethod)();
 typedef void (*AlgReleaseMethod)(IGraphAlg*);
 
-shared_ptr<IGraphAlg> loadAlgorithm(LPTSTR algDllPath)
+/*
+ * @returns	The algorithm loaded from the given dll.
+ * @throws	std::exception	Upon any error (missing dll / expected methods).
+ */
+shared_ptr<IGraphAlg> loadAlgorithm(LPCSTR algDllPath)
 {
+	cout << "Loading " << algDllPath << "..." << endl;
+
 	shared_ptr<HINSTANCE__> alg(LoadLibrary(algDllPath), &CloseHandle);
 	if (nullptr == alg.get()) throw std::exception("Failed loading dll");
 
@@ -24,62 +31,47 @@ shared_ptr<IGraphAlg> loadAlgorithm(LPTSTR algDllPath)
 	return shared_ptr<IGraphAlg>(createAlg(), releaseAlg);
 }
 
-DeltaHyperbolicity runAlgorithm(LPTSTR algDllPath, const graph_ptr_t graph)
-{
-	wcout << TEXT("Loading ") << algDllPath << "..." << endl;
-		
-	shared_ptr<IGraphAlg> alg = loadAlgorithm(algDllPath);
-	return alg->run(graph);
-}
-
-DeltaHyperbolicity runAlgorithmWithInitialState(LPTSTR algDllPath, const graph_ptr_t graph, const node_quad_t& state)
-{
-	cout << "Loading ddsweep dll..." << endl;
-		
-	shared_ptr<IGraphAlg> alg = loadAlgorithm(algDllPath);
-	return alg->runWithInitialState(graph, state);
-}
-
-unsigned int countEdges(const graph_ptr_t graph)
-{
-	unsigned int edgeCount = 0;
-	for (unsigned int i = 0; i < graph->size(); ++i)
-	{
-		edgeCount += graph->getNode(i)->getEdges().size();
-	}
-
-	return edgeCount;
-}
 
 int main()
 {
 	try
 	{
+		//load the graph
 		graph_ptr_t g = GraphAlgorithms::LoadGraphFromFile("C:\\Users\\Eran\\Dropbox\\University\\Thesis\\Shavitt\\Code\\Graphs\\100-300\\2.dat");
 	
-		cout << "Graph loaded, " << g->size() << " nodes and " << countEdges(g) << " edges have been loaded!" << endl;
+		//display stats before & after pruning trees
+		cout << "Graph loaded, " << g->size() << " nodes and " << g->edgeCount() << " edges have been loaded!" << endl;
 		cout << "Pruning..." << endl;
 		GraphAlgorithms::PruneTrees(g);
-		cout << "Graph now has " << g->size() << " nodes and " << countEdges(g) << " edges." << endl;
+		cout << "Graph now has " << g->size() << " nodes and " << g->edgeCount() << " edges." << endl;
 
-		node_ptr_t origin = g->getNode(0);
-		node_collection_t dest(3);
-		for (int i = 1; i < 4; ++i) dest[i-1] = g->getNode(i);
-		distance_dict_t dist = GraphAlgorithms::Dijkstra(g, g->getNode(0));
 
-		for (distance_dict_t::const_iterator it = dist.cbegin(); it != dist.cend(); ++it)
+		string input;
+		cout << "Enter algorithm dll path: ";
+		getline(cin, input);
+
+		//start loop, loading algorithms requested by the user (unless "exit" is typed)
+		while (0 != _stricmp(input.c_str(), "exit"))
 		{
-			if (it->second >= 4) cout << "Node: " << it->first << ", Distance: " << it->second << endl;
+			try
+			{
+				//load & run the algorithm
+				shared_ptr<IGraphAlg> alg = loadAlgorithm(input.c_str());
+				cout << endl;
+				cout << alg->run(g).getDelta() << endl;
+				node_quad_t quad;
+				cout << alg->runWithInitialState(g, quad).getDelta() << endl;	
+			}
+			catch (const std::exception& ex)
+			{
+				cout << "Algorithm threw an exception: " << ex.what() << endl;
+			}
+
+			//get next algorithm to run
+			cout << endl;
+			cout << "Enter algorithm dll path: ";
+			getline(cin, input);
 		}
-
-		GraphAlgorithms::DoubleSweepResult res = GraphAlgorithms::DoubleSweep(g);
-		cout << res.u->getIndex() << "->" << res.v->getIndex() << ", distance: " << res.dist << endl;
-
-		cout << endl << endl;
-
-		cout << runAlgorithm(TEXT("ddsweep.dll"), g).getDelta() << endl;
-		node_quad_t quad;
-		cout << runAlgorithmWithInitialState(TEXT("ddsweep.dll"), g, quad).getDelta() << endl;
 	}
 	catch (const std::exception& e)
 	{

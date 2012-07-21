@@ -36,6 +36,12 @@ public:
 	unsigned int size() const;
 
 	/*
+	 * @returns	The number of edges in the graph.
+	 * @note	Bidirectional edges are counted twice!
+	 */
+	unsigned int edgeCount() const;
+
+	/*
 	 * @brief	Removes a node from the graph, based on the given index.
 	 * @param	index	The index of the node to be removed.
 	 * @throws	OutOfBoundsException	Upon an index that does not exist in the graph.
