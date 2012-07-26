@@ -6,7 +6,7 @@
 
 namespace graphs
 {
-	DeltaHyperbolicity BruteForce::run(const graph_ptr_t graph) 
+	DeltaHyperbolicity BruteForce::runImpl(const graph_ptr_t graph) 
 	{
 		delta_t maxDelta = 0;
 		node_quad_t maxState;
@@ -43,10 +43,10 @@ namespace graphs
 		return DeltaHyperbolicity(maxDelta, maxState);
 	}
 
-	DeltaHyperbolicity BruteForce::runWithInitialState(const graph_ptr_t graph, const node_quad_t&)
+	DeltaHyperbolicity BruteForce::runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t&)
 	{
 		//initial state is ignored
-		return run(graph);
+		return runImpl(graph);
 	}
 
 

@@ -89,6 +89,7 @@
     <ClCompile Include="DeltaHyperbolicity.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="GraphAlgorithms.cpp" />
+    <ClCompile Include="IGraphAlg.cpp" />
     <ClCompile Include="Node.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

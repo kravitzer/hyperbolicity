@@ -19,16 +19,36 @@ namespace graphs
 	{
 	public:
 		/*
-		 * @brief	empty ctor.
+		 * @brief	Empty ctor.
 		 */
-		IGraphAlg() {};
+		IGraphAlg();
 
+		/*
+		 * @brief	Default dtor.
+		 */
+		virtual ~IGraphAlg();
+
+		/*
+		 * @brief	Runs the implementation for the algorithm, after performing some input validity checks.
+		 * @throws	std::exception	Upon invalid input.
+		 * @see		runImpl
+		 */
+		DeltaHyperbolicity run(const graph_ptr_t graph);
+
+		/*
+		 * @brief	Runs the implementation for the algorithm, after performing some input validity checks.
+		 * @throws	std::exception	Upon invalid input.
+		 * @see		runWithInitialStateImpl
+		 */
+		DeltaHyperbolicity runWithInitialState(const graph_ptr_t graph, const node_quad_t& initialState);
+
+	protected:
 		/*
 		 * @brief	The implementation of this method should containg the algorithm logic to be run on the given graph.
 		 * @param	graph	The graph to run the algorithm on.
 		 * @throws	The implementation may throw standard std::exception upon error.
 		 */
-		virtual DeltaHyperbolicity run(const graph_ptr_t graph) = 0;
+		virtual DeltaHyperbolicity runImpl(const graph_ptr_t graph) = 0;
 
 		/*
 		 * @brief	The implementation of this method should containg the algorithm logic to be run on the given graph.
@@ -36,7 +56,13 @@ namespace graphs
 		 * @param	initialState	Some initial state for the algorithm to start from.
 		 * @throws	The implementation may throw standard std::exception upon error.
 		 */
-		virtual DeltaHyperbolicity runWithInitialState(const graph_ptr_t graph, const node_quad_t& initialState) = 0;
+		virtual DeltaHyperbolicity runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t& initialState) = 0;
+
+	private:
+		/*
+		 * @throws	std::exception	If given graph parameter is null or contains less than a quad of vertices.
+		 */
+		void validateGraphInput(const graph_ptr_t graph) const;
 	};
 
 } // namespace graphs

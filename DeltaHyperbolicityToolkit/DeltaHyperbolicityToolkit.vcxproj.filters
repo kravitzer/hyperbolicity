@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\SA">
+      <UniqueIdentifier>{2dd3cde8-4bc7-431d-964e-4d9e56db8931}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SA">
+      <UniqueIdentifier>{af512bf9-756e-4b2f-9cb9-5482330bdfd6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Node.h">
@@ -36,6 +42,12 @@
     <ClInclude Include="DeltaHyperbolicity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SimulatedAnnealing.h">
+      <Filter>Header Files\SA</Filter>
+    </ClInclude>
+    <ClInclude Include="SADefs.h">
+      <Filter>Header Files\SA</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graph.cpp">
@@ -48,6 +60,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DeltaHyperbolicity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulatedAnnealing.cpp">
+      <Filter>Source Files\SA</Filter>
+    </ClCompile>
+    <ClCompile Include="IGraphAlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,7 +6,7 @@
 
 namespace graphs
 {
-	DeltaHyperbolicity DDSweep::run(const graph_ptr_t graph) 
+	DeltaHyperbolicity DDSweep::runImpl(const graph_ptr_t graph) 
 	{
 		GraphAlgorithms::DoubleSweepResult ds1 = GraphAlgorithms::DoubleSweep(graph);
 		GraphAlgorithms::DoubleSweepResult ds2 = GraphAlgorithms::DoubleSweep(graph);
@@ -30,10 +30,10 @@ namespace graphs
 		return DeltaHyperbolicity(delta, state);
 	}
 
-	DeltaHyperbolicity DDSweep::runWithInitialState(const graph_ptr_t graph, const node_quad_t&)
+	DeltaHyperbolicity DDSweep::runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t&)
 	{
 		//initial state is ignored
-		return run(graph);
+		return runImpl(graph);
 	}
 
 
