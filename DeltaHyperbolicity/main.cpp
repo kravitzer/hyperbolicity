@@ -69,11 +69,11 @@ void runAlgorithm()
 		cout << "Run with no initial state:" << endl;
 		cout << "Delta: " << delta.getDelta() << endl;
 		cout << "Nodes: ";
-		for (unsigned int i = 0; i < NodeQuadCount-1; ++i)
+		for (unsigned int i = 0; i < node_quad_t::size()-1; ++i)
 		{
 			cout << delta.getNodes()[i]->getIndex() << ", ";
 		}
-		cout << delta.getNodes()[NodeQuadCount-1]->getIndex() << endl;
+		cout << delta.getNodes()[node_quad_t::size()-1]->getIndex() << endl;
 		cout << "Run time: " << timeElapsed << endl;
 	}
 	catch (const std::exception& ex)

@@ -75,12 +75,7 @@ namespace graphs
 			}
 		}
 
-		node_quad_t state;
-		state[0] = v1;
-		state[1] = v2;
-		state[2] = v3;
-		state[3] = v4;
-
+		node_quad_t state(v1, v2, v3, v4);
 		return DeltaHyperbolicity(maxDelta, state);
 	}
 

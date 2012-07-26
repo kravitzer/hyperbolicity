@@ -7,6 +7,7 @@
 #define DELTAHYPER_DELTA_HYPERBOLICITY_H
 
 #include "defs.h"
+#include "State.h"
 
 namespace graphs
 {

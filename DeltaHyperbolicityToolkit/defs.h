@@ -15,15 +15,14 @@ namespace graphs
 {
 	class Graph;
 	class Node;
+	class State;
 
 	typedef unsigned int						node_index_t;
 	typedef std::shared_ptr<Node>				node_ptr_t;
 	typedef std::vector<node_ptr_t>				node_collection_t;
 
 	typedef double								delta_t;
-	const unsigned int							NodeQuadCount = 4;
-	typedef node_ptr_t							node_quad_t[NodeQuadCount];
-
+	typedef State								node_quad_t;
 	typedef std::shared_ptr<Graph>				graph_ptr_t;
 
 	typedef	int									distance_t;

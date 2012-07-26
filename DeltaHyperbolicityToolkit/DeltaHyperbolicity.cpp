@@ -1,5 +1,6 @@
 #include "DeltaHyperbolicity.h"
 #include "defs.h"
+#include "GraphAlgorithms.h"
 
 namespace graphs
 {
@@ -10,10 +11,7 @@ namespace graphs
 
 	DeltaHyperbolicity::DeltaHyperbolicity(delta_t delta, node_quad_t nodes) : _delta(delta), _nodesAvailable(true)
 	{
-		for (unsigned int i = 0; i < NodeQuadCount; ++i)
-		{
-			_nodes[i] = nodes[i];
-		}
+		_nodes = nodes;
 	}
 
 	delta_t DeltaHyperbolicity::getDelta() const

@@ -84,6 +84,9 @@
     <ClInclude Include="GraphAlgorithms.h" />
     <ClInclude Include="IGraphAlg.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="SADefs.h" />
+    <ClInclude Include="SimulatedAnnealing.h" />
+    <ClInclude Include="State.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeltaHyperbolicity.cpp" />
@@ -91,6 +94,8 @@
     <ClCompile Include="GraphAlgorithms.cpp" />
     <ClCompile Include="IGraphAlg.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="SimulatedAnnealing.cpp" />
+    <ClCompile Include="State.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

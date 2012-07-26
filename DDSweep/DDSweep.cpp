@@ -20,12 +20,7 @@ namespace graphs
 			++numOfTrials;
 		}
 
-		node_quad_t state = {0};
-		state[0] = ds1.u;
-		state[1] = ds1.v;
-		state[2] = ds2.u;
-		state[3] = ds2.v;
-
+		node_quad_t state(ds1.u, ds1.v, ds2.u, ds2.v);
 		delta_t delta = GraphAlgorithms::CalculateDelta(graph, state);
 		return DeltaHyperbolicity(delta, state);
 	}

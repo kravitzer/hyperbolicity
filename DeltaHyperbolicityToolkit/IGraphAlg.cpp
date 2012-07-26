@@ -30,7 +30,7 @@ namespace graphs
 	void IGraphAlg::validateGraphInput(const graph_ptr_t graph) const
 	{
 		if (nullptr == graph.get()) throw std::exception("Graph pointer is invalid");
-		if (graph->size() < NodeQuadCount) throw std::exception("Graph does not contain enough nodes");
+		if (graph->size() < node_quad_t::size()) throw std::exception("Graph does not contain enough nodes");
 	}
 
 } // namespace graphs

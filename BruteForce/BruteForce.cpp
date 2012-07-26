@@ -2,6 +2,7 @@
 #include "DeltaHyperbolicityToolkit\defs.h"
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
+#include "DeltaHyperbolicityToolkit\State.h"
 #include <time.h>
 
 namespace graphs
@@ -12,16 +13,16 @@ namespace graphs
 		node_quad_t maxState;
 		node_quad_t curState;
 
-		for (unsigned int i = 0; i <= graph->size() - NodeQuadCount; ++i)
+		for (unsigned int i = 0; i <= graph->size() - node_quad_t::size(); ++i)
 		{
 			curState[0] = graph->getNode(i);
-			for (unsigned int j = i+1; j <= graph->size() - NodeQuadCount + 1; ++j)
+			for (unsigned int j = i+1; j <= graph->size() - node_quad_t::size() + 1; ++j)
 			{
 				curState[1] = graph->getNode(j);
-				for (unsigned int k = j+1; k <= graph->size() - NodeQuadCount + 2; ++k)
+				for (unsigned int k = j+1; k <= graph->size() - node_quad_t::size() + 2; ++k)
 				{
 					curState[2] = graph->getNode(k);
-					for (unsigned int l = k+1; l <= graph->size() - NodeQuadCount + 3; ++l)
+					for (unsigned int l = k+1; l <= graph->size() - node_quad_t::size() + 3; ++l)
 					{
 						curState[3] = graph->getNode(l);
 
@@ -30,10 +31,7 @@ namespace graphs
 						{
 							//keep new max-values
 							maxDelta = curDelta;
-							for (unsigned int m = 0; m < NodeQuadCount; ++m)
-							{
-								maxState[m] = curState[m];
-							}
+							maxState = curState;
 						}
 					}
 				}

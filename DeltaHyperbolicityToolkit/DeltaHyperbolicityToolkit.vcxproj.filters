@@ -42,11 +42,14 @@
     <ClInclude Include="DeltaHyperbolicity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SADefs.h">
+      <Filter>Header Files\SA</Filter>
+    </ClInclude>
     <ClInclude Include="SimulatedAnnealing.h">
       <Filter>Header Files\SA</Filter>
     </ClInclude>
-    <ClInclude Include="SADefs.h">
-      <Filter>Header Files\SA</Filter>
+    <ClInclude Include="State.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -62,10 +65,13 @@
     <ClCompile Include="DeltaHyperbolicity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IGraphAlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="SimulatedAnnealing.cpp">
       <Filter>Source Files\SA</Filter>
     </ClCompile>
-    <ClCompile Include="IGraphAlg.cpp">
+    <ClCompile Include="State.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
