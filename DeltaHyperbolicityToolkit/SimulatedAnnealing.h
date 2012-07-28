@@ -19,12 +19,12 @@ namespace graphs
 	{
 	public:
 		/*
-		 * @param	prevDelta	The delta value of the previous state.
-		 * @param	curDelta	The delta value of the new state.
+		 * @param	curDelta	The delta value of the current state.
+		 * @param	newDelta	The delta value of the new state.
 		 * @param	curTemp		The current temperature value.
 		 * @returns				The probability to accept the new state (number b/w 0.0 to 1.0).
 		 */
-		virtual sa_probability_t ProbabilityToAcceptChange(delta_t prevDelta, delta_t curDelta, sa_temp_t curTemp) = 0;
+		virtual sa_probability_t ProbabilityToAcceptChange(delta_t curDelta, delta_t newDelta, sa_temp_t curTemp) = 0;
 	};
 
 	/*
@@ -35,11 +35,16 @@ namespace graphs
 	public:
 		/*
 		 * @param	curTemp		The current temperature.
-		 * @param	prevDelta	The delta value of the previous state.
-		 * @param	curDelta	The delta value of the new state.
+		 * @param	curDelta	The delta value of the current state.
+		 * @param	newDelta	The delta value of the new state.
 		 * @returns				The new temperature value to be set.
 		 */
-		virtual sa_temp_t TemperatureChange(sa_temp_t curTemp, delta_t prevDelta, delta_t curDelta) = 0;
+		virtual sa_temp_t TemperatureChange(sa_temp_t curTemp, delta_t curDelta, delta_t newDelta) = 0;
+
+		/*
+		 * @returns	The initial temperature of the algorithm.
+		 */
+		virtual sa_temp_t GetInitialTemperature() const = 0;
 	};
 
 	/*
@@ -54,7 +59,12 @@ namespace graphs
 		 * @param	probabilityFunction		The probability method to be used in the process.
 		 * @param	tempFunction			The temperature method to be used in the process.
 		 */
-		SimulatedAnnealing(sa_temp_t initialTemp, ISaProbabilityFunction& probabilityFunction, ISaTempPolicyFunction& tempFunction);
+		SimulatedAnnealing(sa_temp_t initialTemp, sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction);
+
+		/*
+		 * @brief	Default dtor.
+		 */
+		virtual ~SimulatedAnnealing();
 
 	private:
 		//do *not* allow copy ctor / assignment operator
@@ -90,8 +100,8 @@ namespace graphs
 
 		//SA parameters (see ctor for details)
 		sa_temp_t _temp;
-		ISaProbabilityFunction& _probFunc;
-		ISaTempPolicyFunction& _tempFunc;
+		sa_prob_func_ptr _probFunc;
+		sa_temp_func_ptr _tempFunc;
 	};
 
 } // namespace graphs

@@ -48,7 +48,6 @@ namespace graphs
 
 	private:
 		static const int NumberOfNodes = 4;
-		bool _isInit;
 		node_ptr_t _nodes[NumberOfNodes];
 	};
 } // namespace graphs

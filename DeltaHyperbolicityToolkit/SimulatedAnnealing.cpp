@@ -7,8 +7,13 @@
 namespace graphs
 {
 
-	SimulatedAnnealing::SimulatedAnnealing(sa_temp_t initialTemp, ISaProbabilityFunction& probabilityFunction, ISaTempPolicyFunction& tempFunction) : 
+	SimulatedAnnealing::SimulatedAnnealing(sa_temp_t initialTemp, sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction) : IGraphAlg(),
 		_temp(initialTemp), _probFunc(probabilityFunction), _tempFunc(tempFunction)
+	{
+		//empty
+	}
+
+	SimulatedAnnealing::~SimulatedAnnealing()
 	{
 		//empty
 	}
@@ -81,11 +86,11 @@ namespace graphs
 			}
 
 			//run the probability method to see if we accept the new state
-			sa_probability_t prob = _probFunc.ProbabilityToAcceptChange(curDelta, newDelta, _temp);
+			sa_probability_t prob = _probFunc->ProbabilityToAcceptChange(curDelta, newDelta, _temp);
 			bool accept = ( (static_cast<double>(rand()) / static_cast<double>(RAND_MAX)) <= prob );
 
 			//update the temperature
-			_temp = _tempFunc.TemperatureChange(_temp, curDelta, newDelta);
+			_temp = _tempFunc->TemperatureChange(_temp, curDelta, newDelta);
 
 			//update current state if it was accepted
 			if (accept)

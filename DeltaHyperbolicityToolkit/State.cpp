@@ -3,12 +3,12 @@
 
 namespace graphs
 {
-	State::State() : _isInit(false)
+	State::State()
 	{
 		//empty
 	}
 
-	State::State(const node_ptr_t n1, const node_ptr_t n2, const node_ptr_t n3, const node_ptr_t n4) : _isInit(true)
+	State::State(const node_ptr_t n1, const node_ptr_t n2, const node_ptr_t n3, const node_ptr_t n4)
 	{
 		_nodes[0] = n1;
 		_nodes[1] = n2;
@@ -25,8 +25,8 @@ namespace graphs
 
 	const node_ptr_t& State::operator[](int index) const
 	{
-		if (!_isInit) throw std::exception("Instance is not initialized");
 		if ( (index < 0) || (index >= static_cast<int>(size())) ) throw OutOfBoundsException();
+		if (nullptr == _nodes[index].get()) throw std::exception("State node is not initialized");
 		return _nodes[index];
 	}
 

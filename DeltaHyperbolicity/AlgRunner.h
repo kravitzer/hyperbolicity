@@ -19,8 +19,7 @@ class AlgRunner
 {
 public:
 	/*
-	 * @brief	Loads the given dll & instantiates the algorithm instance.
-	 * @throws	std::exception	Upon any error (missing dll / expected methods).
+	 * @param	dllPath		The dll to be loaded.
 	 */
 	AlgRunner(std::string dllPath);
 
@@ -28,6 +27,12 @@ public:
 	 * @brief	Dtor, releases algorithm instance.
 	 */ 
 	~AlgRunner();
+
+	/*
+	 * @brief	Loads the dll & instantiates the algorithm instance.
+	 * @throws	std::exception	Upon any error (missing dll / expected methods).
+	 */
+	void load();
 
 	/*
 	 * @brief	Wrapper for running the algorithm. See IGraphAlg documentation for details.
@@ -43,6 +48,9 @@ private:
 	//do *not* allow copy ctor / assignment operator
 	AlgRunner(const AlgRunner&);
 	AlgRunner& operator=(const AlgRunner&);
+
+	//the dll to be loaded
+	std::string _dllPath;
 
 	//handle to the loaded dll
 	std::shared_ptr<HINSTANCE__> _dll;

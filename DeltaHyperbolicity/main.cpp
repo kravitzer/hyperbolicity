@@ -59,10 +59,15 @@ void runAlgorithm()
 	cout << "Enter algorithm dll name/path: ";
 	getline(cin, input);
 
+	//note: alg runner must be declared *outside* of the try/catch block, because an exception thrown
+	//inside the block may be thrown from the dll itself, in which case having it inside the block would
+	//cause it to be destructed (i.e. the dll freed) before the exception instance is destroyed! When trying
+	//to deallocate the exception instance, an access violation will occur as the dll is no longer loaded.
+	AlgRunner alg(input);
 	try
 	{
 		//load & run the algorithm
-		AlgRunner alg(input);
+		alg.load();
 		clock_t t1 = clock();
 		DeltaHyperbolicity delta = alg.run(graph);
 		double timeElapsed = (clock() - t1) / static_cast<double>(CLOCKS_PER_SEC);
