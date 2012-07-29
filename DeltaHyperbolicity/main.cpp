@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>
 #include <iomanip>
+#include <stdio.h>
 #include <boost\filesystem.hpp>
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
 #include "DeltaHyperbolicityToolkit\defs.h"
@@ -140,8 +141,8 @@ void writeStringToFile(file_ptr_t f, const string& str)
 file_ptr_t createRawDataFile(const string& filePath, const alg_runner_collection_t& algorithms)
 {
 	//create output file
-	FILE* outputFile = nullptr;
-	if (0 != fopen_s(&outputFile, filePath.c_str(), "w"))
+	FILE* outputFile = _fsopen(filePath.c_str(), "w", _SH_DENYWR);
+	if (nullptr == outputFile)
 	{
 		throw exception("Failed opening file");
 	}
@@ -170,8 +171,8 @@ file_ptr_t createRawDataFile(const string& filePath, const alg_runner_collection
 file_ptr_t createSummaryFile(const string& filePath, const alg_runner_collection_t& algorithms)
 {
 	//create output file
-	FILE* outputFile = nullptr;
-	if (0 != fopen_s(&outputFile, filePath.c_str(), "w"))
+	FILE* outputFile = _fsopen(filePath.c_str(), "w", _SH_DENYWR);
+	if (nullptr == outputFile)
 	{
 		throw exception("Failed opening file");
 	}
