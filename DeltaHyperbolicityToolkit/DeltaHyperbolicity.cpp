@@ -2,7 +2,7 @@
 #include "defs.h"
 #include "GraphAlgorithms.h"
 
-namespace graphs
+namespace dhtoolkit
 {
 	DeltaHyperbolicity::DeltaHyperbolicity(delta_t delta) : _delta(delta), _nodesAvailable(false), _nodes() 
 	{
@@ -23,4 +23,4 @@ namespace graphs
 	{
 		return _nodes;
 	}
-} // namespace graphs
+} // namespace dhtoolkit

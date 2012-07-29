@@ -1,7 +1,7 @@
 #include "Node.h"
 #include "Except.h"
 
-namespace graphs
+namespace dhtoolkit
 {
 	Node::Node(node_index_t index) : _index(index), _outgoingEdges(), _incomingEdges()
 	{
@@ -62,4 +62,4 @@ namespace graphs
 		_index = newIndex;
 	}
 
-} // namespace graphs
+} // namespace dhtoolkit

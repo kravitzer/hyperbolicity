@@ -5,20 +5,30 @@
 #include <math.h>
 #include <time.h>
 
-namespace graphs
+namespace dhtoolkit
 {
+	ExpProbability::ExpProbability()
+	{
+		reset();
+	}
+
 	sa_probability_t ExpProbability::ProbabilityToAcceptChange(delta_t curDelta, delta_t newDelta, sa_temp_t curTemp)
 	{
 		if (newDelta > curDelta) return 1.0;
 		return exp((newDelta-curDelta)/curTemp);
 	}
 
+	void ExpProbability::reset()
+	{
+		//empty
+	}
+
 	const sa_temp_t IntervalTemperature::InitialTemp = 100.0;
 	const sa_temp_t IntervalTemperature::TerminationThreshold = 0.05;
 
-	IntervalTemperature::IntervalTemperature() : _numOfIterations(0), _lastChange(0)
+	IntervalTemperature::IntervalTemperature()
 	{
-		//empty
+		reset();
 	}
 
 	sa_temp_t IntervalTemperature::TemperatureChange(sa_temp_t curTemp, delta_t curDelta, delta_t newDelta)
@@ -45,6 +55,12 @@ namespace graphs
 		return InitialTemp;
 	}
 
+	void IntervalTemperature::reset()
+	{
+		_numOfIterations = 0;
+		_lastChange = 0;
+	}
+
 
 	IGraphAlg* CreateAlgorithm()
 	{
@@ -53,7 +69,7 @@ namespace graphs
 
 		sa_prob_func_ptr probFunc(new ExpProbability);
 		sa_temp_func_ptr tempFunc(new IntervalTemperature);
-		IGraphAlg* alg = new SimulatedAnnealing(tempFunc->GetInitialTemperature(), probFunc, tempFunc);
+		IGraphAlg* alg = new SimulatedAnnealing(probFunc, tempFunc);
 		return alg;
 	}
 
@@ -61,4 +77,4 @@ namespace graphs
 	{
 		if (alg) delete alg;
 	}
-} // namespace graphs
+} // namespace dhtoolkit

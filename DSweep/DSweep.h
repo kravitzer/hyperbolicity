@@ -9,7 +9,7 @@
 #include "DeltaHyperbolicityToolkit\IGraphAlg.h"
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 
-namespace graphs
+namespace dhtoolkit
 {
 	/*
 	 * @brief	Implementation for the single-double-sweep algorithm. It performs a single double sweep to obtain the first 2 nodes. Then
@@ -36,6 +36,6 @@ namespace graphs
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif //DELTAHYPER_DSWEEP_H

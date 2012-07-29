@@ -12,8 +12,8 @@
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 #include "DeltaHyperbolicityToolkit\IGraphAlg.h"
 
-typedef graphs::IGraphAlg* (*AlgCreationMethod)();
-typedef void (*AlgReleaseMethod)(graphs::IGraphAlg*);
+typedef dhtoolkit::IGraphAlg* (*AlgCreationMethod)();
+typedef void (*AlgReleaseMethod)(dhtoolkit::IGraphAlg*);
 
 class AlgRunner
 {
@@ -37,12 +37,17 @@ public:
 	/*
 	 * @brief	Wrapper for running the algorithm. See IGraphAlg documentation for details.
 	 */
-	graphs::DeltaHyperbolicity run(const graphs::graph_ptr_t graph) const;
+	dhtoolkit::DeltaHyperbolicity run(const dhtoolkit::graph_ptr_t graph) const;
 
 	/*
 	 * @brief	Wrapper for running the algorithm. See IGraphAlg documentation for details.
 	 */
-	graphs::DeltaHyperbolicity runWithInitialState(const graphs::graph_ptr_t graph, const graphs::node_quad_t& state) const;
+	dhtoolkit::DeltaHyperbolicity runWithInitialState(const dhtoolkit::graph_ptr_t graph, const dhtoolkit::node_quad_t& state) const;
+
+	/*
+	 * @returns	The algorithm's name.
+	 */
+	std::string getName() const;
 
 private:
 	//do *not* allow copy ctor / assignment operator
@@ -60,7 +65,7 @@ private:
 	AlgReleaseMethod _releaseAlg;
 
 	//algorithm instance
-	graphs::IGraphAlg* _algorithm;
+	dhtoolkit::IGraphAlg* _algorithm;
 };
 
 #endif // DELTAHYPER_ALGRUNNER_H

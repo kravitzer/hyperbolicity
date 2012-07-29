@@ -9,7 +9,7 @@
 #include "defs.h"
 #include "State.h"
 
-namespace graphs
+namespace dhtoolkit
 {
 
 /*
@@ -55,6 +55,6 @@ private:
 	bool _nodesAvailable;
 };
 
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif

@@ -1,7 +1,7 @@
 #include "State.h"
 #include "Except.h"
 
-namespace graphs
+namespace dhtoolkit
 {
 	State::State()
 	{
@@ -40,4 +40,4 @@ namespace graphs
 		return NumberOfNodes;
 	}
 
-} // namespace graphs
+} // namespace dhtoolkit

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace graphs
+namespace dhtoolkit
 {
 	const int GraphAlgorithms::NodeIndexMaxNumOfDigits = 20;		//including null-terminator
 	const char* GraphAlgorithms::EdgeMarker = "->";
@@ -48,7 +48,7 @@ namespace graphs
 		
 		//create nodes
 		unsigned int nodeCount = ReadNodeCount(inputFile);
-		graph_ptr_t g(new Graph);
+		graph_ptr_t g(new Graph(path));
 		for (unsigned int i = 0; i < nodeCount; ++i) g->insertNode();
 
 		//create edges
@@ -93,7 +93,7 @@ namespace graphs
 	delta_t GraphAlgorithms::CalculateDeltaFromDistances(distance_t d1, distance_t d2, distance_t d3)
 	{
 		//find largest and second-largest distances out of the 3 options
-		distance_t& largest = d1, secondLargest = d1;
+		distance_t largest = d1, secondLargest = d1;
 		if (d2 > largest)
 		{
 			largest = d2;
@@ -492,4 +492,4 @@ namespace graphs
 
 		return true;
 	}
-} // namespace graphs
+} // namespace dhtoolkit

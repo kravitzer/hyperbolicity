@@ -3,7 +3,7 @@
 
 #include "defs.h"
 
-namespace graphs
+namespace dhtoolkit
 {
 	/*
 	 * @brief	A class representing a given state from which a delta hyperbolicity value may be calculated.
@@ -50,6 +50,6 @@ namespace graphs
 		static const int NumberOfNodes = 4;
 		node_ptr_t _nodes[NumberOfNodes];
 	};
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif // DELTAHYPER_STATE_H

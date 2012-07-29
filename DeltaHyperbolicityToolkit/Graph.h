@@ -8,8 +8,9 @@
 
 #include "Node.h"
 #include "defs.h"
+#include <string>
 
-namespace graphs
+namespace dhtoolkit
 {
 
 /*
@@ -20,8 +21,14 @@ class Graph
 public:
 	/*
 	 * @brief	Default ctor. Nodes may be added using the insertion methods.
+	 * @param	title	Graph title.
 	 */
-	Graph();
+	Graph(std::string title);
+
+	/*
+	 * @returns	The graph title.
+	 */
+	std::string getTitle() const;
 
 	/*
 	 * @brief	Inserts a new node to the graph.
@@ -79,9 +86,10 @@ private:
 	 */
 	void assertIndexInBounds(node_index_t index) const;
 
+	std::string _title;
 	node_collection_t _nodes;
 };
 
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif

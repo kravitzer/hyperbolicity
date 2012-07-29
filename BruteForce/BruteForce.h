@@ -9,7 +9,7 @@
 #include "DeltaHyperbolicityToolkit\IGraphAlg.h"
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 
-namespace graphs
+namespace dhtoolkit
 {
 	/*
 	 * @brief	Implementation for the brute-force solution for finding delta hyperbolicity. Obviously takes a significant amount of time
@@ -34,6 +34,6 @@ namespace graphs
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif //DELTAHYPER_BRUTEFORCE_H

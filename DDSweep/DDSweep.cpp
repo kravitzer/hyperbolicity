@@ -4,7 +4,7 @@
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
 #include <time.h>
 
-namespace graphs
+namespace dhtoolkit
 {
 	DeltaHyperbolicity DDSweep::runImpl(const graph_ptr_t graph) 
 	{
@@ -25,10 +25,9 @@ namespace graphs
 		return DeltaHyperbolicity(delta, state);
 	}
 
-	DeltaHyperbolicity DDSweep::runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t&)
+	DeltaHyperbolicity DDSweep::runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t& initialState)
 	{
-		//initial state is ignored
-		return runImpl(graph);
+		return runAndReturnBetter(graph, initialState);
 	}
 
 
@@ -46,4 +45,4 @@ namespace graphs
 	{
 		if (alg) delete alg;
 	}
-} // namespace graphs
+} // namespace dhtoolkit

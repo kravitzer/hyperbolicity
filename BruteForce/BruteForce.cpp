@@ -5,7 +5,7 @@
 #include "DeltaHyperbolicityToolkit\State.h"
 #include <time.h>
 
-namespace graphs
+namespace dhtoolkit
 {
 	DeltaHyperbolicity BruteForce::runImpl(const graph_ptr_t graph) 
 	{
@@ -43,7 +43,7 @@ namespace graphs
 
 	DeltaHyperbolicity BruteForce::runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t&)
 	{
-		//initial state is ignored
+		//initial state is ignored, as this algorithm calculates all states anyways...
 		return runImpl(graph);
 	}
 
@@ -59,4 +59,4 @@ namespace graphs
 	{
 		if (alg) delete alg;
 	}
-} // namespace graphs
+} // namespace dhtoolkit

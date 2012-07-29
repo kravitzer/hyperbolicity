@@ -2,12 +2,20 @@
 #include "defs.h"
 #include "Node.h"
 #include "Except.h"
+#include <string>
 
-namespace graphs
+using std::string;
+
+namespace dhtoolkit
 {
-	Graph::Graph() : _nodes()
+	Graph::Graph(string title) : _nodes(), _title(title)
 	{
 		//empty
+	}
+
+	string Graph::getTitle() const
+	{
+		return _title;
 	}
 
 	node_ptr_t Graph::insertNode()

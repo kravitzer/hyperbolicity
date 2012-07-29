@@ -10,7 +10,7 @@
 #include "Graph.h"
 #include <vector>
 
-namespace graphs
+namespace dhtoolkit
 {
 	/*
 	 * @brief	A collection of some useful graph methods.
@@ -204,6 +204,6 @@ namespace graphs
 		 */
 		static bool StringStartsWith(const char* s, const char *p);
 	};
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif

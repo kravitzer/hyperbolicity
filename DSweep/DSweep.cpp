@@ -4,7 +4,7 @@
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
 #include <time.h>
 
-namespace graphs
+namespace dhtoolkit
 {
 	DeltaHyperbolicity DSweep::runImpl(const graph_ptr_t graph) 
 	{
@@ -24,19 +24,19 @@ namespace graphs
 		for (unsigned int i = 0; i < graph->size(); ++i)
 		{
 			node_ptr_t curNode = graph->getNode(i);
-			if ( (curNode == ds.u) || (curNode == ds.v) ) continue;
+			if ( (curNode == v1) || (curNode == v2) ) continue;
 
-			distance_t distFromU = v1Dists[curNode->getIndex()];
-			distance_t distFromV = v2Dists[curNode->getIndex()];
+			distance_t distFromV1 = v1Dists[curNode->getIndex()];
+			distance_t distFromV2 = v2Dists[curNode->getIndex()];
 
-			if ( (distFromU <= distFromV && distFromV <= distFromU + 1) || (distFromV <= distFromU && distFromU <= distFromV + 1) )
+			if ( (distFromV1 <= distFromV2 && distFromV2 <= distFromV1 + 1) || (distFromV2 <= distFromV1 && distFromV1 <= distFromV2 + 1) )
 			{
-				if ( (distFromU >= distV2V3) && (distFromV >= distV1V3) )
+				if ( (distFromV2 >= distV2V3) && (distFromV1 >= distV1V3) )
 				{
-					if ( (distFromU > distV2V3) || (distFromV > distV1V3) )
+					if ( (distFromV2 > distV2V3) || (distFromV1 > distV1V3) )
 					{
-						distV2V3 = distFromU;
-						distV1V3 = distFromV;
+						distV2V3 = distFromV2;
+						distV1V3 = distFromV1;
 
 						v3Candidates.clear();						
 					}
@@ -79,10 +79,9 @@ namespace graphs
 		return DeltaHyperbolicity(maxDelta, state);
 	}
 
-	DeltaHyperbolicity DSweep::runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t&)
+	DeltaHyperbolicity DSweep::runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t& initialState)
 	{
-		//initial state is ignored
-		return runImpl(graph);
+		return runAndReturnBetter(graph, initialState);
 	}
 
 
@@ -100,4 +99,4 @@ namespace graphs
 	{
 		if (alg) delete alg;
 	}
-} // namespace graphs
+} // namespace dhtoolkit

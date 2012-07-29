@@ -9,7 +9,7 @@
 #include "DeltaHyperbolicityToolkit\SimulatedAnnealing.h"
 #include "DeltaHyperbolicityToolkit\SADefs.h"
 
-namespace graphs
+namespace dhtoolkit
 {
 	/*
 	 * @brief	Implementation for a simulated annealing probability function that is exponential in the delta-difference
@@ -18,8 +18,12 @@ namespace graphs
 	class ExpProbability : public ISaProbabilityFunction
 	{
 	public:
+		/*
+		 * @brief	Default ctor.
+		 */
+		ExpProbability();
+
 		//allow default ctor, copy ctor & assignment operator
-		//ExpProbability();
 		//ExpProbability(const ExpProbability& other);
 		//ExpProbability& operator=(const ExpProbability& other);
 
@@ -30,6 +34,11 @@ namespace graphs
 		 * @returns	The probability to accept the new delta
 		 */
 		sa_probability_t ProbabilityToAcceptChange(delta_t curDelta, delta_t newDelta, sa_temp_t curTemp);
+
+		/*
+		 * @brief	Resets any internal state the instance might have, in order to start over when necessary.
+		 */
+		void reset();
 	};
 
 
@@ -62,6 +71,11 @@ namespace graphs
 		 */
 		sa_temp_t GetInitialTemperature() const;
 
+		/*
+		 * @brief	Resets any internal state the instance might have, in order to start over when necessary.
+		 */
+		void reset();
+
 	private:
 		static const unsigned int IterationInterval = 25;
 		static const sa_temp_t InitialTemp;
@@ -77,6 +91,6 @@ namespace graphs
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif // DELTAHYPER_SA_EXP_PROB_INTERVAL_TEMP_H

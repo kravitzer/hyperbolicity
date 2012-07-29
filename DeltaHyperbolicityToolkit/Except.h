@@ -8,7 +8,7 @@
 
 #include <exception>
 
-namespace graphs
+namespace dhtoolkit
 {
 	/* 
 	 * @brief	A general delta hyperbolicity exception.
@@ -43,6 +43,6 @@ namespace graphs
 		InvalidFormatException(const char* what) : DeltaHyperbolicityException(what) {}
 	};
 
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif // DELTAHYPER_EXCEPT_H

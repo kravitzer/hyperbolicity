@@ -9,7 +9,7 @@
 #include "defs.h"
 #include <memory>
 
-namespace graphs
+namespace dhtoolkit
 {
 	class ISaProbabilityFunction;
 	class ISaTempPolicyFunction;
@@ -20,6 +20,6 @@ namespace graphs
 	typedef double			sa_temp_t;
 	typedef double			sa_probability_t;
 
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif // DELTAHYPER_SADEFS_H

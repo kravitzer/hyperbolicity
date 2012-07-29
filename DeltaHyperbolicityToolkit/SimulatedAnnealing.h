@@ -9,7 +9,7 @@
 #include "SADefs.h"
 #include "IGraphAlg.h"
 
-namespace graphs
+namespace dhtoolkit
 {
 
 	/*
@@ -25,6 +25,11 @@ namespace graphs
 		 * @returns				The probability to accept the new state (number b/w 0.0 to 1.0).
 		 */
 		virtual sa_probability_t ProbabilityToAcceptChange(delta_t curDelta, delta_t newDelta, sa_temp_t curTemp) = 0;
+
+		/*
+		 * @brief	Resets any internal state the instance might have, in order to start over when necessary.
+		 */
+		virtual void reset() = 0;
 	};
 
 	/*
@@ -45,6 +50,11 @@ namespace graphs
 		 * @returns	The initial temperature of the algorithm.
 		 */
 		virtual sa_temp_t GetInitialTemperature() const = 0;
+
+		/*
+		 * @brief	Resets any internal state the instance might have, in order to start over when necessary.
+		 */
+		virtual void reset() = 0;
 	};
 
 	/*
@@ -55,11 +65,10 @@ namespace graphs
 	public:
 		/*
 		 * @brief	Ctor, initializes the SA process.
-		 * @param	initialTemp				The initial temperature.
 		 * @param	probabilityFunction		The probability method to be used in the process.
 		 * @param	tempFunction			The temperature method to be used in the process.
 		 */
-		SimulatedAnnealing(sa_temp_t initialTemp, sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction);
+		SimulatedAnnealing(sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction);
 
 		/*
 		 * @brief	Default dtor.
@@ -104,6 +113,6 @@ namespace graphs
 		sa_temp_func_ptr _tempFunc;
 	};
 
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif // DELTAHYPER_SA_H

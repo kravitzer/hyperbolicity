@@ -4,11 +4,11 @@
 #include "GraphAlgorithms.h"
 #include <random>
 
-namespace graphs
+namespace dhtoolkit
 {
 
-	SimulatedAnnealing::SimulatedAnnealing(sa_temp_t initialTemp, sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction) : IGraphAlg(),
-		_temp(initialTemp), _probFunc(probabilityFunction), _tempFunc(tempFunction)
+	SimulatedAnnealing::SimulatedAnnealing(sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction) : IGraphAlg(),
+		_temp(0), _probFunc(probabilityFunction), _tempFunc(tempFunction)
 	{
 		//empty
 	}
@@ -56,6 +56,10 @@ namespace graphs
 
 	DeltaHyperbolicity SimulatedAnnealing::startSA(const graph_ptr_t graph, const node_quad_t& initialState)
 	{
+		_probFunc->reset();
+		_tempFunc->reset();
+		_temp = _tempFunc->GetInitialTemperature();
+
 		node_quad_t curState, maxState;
 		delta_t curDelta, maxDelta;
 
@@ -148,4 +152,4 @@ namespace graphs
 			}
 		}
 	}
-} // namespace graphs
+} // namespace dhtoolkit

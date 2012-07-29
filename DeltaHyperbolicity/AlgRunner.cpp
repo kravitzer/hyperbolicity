@@ -7,9 +7,9 @@
 #include <iostream>
 
 using namespace std;
-using namespace graphs;
+using namespace dhtoolkit;
 
-AlgRunner::AlgRunner(string dllPath) : _dllPath(dllPath)
+AlgRunner::AlgRunner(string dllPath) : _dllPath(dllPath), _algorithm(nullptr), _createAlg(nullptr), _releaseAlg(nullptr)
 {
 	//empty
 }
@@ -18,7 +18,7 @@ AlgRunner::~AlgRunner()
 {
 	try
 	{
-		_releaseAlg(_algorithm);
+		if (_releaseAlg && _algorithm) _releaseAlg(_algorithm);
 	}
 	catch (...)
 	{
@@ -56,4 +56,9 @@ DeltaHyperbolicity AlgRunner::runWithInitialState(const graph_ptr_t graph, const
 {
 	if (nullptr == _dll.get()) throw std::exception("Dll must be loaded first");
 	return _algorithm->runWithInitialState(graph, state);
+}
+
+string AlgRunner::getName() const
+{
+	return _dllPath;
 }

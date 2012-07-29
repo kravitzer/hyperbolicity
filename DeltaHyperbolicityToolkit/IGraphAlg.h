@@ -9,7 +9,7 @@
 #include "defs.h"
 #include "DeltaHyperbolicity.h"
 
-namespace graphs
+namespace dhtoolkit
 {
 	/*
 	 * @brief	This is the general interface for a graph algorithm. When implementing a new algorithm logic,
@@ -58,6 +58,14 @@ namespace graphs
 		 */
 		virtual DeltaHyperbolicity runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t& initialState) = 0;
 
+		/* 
+		 * @brief	Runs the algorithm with *no* initial state, and then compares the result to the state given.
+		 * @param	graph			The graph to run the algorithm on.
+		 * @param	state			The state to compare the result to.
+		 * @returns	The delta hyperbolicity that's the higher of the two.
+		 */
+		DeltaHyperbolicity runAndReturnBetter(const graph_ptr_t graph, const node_quad_t& state);
+
 	private:
 		/*
 		 * @throws	std::exception	If given graph parameter is null or contains less than a quad of vertices.
@@ -65,6 +73,6 @@ namespace graphs
 		void validateGraphInput(const graph_ptr_t graph) const;
 	};
 
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif

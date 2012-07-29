@@ -9,7 +9,7 @@
 #include <memory>
 #include "defs.h"
 
-namespace graphs
+namespace dhtoolkit
 {
 
 class Graph;
@@ -79,6 +79,6 @@ private:
 	node_collection_t _incomingEdges;
 };
 
-} // namespace graphs
+} // namespace dhtoolkit
 
 #endif

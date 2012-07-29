@@ -11,7 +11,7 @@
 #include <map>
 #include <unordered_map>
 
-namespace graphs
+namespace dhtoolkit
 {
 	class Graph;
 	class Node;
@@ -22,6 +22,7 @@ namespace graphs
 	typedef std::vector<node_ptr_t>				node_collection_t;
 
 	typedef double								delta_t;
+	const delta_t								InfiniteDelta = -1;
 	typedef State								node_quad_t;
 	typedef std::shared_ptr<Graph>				graph_ptr_t;
 
