@@ -406,6 +406,12 @@ namespace dhtoolkit
 		while (0 == feof(filePtr.get()))
 		{
 			size_t bytesToRead = BufSize - bufDataSize;
+			//if the entire buffer is occupied, it means that we couldn't find a single edge
+			//marker in the entire buffer. Assuming the buffer is large enough to hold at least
+			//one edge (which obviously it is), this means the file has an invalid format.
+			if (0 == bytesToRead) throw InvalidFormatException("Invalid graph file format");
+
+			//read the data to buffer (to complete to BufSize)
 			size_t bytesRead = fread(buf + bufDataSize, sizeof(char), bytesToRead, filePtr.get());
 			if (bytesToRead != bytesRead)
 			{
@@ -484,12 +490,11 @@ namespace dhtoolkit
 	bool GraphAlgorithms::StringStartsWith(const char* s, const char *p)
 	{
 		unsigned int i = 0;
-		while (s[i] != '\0' && p[i] != '\0')
+		for (; (s[i] != '\0' && p[i] != '\0'); ++i)
 		{
 			if (s[i] != p[i]) return false;
-			++i;
 		}
 
-		return true;
+		return (i == strlen(p));
 	}
 } // namespace dhtoolkit

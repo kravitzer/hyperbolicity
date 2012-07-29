@@ -101,13 +101,26 @@ void loadGraphDirectory()
 		{
 			try
 			{
-				loadGraph(it->path().string());
-				cout << endl;
+				fs::path curPath = it->path();
+				if (fs::is_regular(curPath))
+				{
+					loadGraph(curPath.string());
+					cout << endl;
+				}
 			}
 			catch (const exception&)
 			{
 				//skip errors
 			}
+		}
+
+		if (0 == graphs.size())
+		{
+			cout << "No valid graph files have been found, no graphs have been loaded!" << endl;
+		}
+		else
+		{
+			cout << graphs.size() << " graphs have been loaded!" << endl;
 		}
 	}
 	catch (const std::exception& e)

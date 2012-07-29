@@ -19,12 +19,14 @@ namespace dhtoolkit
 	DeltaHyperbolicity IGraphAlg::run(const graph_ptr_t graph)
 	{
 		validateGraphInput(graph);
+		reset();
 		return runImpl(graph);
 	}
 
 	DeltaHyperbolicity IGraphAlg::runWithInitialState(const graph_ptr_t graph, const node_quad_t& state)
 	{
 		validateGraphInput(graph);
+		reset();
 		return runWithInitialStateImpl(graph, state);
 	}
 

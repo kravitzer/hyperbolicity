@@ -89,6 +89,11 @@ namespace dhtoolkit
 		 * @brief	Implementation of the base class' method. Implements a delta hyperbolicity process on the graph, starting from the given state.
 		 */
 		virtual DeltaHyperbolicity runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t& initialState);
+		
+		/*
+		 * @brief	Resets any internal state the instance might have, in order to run the algorithm again on a new graph.
+		 */
+		virtual void reset();
 
 		/*
 		 * @brief	Starts the SA process.

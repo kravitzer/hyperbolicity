@@ -47,6 +47,10 @@ namespace dhtoolkit
 		return runImpl(graph);
 	}
 
+	void BruteForce::reset()
+	{
+		//empty
+	}
 
 
 	IGraphAlg* CreateAlgorithm()

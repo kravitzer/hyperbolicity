@@ -30,6 +30,11 @@ namespace dhtoolkit
 		return runAndReturnBetter(graph, initialState);
 	}
 
+	void DDSweep::reset()
+	{
+		//empty
+	}
+
 
 
 	IGraphAlg* CreateAlgorithm()

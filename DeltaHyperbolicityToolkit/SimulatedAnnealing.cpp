@@ -54,12 +54,15 @@ namespace dhtoolkit
 		return startSA(graph, initialState);
 	}
 
-	DeltaHyperbolicity SimulatedAnnealing::startSA(const graph_ptr_t graph, const node_quad_t& initialState)
+	void SimulatedAnnealing::reset()
 	{
 		_probFunc->reset();
 		_tempFunc->reset();
 		_temp = _tempFunc->GetInitialTemperature();
+	}
 
+	DeltaHyperbolicity SimulatedAnnealing::startSA(const graph_ptr_t graph, const node_quad_t& initialState)
+	{
 		node_quad_t curState, maxState;
 		delta_t curDelta, maxDelta;
 

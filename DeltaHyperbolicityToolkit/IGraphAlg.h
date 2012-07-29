@@ -58,6 +58,11 @@ namespace dhtoolkit
 		 */
 		virtual DeltaHyperbolicity runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t& initialState) = 0;
 
+		/*
+		 * @brief	Resets any internal state the instance might have, in order to run the algorithm again on a new graph.
+		 */
+		virtual void reset() = 0;
+
 		/* 
 		 * @brief	Runs the algorithm with *no* initial state, and then compares the result to the state given.
 		 * @param	graph			The graph to run the algorithm on.
