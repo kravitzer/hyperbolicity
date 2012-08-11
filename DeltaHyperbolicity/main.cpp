@@ -90,18 +90,21 @@ void loadGraphDirectory()
 
 	try
 	{
+		//make sure we were given a path to an existing folder
 		if (!fs::is_directory(dirPath))
 		{
 			cout << "Directory enterred does not exist" << endl;
 			return;
 		}
 
+		//clear the graph collection and iterate over all files in the folder
 		graphs.clear();
 		fs::recursive_directory_iterator end;
 		for (fs::recursive_directory_iterator it(dirPath); it != end; ++it)
 		{
 			try
 			{
+				//if the current path is a file - try to load it
 				fs::path curPath = it->path();
 				if (fs::is_regular(curPath))
 				{
@@ -111,12 +114,13 @@ void loadGraphDirectory()
 			}
 			catch (const exception&)
 			{
-				//skip errors
+				//loading failed - maybe it is not a graph file? skip to next file.
 			}
 		}
 
 		if (0 == graphs.size())
 		{
+			//not a single graph has been loaded :(
 			cout << "No valid graph files have been found, no graphs have been loaded!" << endl;
 		}
 		else
@@ -141,12 +145,11 @@ void writeStringToFile(file_ptr_t f, const string& str)
 file_ptr_t createRawDataFile(const string& filePath, const alg_runner_collection_t& algorithms)
 {
 	//create output file
-	FILE* outputFile = _fsopen(filePath.c_str(), "w", _SH_DENYWR);
-	if (nullptr == outputFile)
+	file_ptr_t f(_fsopen(filePath.c_str(), "w", _SH_DENYWR), &fclose);
+	if (nullptr == f.get())
 	{
 		throw exception("Failed opening file");
-	}
-	file_ptr_t f(outputFile, &fclose);
+	}	
 
 	//write file header
 	writeStringToFile(f, "file, ");
@@ -171,12 +174,12 @@ file_ptr_t createRawDataFile(const string& filePath, const alg_runner_collection
 file_ptr_t createSummaryFile(const string& filePath, const alg_runner_collection_t& algorithms)
 {
 	//create output file
-	FILE* outputFile = _fsopen(filePath.c_str(), "w", _SH_DENYWR);
-	if (nullptr == outputFile)
+	file_ptr_t f(_fsopen(filePath.c_str(), "w", _SH_DENYWR), &fclose);
+	if (nullptr == f.get())
 	{
 		throw exception("Failed opening file");
 	}
-	file_ptr_t f(outputFile, &fclose);
+	
 
 	//write file header
 	writeStringToFile(f, "file, ");
@@ -212,7 +215,7 @@ file_ptr_t createSummaryFile(const string& filePath, const alg_runner_collection
 
 string getCurrentTime()
 {
-	time_t now;
+	time_t now = 0;
 	time(&now);
 	tm curTime = {0};
 	localtime_s(&curTime, &now);
@@ -223,54 +226,8 @@ string getCurrentTime()
 	return s.str();
 }
 
-void runAlgorithms(unsigned int runsPerGraph)
+void runGivenAlgorithms(alg_runner_collection_t algorithms, file_ptr_t rawFile, file_ptr_t sumFile, unsigned int runsPerGraph)
 {
-	//make sure a graph has already been loaded
-	if (0 == graphs.size())
-	{
-		cout << "You must load a graph first!" << endl;
-		return;
-	}
-
-	stringstream fileName;
-	fileName << getCurrentTime() << "_" << graphsTitle << "_";
-
-	alg_runner_collection_t algorithms;
-	string input;
-	cout << "Enter algorithm dll name/path: ";
-	getline(cin, input);
-	while (0 != input.length())
-	{
-		//note: alg runner must be declared *outside* of the try/catch block, because an exception thrown
-		//inside the block may be thrown from the dll itself, in which case having it inside the block would
-		//cause it to be destructed (i.e. the dll freed) before the exception instance is destroyed! When trying
-		//to deallocate the exception instance, an access violation will occur as the dll is no longer loaded.
-		alg_runner_ptr_t alg(new AlgRunner(input));
-		try
-		{
-			alg->load();
-			algorithms.push_back(alg);
-			fileName << alg->getName() << "_";
-		}
-		catch (const exception& ex)
-		{
-			cout << "An error occurred while loading the algorithm: " << ex.what() << endl;
-		}
-
-		cout << "Enter algorithm dll name/path (leave empty if done): ";
-		getline(cin, input);
-	}
-
-	if (0 == algorithms.size())
-	{
-		cout << "You must load at least one algorithm!" << endl;
-		return;
-	}
-
-	string fileNameStr = fileName.str();
-	file_ptr_t rawFile = createRawDataFile(fileNameStr.substr(0, fileNameStr.length()-1) + "_raw.csv", algorithms);
-	file_ptr_t sumFile = createSummaryFile(fileNameStr.substr(0, fileNameStr.length()-1) + "_sum.csv", algorithms);
-	
 	for (graph_collection_t::const_iterator graphIt = graphs.cbegin(); graphIt != graphs.cend(); ++graphIt)
 	{
 		graph_ptr_t graph = *graphIt;
@@ -383,6 +340,68 @@ void runAlgorithms(unsigned int runsPerGraph)
 
 		fflush(sumFile.get());
 	}
+}
+
+void runAlgorithms(unsigned int runsPerGraph)
+{
+	//make sure a graph has already been loaded
+	if (0 == graphs.size())
+	{
+		cout << "You must load a graph first!" << endl;
+		return;
+	}
+
+	//file names are "<current-date&time>_<graph-title>_<alg_1>_<alg_2>...<alg_n>.csv"
+	//so far we only have the date/time & graph title...
+	stringstream fileName;
+	fileName << getCurrentTime() << "_" << graphsTitle << "_";
+
+	//receive input for algorithm names
+	alg_runner_collection_t algorithms;
+	string input;
+	cout << "Enter algorithm dll name/path: ";
+	getline(cin, input);
+	while (0 != input.length())
+	{
+		//note: alg runner must be declared *outside* of the try/catch block, because an exception thrown
+		//inside the block may be thrown from the dll itself, in which case having it inside the block would
+		//cause it to be destructed (i.e. the dll freed) before the exception instance is destroyed! When trying
+		//to deallocate the exception instance, an access violation will occur as the dll is no longer loaded.
+		alg_runner_ptr_t alg(new AlgRunner(input));
+		try
+		{
+			//load the algorithm dll and add it to the algorithm collection
+			alg->load();
+			algorithms.push_back(alg);
+		}
+		catch (const exception& ex)
+		{
+			//loading/adding of dll failed
+			cout << "An error occurred while loading the algorithm: " << ex.what() << endl;
+		}
+
+		//add algorithm name to the file name string
+		fileName << alg->getName() << "_";
+
+		//get next algorithm input
+		cout << "Enter algorithm dll name/path (leave empty if done): ";
+		getline(cin, input);
+	}
+
+	//make sure at least one algorithm has been loaded
+	if (0 == algorithms.size())
+	{
+		cout << "You must load at least one algorithm!" << endl;
+		return;
+	}
+
+	//add ".csv" extension to the file name
+	string fileNameStr = fileName.str();
+	file_ptr_t rawFile = createRawDataFile(fileNameStr.substr(0, fileNameStr.length()-1) + "_raw.csv", algorithms);
+	file_ptr_t sumFile = createSummaryFile(fileNameStr.substr(0, fileNameStr.length()-1) + "_sum.csv", algorithms);
+	
+
+	runGivenAlgorithms(algorithms, rawFile, sumFile, runsPerGraph);
 }
 
 int main()

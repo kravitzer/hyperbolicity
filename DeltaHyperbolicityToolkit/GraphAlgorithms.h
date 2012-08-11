@@ -151,7 +151,7 @@ namespace dhtoolkit
 		 * @returns	A smart pointer to the file instance. File will be closed when pointer is out of scope.
 		 * @throws	std::exception upon I/O error.
 		 */
-		static std::shared_ptr<FILE> OpenFile(const char* path, const char* mode);
+		static std::shared_ptr<FILE> OpenFile(const char* path, const char* mode, int share);
 
 		/*
 		 * @brief	Writes the given node index into the given file.

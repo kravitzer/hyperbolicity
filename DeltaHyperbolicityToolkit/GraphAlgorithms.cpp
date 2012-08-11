@@ -21,7 +21,7 @@ namespace dhtoolkit
 
 	void GraphAlgorithms::SaveGraphToFile(const graph_ptr_t graph, const std::string& path)
 	{
-		shared_ptr<FILE> outputFile = OpenFile(path.c_str(), "w");
+		shared_ptr<FILE> outputFile = OpenFile(path.c_str(), "w", _SH_DENYRW);
 		//write all nodes but last
 		for (unsigned int i = 0; i < graph->size() - 1; ++i)
 		{
@@ -44,7 +44,7 @@ namespace dhtoolkit
 
 	graph_ptr_t GraphAlgorithms::LoadGraphFromFile(const std::string& path)
 	{
-		shared_ptr<FILE> inputFile = OpenFile(path.c_str(), "rb");
+		shared_ptr<FILE> inputFile = OpenFile(path.c_str(), "rb", _SH_DENYWR);
 		
 		//create nodes
 		unsigned int nodeCount = ReadNodeCount(inputFile);
@@ -302,14 +302,14 @@ namespace dhtoolkit
 		return furthestNode[selectedNodeIndex];
 	}
 
-	shared_ptr<FILE> GraphAlgorithms::OpenFile(const char* path, const char* mode)
+	shared_ptr<FILE> GraphAlgorithms::OpenFile(const char* path, const char* mode, int share)
 	{
-		FILE* outputFile = nullptr;
-		if (0 != fopen_s(&outputFile, path, mode))
+		shared_ptr<FILE> f(_fsopen(path, mode, share), &fclose);
+		if (nullptr == f.get())
 		{
 			throw exception("Failed opening file");
 		}
-		return shared_ptr<FILE>(outputFile, &fclose);
+		return f;
 	}
 
 	void GraphAlgorithms::WriteNodeToFile(std::shared_ptr<FILE> filePtr, node_index_t nodeIndex, bool isLast)
