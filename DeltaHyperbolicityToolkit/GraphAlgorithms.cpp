@@ -1,6 +1,7 @@
 #include "GraphAlgorithms.h"
 #include "Except.h"
 #include "defs.h"
+#include "boost/format.hpp"
 #include <memory>
 #include <vector>
 #include <algorithm>
@@ -60,6 +61,51 @@ namespace dhtoolkit
 		}
 
 		return g;
+	}
+
+	void GraphAlgorithms::drawGraph(const string& fileName, const graph_ptr_t graph, const node_quad_t* nodesToMark)
+	{
+		shared_ptr<FILE> file(_fsopen(fileName.c_str(), "wb", _SH_DENYRW), &fclose);
+		if (nullptr == file.get())
+		{
+			throw exception("Failed creating Pajek file");
+		}
+
+		string vertices;
+		vertices += (boost::format("*Vertices %1%\n") % graph->size()).str();
+
+		string edges = "*EdgesList\n";
+
+		for (unsigned int i = 0; i < graph->size(); ++i)
+		{
+			node_ptr_t curNode = graph->getNode(i);
+			node_collection_t neighbors = curNode->getEdges();
+
+			if (isNodeToBeMarked(curNode, nodesToMark))
+			{
+				vertices += (boost::format("%1% \"%2%\" ic Blue\n") % (i+1) % (i+1)).str();
+			}
+			else
+			{
+				vertices += (boost::format("%1% \"%2%\" ic Red\n") % (i+1) % (i+1)).str();
+			}
+
+			edges += (boost::format("%1%") % (i+1)).str();
+			for (node_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
+			{
+				edges += (boost::format(" %1%") % ((**it).getIndex() + 1)).str();
+			}
+			edges += "\n";
+		}
+
+		if (vertices.size() != fwrite(vertices.c_str(), sizeof(char), vertices.size(), file.get()))
+		{
+			throw exception("Error writing graph nodes to file");
+		}
+		if (edges.size() != fwrite(edges.c_str(), sizeof(char), edges.size(), file.get()))
+		{
+			throw exception("Error writing graph edges to file");
+		}
 	}
 
 	delta_t GraphAlgorithms::CalculateDelta(const graph_ptr_t graph, const node_quad_t& state)
@@ -274,6 +320,18 @@ namespace dhtoolkit
 		//the number returned here is the number of nodes we need to go back in the node iteration of the graph (since this
 		//many nodes have been removed prior to the original node)
 		return nodesRemoved;
+	}
+
+	bool GraphAlgorithms::isNodeToBeMarked(node_ptr_t node, const node_quad_t* nodesToMark)
+	{
+		if (nullptr == nodesToMark) return false;
+
+		for (unsigned int i = 0; i < nodesToMark->size(); ++i)
+		{
+			if (nodesToMark->operator[](i) == node) return true;
+		}
+
+		return false;
 	}
 
 	node_ptr_t GraphAlgorithms::Sweep(const graph_ptr_t graph, const node_ptr_t origin, distance_t* dist, distance_dict_t* distancesFromU)

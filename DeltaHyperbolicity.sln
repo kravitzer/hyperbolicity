@@ -31,6 +31,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SAExpProbIntervalTemp", "SA
 		{4FE837FE-AC12-42B9-9275-72691CAE5D27} = {4FE837FE-AC12-42B9-9275-72691CAE5D27}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pajek", "Pajek\Pajek.vcxproj", "{F1187A3A-148F-4A52-A9C6-D0A985562F7D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4FE837FE-AC12-42B9-9275-72691CAE5D27} = {4FE837FE-AC12-42B9-9275-72691CAE5D27}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -61,6 +66,10 @@ Global
 		{C7259CD5-648F-43FE-BB0E-5569DCE83139}.Debug|Win32.Build.0 = Debug|Win32
 		{C7259CD5-648F-43FE-BB0E-5569DCE83139}.Release|Win32.ActiveCfg = Release|Win32
 		{C7259CD5-648F-43FE-BB0E-5569DCE83139}.Release|Win32.Build.0 = Release|Win32
+		{F1187A3A-148F-4A52-A9C6-D0A985562F7D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F1187A3A-148F-4A52-A9C6-D0A985562F7D}.Debug|Win32.Build.0 = Debug|Win32
+		{F1187A3A-148F-4A52-A9C6-D0A985562F7D}.Release|Win32.ActiveCfg = Release|Win32
+		{F1187A3A-148F-4A52-A9C6-D0A985562F7D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -45,6 +45,15 @@ namespace dhtoolkit
 		static graph_ptr_t LoadGraphFromFile(const std::string& path);
 
 		/*
+		 * @brief	Creates a Pajek net file that can be visualized using Pajek.
+		 * @param	fileName		The name of the files to be created.
+		 * @param	graph			The graph to be drawn.
+		 * @param	nodesToMark		Nodes in this parameter will be given a unique color.
+		 * @throws	std::exception	Upon any error.
+		 */
+		static void GraphAlgorithms::drawGraph(const std::string& fileName, const graph_ptr_t graph, const node_quad_t* nodesToMark);
+
+		/*
 		 * @brief	Calculates the delta value of the given state nodes.
 		 * @param	graph	The graph to calculate delta for.
 		 * @param	state	The state for which we need to calculate the delta value.
@@ -135,6 +144,13 @@ namespace dhtoolkit
 		 * @throws	std::exception	If the current node's degree is greater than 1.
 		 */
 		static unsigned int pruneTreesRecursion(graph_ptr_t graph, node_ptr_t curNode, node_ptr_t originalNode);
+
+		/*
+		 * @param	node			The node to be checked.
+		 * @param	nodesToMark		The collection of nodes to be marked. May be null (function will return false).
+		 * @returns	True if node is to be marked, false otherwise.
+		 */
+		static bool GraphAlgorithms::isNodeToBeMarked(node_ptr_t node, const node_quad_t* nodesToMark);
 
 		/*
 		 * @brief Performs a single sweep on the graph - i.e. takes the origin node and randomly selects one of the nodes furthest away from it.
