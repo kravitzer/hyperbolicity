@@ -24,6 +24,7 @@ typedef vector<alg_runner_ptr_t>	alg_runner_collection_t;
 
 graph_collection_t graphs;
 string graphsTitle;
+string outputDir = ".\\";
 
 
 //delete functor for shared pointer to an array (AKA shared array)
@@ -38,12 +39,13 @@ struct arrayDeleter
 
 void printMenu()
 {
-	cout << "****************************" << endl;
-	cout << "* 1. Load new graph.       *" << endl;
-	cout << "* 2. Load graph directory. *" << endl;
-	cout << "* 3. Run an algorithm(s).  *" << endl;
-	cout << "* 4. Exit.                 *" << endl;
-	cout << "****************************" << endl;
+	cout << "*******************************" << endl;
+	cout << "* 1. Load new graph.          *" << endl;
+	cout << "* 2. Load graph directory.    *" << endl;
+	cout << "* 3. Select output directory. *" << endl;
+	cout << "* 4. Run an algorithm(s).     *" << endl;
+	cout << "* 5. Exit.                    *" << endl;
+	cout << "*******************************" << endl;
 	cout << endl;
 }
 
@@ -131,6 +133,27 @@ void loadGraphDirectory()
 	catch (const std::exception& e)
 	{
 		cout << "An error occurred while iterating the directory: " << e.what() << endl;
+	}
+}
+
+void getOutputDirectory()
+{
+	string newOutputDir;
+	cout << "Enter a new output path (relative or absolute): ";
+	getline(cin, newOutputDir);
+	cout << endl;
+
+	if (0 == newOutputDir.size()) return;
+	if (newOutputDir[newOutputDir.size()-1] != '\\') newOutputDir += '\\';
+
+	if (boost::filesystem::is_directory(newOutputDir))
+	{
+		outputDir = newOutputDir;
+	}
+	else
+	{
+		cout << "The entered directory does not exist!" << endl;
+		cout << "Output directory remained: " << outputDir.c_str() << endl;
 	}
 }
 
@@ -354,7 +377,7 @@ void runAlgorithms(unsigned int runsPerGraph)
 	//file names are "<current-date&time>_<graph-title>_<alg_1>_<alg_2>...<alg_n>.csv"
 	//so far we only have the date/time & graph title...
 	stringstream fileName;
-	fileName << getCurrentTime() << "_" << graphsTitle << "_";
+	fileName << outputDir << getCurrentTime() << "_" << graphsTitle << "_";
 
 	//receive input for algorithm names
 	alg_runner_collection_t algorithms;
@@ -367,7 +390,7 @@ void runAlgorithms(unsigned int runsPerGraph)
 		//inside the block may be thrown from the dll itself, in which case having it inside the block would
 		//cause it to be destructed (i.e. the dll freed) before the exception instance is destroyed! When trying
 		//to deallocate the exception instance, an access violation will occur as the dll is no longer loaded.
-		alg_runner_ptr_t alg(new AlgRunner(input));
+		alg_runner_ptr_t alg(new AlgRunner(input, outputDir));
 		try
 		{
 			//load the algorithm dll and add it to the algorithm collection
@@ -418,7 +441,7 @@ int main()
 		stringstream(input) >> choice;
 
 		//start loop, loading algorithms requested by the user (unless "exit" is typed)
-		while (4 != choice)
+		while (5 != choice)
 		{
 			cout << endl;
 			switch (choice)
@@ -432,6 +455,10 @@ int main()
 				break;
 
 			case 3:
+				getOutputDirectory();
+				break;
+
+			case 4:
 				runAlgorithms(RunsPerGraph);
 				break;
 			}

@@ -8,6 +8,7 @@
 
 #include "DeltaHyperbolicityToolkit\IGraphAlg.h"
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
+#include <string>
 
 namespace dhtoolkit
 {
@@ -19,7 +20,7 @@ namespace dhtoolkit
 	class DDSweep : public IGraphAlg
 	{
 	public:
-		DDSweep() : IGraphAlg() {}
+		DDSweep(const std::string& outputDir);
 
 	private:
 		/*
@@ -33,7 +34,7 @@ namespace dhtoolkit
 		static const unsigned int MaxNumOfTrials = 50;
 	};
 
-	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
+	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm(const std::string& outputDir);
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
 } // namespace dhtoolkit
 

@@ -9,7 +9,7 @@
 using namespace std;
 using namespace dhtoolkit;
 
-AlgRunner::AlgRunner(string dllPath) : _dllPath(dllPath), _algorithm(nullptr), _createAlg(nullptr), _releaseAlg(nullptr)
+AlgRunner::AlgRunner(const string& dllPath, const string& outputDir) : _dllPath(dllPath), _outputDir(outputDir), _algorithm(nullptr), _createAlg(nullptr), _releaseAlg(nullptr)
 {
 	//empty
 }
@@ -43,7 +43,7 @@ void AlgRunner::load()
 	if (nullptr == _releaseAlg) throw std::exception("Failed to get the algorithm release method");
 
 	//create the algorithm instance
-	_algorithm = _createAlg();
+	_algorithm = _createAlg(_outputDir);
 }
 
 DeltaHyperbolicity AlgRunner::run(const graph_ptr_t graph) const

@@ -4,9 +4,17 @@
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
 #include "DeltaHyperbolicityToolkit\State.h"
 #include <time.h>
+#include <string>
+
+using namespace std;
 
 namespace dhtoolkit
 {
+	BruteForce::BruteForce(const string& outputDir) : IGraphAlg(outputDir) 
+	{
+		//empty
+	}
+
 	DeltaHyperbolicity BruteForce::runImpl(const graph_ptr_t graph) 
 	{
 		delta_t maxDelta = 0;
@@ -53,9 +61,9 @@ namespace dhtoolkit
 	}
 
 
-	IGraphAlg* CreateAlgorithm()
+	IGraphAlg* CreateAlgorithm(const string& outputDir)
 	{
-		IGraphAlg* alg = new BruteForce();
+		IGraphAlg* alg = new BruteForce(outputDir);
 		return alg;
 	}
 

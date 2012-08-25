@@ -13,6 +13,11 @@ const char SlashReplacement = '~';
 
 namespace dhtoolkit
 {
+	Pajek::Pajek(const string& outputDir) : IGraphAlg(outputDir) 
+	{
+		//empty
+	}
+
 	DeltaHyperbolicity Pajek::runImpl(const graph_ptr_t graph) 
 	{
 		string fileName = graph->getTitle() + FileExtension;
@@ -46,9 +51,9 @@ namespace dhtoolkit
 	}
 
 
-	IGraphAlg* CreateAlgorithm()
+	IGraphAlg* CreateAlgorithm(const string& outputDir)
 	{
-		IGraphAlg* alg = new Pajek();
+		IGraphAlg* alg = new Pajek(outputDir);
 		return alg;
 	}
 

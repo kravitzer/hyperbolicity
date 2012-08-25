@@ -3,9 +3,17 @@
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
 #include <time.h>
+#include <string>
+
+using namespace std;
 
 namespace dhtoolkit
 {
+	DDSweep::DDSweep(const string& outputDir) : IGraphAlg(outputDir) 
+	{
+		//empty
+	}
+
 	DeltaHyperbolicity DDSweep::runImpl(const graph_ptr_t graph) 
 	{
 		GraphAlgorithms::DoubleSweepResult ds1 = GraphAlgorithms::DoubleSweep(graph);
@@ -37,12 +45,12 @@ namespace dhtoolkit
 
 
 
-	IGraphAlg* CreateAlgorithm()
+	IGraphAlg* CreateAlgorithm(const string& outputDir)
 	{
 		//initialize random seed (necessary before calling DoubleSweep() )
 		srand(static_cast<unsigned int>(time(nullptr)));
 
-		IGraphAlg* alg = new DDSweep();
+		IGraphAlg* alg = new DDSweep(outputDir);
 		return alg;
 	}
 

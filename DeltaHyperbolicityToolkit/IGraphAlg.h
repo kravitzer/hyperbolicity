@@ -8,6 +8,7 @@
 
 #include "defs.h"
 #include "DeltaHyperbolicity.h"
+#include <string>
 
 namespace dhtoolkit
 {
@@ -19,9 +20,10 @@ namespace dhtoolkit
 	{
 	public:
 		/*
-		 * @brief	Empty ctor.
+		 * @brief	Default ctor.
+		 * @param	outputDir	The folder into which outputs are to be written (if there are any).
 		 */
-		IGraphAlg();
+		IGraphAlg(const std::string& outputDir);
 
 		/*
 		 * @brief	Default dtor.
@@ -70,6 +72,9 @@ namespace dhtoolkit
 		 * @returns	The delta hyperbolicity that's the higher of the two.
 		 */
 		DeltaHyperbolicity runAndReturnBetter(const graph_ptr_t graph, const node_quad_t& state);
+
+		//the output dir into which any output files are to be written
+		std::string _outputDir;
 
 	private:
 		/*

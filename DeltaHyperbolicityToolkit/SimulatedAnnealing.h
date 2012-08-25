@@ -8,6 +8,7 @@
 
 #include "SADefs.h"
 #include "IGraphAlg.h"
+#include <string>
 
 namespace dhtoolkit
 {
@@ -58,6 +59,28 @@ namespace dhtoolkit
 	};
 
 	/*
+	 * @brief	An interface for a callback method that is called on every step of the SA process.
+	 */
+	class ISaCallbackFunction
+	{
+	public:
+		/*
+		 * @param	graph				The graph the SA process is running on.
+		 * @param	currentState		The current state in the SA process.
+		 * @param	currentDelta		The delta value of the current state.
+		 * @param	currentTemperature	The current temperature of the SA process.
+		 * @param	isFinal				When true - this is the last call to the callback function (i.e. process has ended). The values passed are not
+		 *								the "current", but the optimal ones observed in the process.
+		 */
+		virtual void callback(const graph_ptr_t graph, const node_quad_t& currentState, delta_t currentDelta, sa_temp_t currentTemperature, bool isFinal) = 0;
+
+		/*
+		 * @brief	Resets any internal state the instance might have, in order to start over when necessary.
+		 */
+		virtual void reset() = 0;
+	};
+
+	/*
 	 * @brief	An implementation for the simulated annealing algorithm.
 	 */
 	class SimulatedAnnealing : public IGraphAlg
@@ -65,10 +88,12 @@ namespace dhtoolkit
 	public:
 		/*
 		 * @brief	Ctor, initializes the SA process.
+		 * @param	outputDir				The dir into which outputs are to be written.
 		 * @param	probabilityFunction		The probability method to be used in the process.
 		 * @param	tempFunction			The temperature method to be used in the process.
+		 * @param	callbackFunction		The callback method to be called on every step of the SA (may be null).
 		 */
-		SimulatedAnnealing(sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction);
+		SimulatedAnnealing(const std::string& outputDir, sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction, sa_callback_func_ptr callbackFunction);
 
 		/*
 		 * @brief	Default dtor.
@@ -116,6 +141,7 @@ namespace dhtoolkit
 		sa_temp_t _temp;
 		sa_prob_func_ptr _probFunc;
 		sa_temp_func_ptr _tempFunc;
+		sa_callback_func_ptr _callbackFunc;
 	};
 
 } // namespace dhtoolkit

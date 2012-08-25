@@ -12,7 +12,7 @@
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 #include "DeltaHyperbolicityToolkit\IGraphAlg.h"
 
-typedef dhtoolkit::IGraphAlg* (*AlgCreationMethod)();
+typedef dhtoolkit::IGraphAlg* (*AlgCreationMethod)(const std::string& outputDir);
 typedef void (*AlgReleaseMethod)(dhtoolkit::IGraphAlg*);
 
 class AlgRunner
@@ -21,7 +21,7 @@ public:
 	/*
 	 * @param	dllPath		The dll to be loaded.
 	 */
-	AlgRunner(std::string dllPath);
+	AlgRunner(const std::string& dllPath, const std::string& outputDir);
 
 	/*
 	 * @brief	Dtor, releases algorithm instance.
@@ -56,6 +56,9 @@ private:
 
 	//the dll to be loaded
 	std::string _dllPath;
+
+	//the output directory
+	std::string _outputDir;
 
 	//handle to the loaded dll
 	std::shared_ptr<HINSTANCE__> _dll;

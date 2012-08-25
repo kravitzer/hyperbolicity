@@ -2,8 +2,17 @@
 #include "DeltaHyperbolicityToolkit\SADefs.h"
 #include "DeltaHyperbolicityToolkit\SimulatedAnnealing.h"
 #include "DeltaHyperbolicityToolkit\IGraphAlg.h"
+#include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
+#include "boost\format.hpp"
 #include <math.h>
 #include <time.h>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+const char SlashReplacement = '~';
+const string DrawingExtension = "net";
 
 namespace dhtoolkit
 {
@@ -62,14 +71,54 @@ namespace dhtoolkit
 	}
 
 
-	IGraphAlg* CreateAlgorithm()
+	DrawingCallback::DrawingCallback(const string& outputDir) : _runCount(-1), _outputDir(outputDir)
+	{
+		if ( (_outputDir.size() > 0) && (_outputDir[_outputDir.size()-1] != '\\') ) _outputDir += '\\';
+		reset();
+	}
+
+	void DrawingCallback::callback(const graph_ptr_t graph, const node_quad_t& currentState, delta_t currentDelta, sa_temp_t currentTemperature, bool isFinal)
+	{
+		if ( (_stepCount % DrawingInterval == 0) || (isFinal) )
+		{
+			//construct file name
+			string graphName = graph->getTitle();
+			replace(graphName.begin(), graphName.end(), '\\', SlashReplacement);
+
+			string fileName;
+			if (!isFinal)
+			{
+				fileName = (boost::format("%1%%2%_%3%_%4%_%5%_%6%.%7%") % _outputDir % graphName % _runCount % _stepCount % currentDelta % currentTemperature % DrawingExtension).str();
+			}
+			else
+			{
+				fileName = (boost::format("%1%%2%_%3%_%4%_%5%_%6%_final.%7%") % _outputDir % graphName % _runCount % _stepCount % currentDelta % currentTemperature % DrawingExtension).str();
+			}
+		
+			//draw graph
+			GraphAlgorithms::drawGraph(fileName, graph, &currentState);
+		}
+
+		//increment step count
+		++_stepCount;
+	}
+
+	void DrawingCallback::reset()
+	{
+		_stepCount = 0;
+		++_runCount;
+	}
+
+
+	IGraphAlg* CreateAlgorithm(const string& outputDir)
 	{
 		//initialize random seed (necessary before calling DoubleSweep() ).
 		srand( static_cast<unsigned int>(time(nullptr)) );
 
 		sa_prob_func_ptr probFunc(new ExpProbability);
 		sa_temp_func_ptr tempFunc(new IntervalTemperature);
-		IGraphAlg* alg = new SimulatedAnnealing(probFunc, tempFunc);
+		sa_callback_func_ptr callbackFunc(new DrawingCallback(outputDir));
+		IGraphAlg* alg = new SimulatedAnnealing(outputDir, probFunc, tempFunc, callbackFunc);
 		return alg;
 	}
 

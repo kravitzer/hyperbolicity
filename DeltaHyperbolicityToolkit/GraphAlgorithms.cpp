@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 using namespace std;
 
@@ -47,9 +48,18 @@ namespace dhtoolkit
 	{
 		shared_ptr<FILE> inputFile = OpenFile(path.c_str(), "rb", _SH_DENYWR);
 		
-		//create nodes
+		//create graph
+		string title = path;
+		size_t slashIndex = title.size();
+		for (unsigned int i = 0; (i < 3) && (slashIndex != string::npos); ++i)
+		{
+			slashIndex = title.find_last_of('\\', slashIndex-1);
+		}
+		if (slashIndex != string::npos) title = title.substr(slashIndex+1);
+		graph_ptr_t g(new Graph(title));
+
+		//create graph nodes
 		unsigned int nodeCount = ReadNodeCount(inputFile);
-		graph_ptr_t g(new Graph(path));
 		for (unsigned int i = 0; i < nodeCount; ++i) g->insertNode();
 
 		//create edges
@@ -362,12 +372,12 @@ namespace dhtoolkit
 
 	shared_ptr<FILE> GraphAlgorithms::OpenFile(const char* path, const char* mode, int share)
 	{
-		shared_ptr<FILE> f(_fsopen(path, mode, share), &fclose);
-		if (nullptr == f.get())
+		FILE* f = _fsopen(path, mode, share);
+		if (nullptr == f)
 		{
 			throw exception("Failed opening file");
 		}
-		return f;
+		return shared_ptr<FILE>(f, &fclose);;
 	}
 
 	void GraphAlgorithms::WriteNodeToFile(std::shared_ptr<FILE> filePtr, node_index_t nodeIndex, bool isLast)

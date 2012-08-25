@@ -3,12 +3,15 @@
 #include "Graph.h"
 #include "GraphAlgorithms.h"
 #include <random>
+#include <string>
+
+using namespace std;
 
 namespace dhtoolkit
 {
 
-	SimulatedAnnealing::SimulatedAnnealing(sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction) : IGraphAlg(),
-		_temp(0), _probFunc(probabilityFunction), _tempFunc(tempFunction)
+	SimulatedAnnealing::SimulatedAnnealing(const string& outputDir, sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction, sa_callback_func_ptr callback) : IGraphAlg(outputDir),
+		_temp(0), _probFunc(probabilityFunction), _tempFunc(tempFunction), _callbackFunc(callback)
 	{
 		//empty
 	}
@@ -58,6 +61,7 @@ namespace dhtoolkit
 	{
 		_probFunc->reset();
 		_tempFunc->reset();
+		_callbackFunc->reset();
 		_temp = _tempFunc->GetInitialTemperature();
 	}
 
@@ -78,6 +82,9 @@ namespace dhtoolkit
 		//loop as long as temperature is positive
 		while (_temp > 0)
 		{
+			//call callback method if exists
+			if (nullptr != _callbackFunc.get()) _callbackFunc->callback(graph, curState, curDelta, _temp, false);
+
 			//perform a single step
 			node_quad_t newState;
 			step(graph, curState, &newState);
@@ -106,6 +113,8 @@ namespace dhtoolkit
 				curDelta = newDelta;
 			}
 		}
+
+		if (nullptr != _callbackFunc.get()) _callbackFunc->callback(graph, maxState, maxDelta, _temp, true);
 
 		//return the maximal delta found throughout the process
 		return DeltaHyperbolicity(maxDelta, maxState);

@@ -2,11 +2,14 @@
 #include "defs.h"
 #include "Graph.h"
 #include "GraphAlgorithms.h"
+#include <string>
+
+using namespace std;
 
 namespace dhtoolkit
 {
 
-	IGraphAlg::IGraphAlg()
+	IGraphAlg::IGraphAlg(const string& outputDir) : _outputDir(outputDir)
 	{
 		//empty
 	}
