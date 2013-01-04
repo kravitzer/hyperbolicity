@@ -43,6 +43,8 @@ namespace dhtoolkit
 	sa_temp_t IntervalTemperature::TemperatureChange(sa_temp_t curTemp, delta_t curDelta, delta_t newDelta)
 	{
 		++_numOfIterations;
+        //TODO: remove patch
+        if (100 == _numOfIterations) return 0;
 
 		if ( (newDelta > curDelta) && (_numOfIterations - _lastChange > IterationInterval) )
 		{
@@ -79,6 +81,8 @@ namespace dhtoolkit
 
 	void DrawingCallback::callback(const graph_ptr_t graph, const node_quad_t& currentState, delta_t currentDelta, sa_temp_t currentTemperature, bool isFinal)
 	{
+        //TODO: patch... Remove next line to get drawings
+        return;
 		if ( (_stepCount % DrawingInterval == 0) || (isFinal) )
 		{
 			//construct file name

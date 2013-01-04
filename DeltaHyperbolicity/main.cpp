@@ -9,9 +9,14 @@
 #include <iomanip>
 #include <stdio.h>
 #include <boost\filesystem.hpp>
+#include <boost\tokenizer.hpp>
+#include <boost\lexical_cast.hpp>
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
 #include "DeltaHyperbolicityToolkit\defs.h"
 #include "DeltaHyperbolicityToolkit\IGraphAlg.h"
+#include "DeltaHyperbolicityToolkit\NodeDistances.h"
+#include "DeltaHyperbolicityToolkit\FurthestNode.h"
+#include "DeltaHyperbolicityToolkit\SpanningTree.h"
 
 using namespace std;
 using namespace dhtoolkit;
@@ -21,11 +26,12 @@ typedef vector<graph_ptr_t>			graph_collection_t;
 typedef shared_ptr<FILE>			file_ptr_t;
 typedef shared_ptr<AlgRunner>		alg_runner_ptr_t;
 typedef vector<alg_runner_ptr_t>	alg_runner_collection_t;
+typedef boost::tokenizer< boost::char_separator<char> > tokenizer;
 
 graph_collection_t graphs;
 string graphsTitle;
 string outputDir = ".\\";
-
+bool shouldCalculateUpperBound = true;
 
 //delete functor for shared pointer to an array (AKA shared array)
 template <typename T>
@@ -37,21 +43,56 @@ struct arrayDeleter
 	}
 };
 
+string getComputerName()
+{
+    const uint32_t InitialBufLen = 100;
+
+    DWORD bufLen = InitialBufLen;
+    vector<char> usernameBuffer(bufLen);
+
+
+    if (0 == GetComputerNameA(&usernameBuffer[0], &bufLen))
+    {
+        DWORD err = GetLastError();
+        //error code can represent an insufficient buffer size, or some other error. We can handle insufficient buffer size,
+        //if it's any other error - throw exception.
+        if (ERROR_INSUFFICIENT_BUFFER != err)
+        {
+            throw exception("Failed to retrieve computer name");
+        }
+
+        //ok, our buffer size is not large enough, let's take care of that. bufLen now holds the necessary length (including the null-terminator).
+        usernameBuffer.resize(bufLen);
+        if (0 == GetComputerNameA(&usernameBuffer[0], &bufLen))
+        {
+            //still an error?? this time we know the buffer size is sufficient, so we're gonna have to declare failure
+            throw exception("Failed to retrieve computer name");
+        }
+    }
+
+    //if we've reached this point - we've got the user name! The buffer is guaranteed to be null-terminated (by the API) so we
+    //can just let the string class parse it up to the null character, and return the result.
+    return string(&usernameBuffer[0]);
+}
+
 void printMenu()
 {
-	cout << "*******************************" << endl;
-	cout << "* 1. Load new graph.          *" << endl;
-	cout << "* 2. Load graph directory.    *" << endl;
-	cout << "* 3. Select output directory. *" << endl;
-	cout << "* 4. Run an algorithm(s).     *" << endl;
-	cout << "* 5. Exit.                    *" << endl;
-	cout << "*******************************" << endl;
+	cout << "**************************************" << endl;
+	cout << "* 1. Load new graph.                 *" << endl;
+	cout << "* 2. Load graph directory.           *" << endl;
+	cout << "* 3. Select output directory.        *" << endl;
+	cout << "* 4. Run an algorithm(s).            *" << endl;
+	cout << "* 5. Calculate delta on given nodes. *" << endl;
+    cout << "* 6. Calculate upper bound is: " << (shouldCalculateUpperBound ? "ON " : "OFF") << "   *" << endl;
+	cout << "* 7. Exit.                           *" << endl;
+	cout << "**************************************" << endl;
 	cout << endl;
 }
 
 void loadGraph(string graphPath)
 {
-	graphs.push_back( GraphAlgorithms::LoadGraphFromFile(graphPath.c_str()) );
+	graph_ptr_t curGraph = GraphAlgorithms::LoadGraphFromFile(graphPath.c_str());
+	graphs.push_back(curGraph);
 	
 	//if graph path is too long, trim the beginning, and display it
 	const unsigned int MaxPathLen = 20;
@@ -59,10 +100,10 @@ void loadGraph(string graphPath)
 	cout << "Graph " << graphPath.c_str() << " loaded successfully!" << endl;
 
 	//display stats before & after pruning trees
-	cout << "Graph has " << graphs[0]->size() << " nodes and " << graphs[0]->edgeCount() << " edges." << endl;
+	cout << "Graph has " << curGraph->size() << " nodes and " << curGraph->edgeCount() << " edges." << endl;
 	cout << "Pruning..." << endl;
-	GraphAlgorithms::PruneTrees(graphs[0]);
-	cout << "Graph now has " << graphs[0]->size() << " nodes and " << graphs[0]->edgeCount() << " edges." << endl;
+	curGraph->pruneTrees();
+	cout << "Graph now has " << curGraph->size() << " nodes and " << curGraph->edgeCount() << " edges." << endl;
 }
 
 void loadSingleGraph()
@@ -83,6 +124,54 @@ void loadSingleGraph()
 	}
 }
 
+void loadGraphDirectory(string dirPath)
+{
+    try
+    {
+        //make sure we were given a path to an existing folder
+        if (!fs::is_directory(dirPath))
+        {
+            cout << "Directory enterred does not exist" << endl;
+            return;
+        }
+
+        //clear the graph collection and iterate over all files in the folder
+        graphs.clear();
+        fs::recursive_directory_iterator end;
+        for (fs::recursive_directory_iterator it(dirPath); it != end; ++it)
+        {
+            try
+            {
+                //if the current path is a file - try to load it
+                fs::path curPath = it->path();
+                if (fs::is_regular(curPath))
+                {
+                    loadGraph(curPath.string());
+                    cout << endl;
+                }
+            }
+            catch (const exception&)
+            {
+                //loading failed - maybe it is not a graph file? skip to next file.
+            }
+        }
+
+        if (0 == graphs.size())
+        {
+            //not a single graph has been loaded :(
+            cout << "No valid graph files have been found, no graphs have been loaded!" << endl;
+        }
+        else
+        {
+            cout << graphs.size() << " graphs have been loaded!" << endl;
+        }
+    }
+    catch (const std::exception& e)
+    {
+        cout << "An error occurred while iterating the directory: " << e.what() << endl;
+    }
+}
+
 void loadGraphDirectory()
 {
 	string dirPath;
@@ -90,50 +179,7 @@ void loadGraphDirectory()
 	getline(cin, dirPath);
 	cout << endl;
 
-	try
-	{
-		//make sure we were given a path to an existing folder
-		if (!fs::is_directory(dirPath))
-		{
-			cout << "Directory enterred does not exist" << endl;
-			return;
-		}
-
-		//clear the graph collection and iterate over all files in the folder
-		graphs.clear();
-		fs::recursive_directory_iterator end;
-		for (fs::recursive_directory_iterator it(dirPath); it != end; ++it)
-		{
-			try
-			{
-				//if the current path is a file - try to load it
-				fs::path curPath = it->path();
-				if (fs::is_regular(curPath))
-				{
-					loadGraph(curPath.string());
-					cout << endl;
-				}
-			}
-			catch (const exception&)
-			{
-				//loading failed - maybe it is not a graph file? skip to next file.
-			}
-		}
-
-		if (0 == graphs.size())
-		{
-			//not a single graph has been loaded :(
-			cout << "No valid graph files have been found, no graphs have been loaded!" << endl;
-		}
-		else
-		{
-			cout << graphs.size() << " graphs have been loaded!" << endl;
-		}
-	}
-	catch (const std::exception& e)
-	{
-		cout << "An error occurred while iterating the directory: " << e.what() << endl;
-	}
+    loadGraphDirectory(dirPath);
 }
 
 void getOutputDirectory()
@@ -185,6 +231,8 @@ file_ptr_t createRawDataFile(const string& filePath, const alg_runner_collection
 		writeStringToFile(f, " Delta, ");
 		writeStringToFile(f, algName);
 		writeStringToFile(f, " Run Time, ");
+		writeStringToFile(f, algName);
+		writeStringToFile(f, " Nodes, ");
 	}
 
 	//move back 2 places to overwrite the last comma with a newline
@@ -229,6 +277,8 @@ file_ptr_t createSummaryFile(const string& filePath, const alg_runner_collection
 		writeStringToFile(f, " Time Variance, ");
 	}
 
+    if (shouldCalculateUpperBound) writeStringToFile(f, "Upper Bound, ");
+
 	//move back 2 places to overwrite the last comma with a newline
 	fseek(f.get(), -2, SEEK_CUR);
 	writeStringToFile(f, "\n");
@@ -247,6 +297,107 @@ string getCurrentTime()
 	s << setfill('0');
 	s << (1900+curTime.tm_year) << setw(2) << (1+curTime.tm_mon) << setw(2) << curTime.tm_mday << "_" << setw(2) << curTime.tm_hour << setw(2) << curTime.tm_min << setw(2) << curTime.tm_sec;
 	return s.str();
+}
+
+delta_t calculateUpperBoundWithSpanningTree(const graph_ptr_t g)
+{
+	//search for nodes with highest degree
+	node_collection_t highestDegreeNodes;
+	highestDegreeNodes.push_back(g->getNode(0));
+	unsigned int highestDegree = g->getNode(0)->getEdges().size();
+	
+	for (unsigned int i = 1; i < g->size(); ++i)
+	{
+		node_ptr_t cur = g->getNode(i);
+		if (cur->getEdges().size() >= highestDegree)
+		{
+			if (cur->getEdges().size() > highestDegree)
+			{
+				highestDegree = cur->getEdges().size();
+				highestDegreeNodes.clear();
+			}
+
+			highestDegreeNodes.push_back(cur);
+		}
+	}
+
+	const unsigned int MaxNodesToTry = 5;
+	delta_t lowestBound = InfiniteDelta;
+	//for each of the nodes with highest degree, up to the maximal number of trials,
+	//calculate spanning tree & calculate bound based on it. Keep the best bound found.
+	for (unsigned int i = 0; i < MaxNodesToTry && i < highestDegreeNodes.size(); ++i)
+	{
+		//calculate spanning tree & estimate diameter based on it.
+		const graph_ptr_t tree = SpanningTree(g, highestDegreeNodes[i]).getTree();
+		node_ptr_t furthest1 = FurthestNode(tree, tree->getNode(0)).getFurthestNodes()[0];
+		distance_t diameter = FurthestNode(tree, furthest1).getFurthestDistance();
+
+		//d1 <= diameter*2, delta <= d1/4 <= diameter*2/4
+		delta_t currentBound = static_cast<delta_t>(diameter)*2/4;
+
+		//update bound if a better one was found
+		if ( (InfiniteDelta == lowestBound) || (currentBound < lowestBound) ) lowestBound = currentBound;
+	}
+
+	return lowestBound;
+}
+
+delta_t calculateUpperBoundWithTrivialBound(const graph_ptr_t g)
+{
+	//calculate distances from an arbitrary node (i.e. the first one)
+	distance_dict_t distances = NodeDistances(g, g->getNode(0)).getDistances();
+    distance_t largestDistances[4];
+
+    //take the first 4 distances to be the maximal ones for now
+    distance_dict_t::const_iterator it = distances.cbegin();
+    largestDistances[0] = it->second;
+    ++it;
+    largestDistances[1] = it->second;
+    ++it;
+    largestDistances[2] = it->second;
+    ++it;
+    largestDistances[3] = it->second;
+
+    //sort those 4 distances such that the largest is first, lowest is last
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = i+1; j < 4; ++j)
+        {
+            if (largestDistances[j-1] < largestDistances[j])
+            {
+                int temp = largestDistances[j];
+                largestDistances[j] = largestDistances[j-1];
+                largestDistances[j-1] = temp;
+            }
+        }
+    }
+
+    //go thru all other distances in the distance map. Keep only the 4 largest distances after each step
+    for (; it != distances.cend(); ++it)
+    {
+        int k = 4;
+        if (it->second > largestDistances[0]) k = 0;
+        else if (it->second > largestDistances[1]) k = 1;
+        else if (it->second > largestDistances[2]) k = 2;
+        else if (it->second > largestDistances[3]) k = 3;
+
+        for (int i = k; i < 3; ++i)
+        {
+            largestDistances[i+1] = largestDistances[i];
+        }
+        if (k < 4) largestDistances[k] = it->second;
+    }
+
+    //upper bound is the sum of the 4 top distances over 4 (if not an integer, will be rounded down as it should)
+    return static_cast<delta_t>(largestDistances[0] + largestDistances[1] + largestDistances[2] + largestDistances[3]) / 4;
+}
+
+delta_t calculateUpperBound(graph_ptr_t g)
+{
+	delta_t b1 = calculateUpperBoundWithSpanningTree(g);
+	delta_t b2 = calculateUpperBoundWithTrivialBound(g);
+
+	return (b1 < b2 ? b1 : b2);
 }
 
 void runGivenAlgorithms(alg_runner_collection_t algorithms, file_ptr_t rawFile, file_ptr_t sumFile, unsigned int runsPerGraph)
@@ -331,7 +482,7 @@ void runGivenAlgorithms(alg_runner_collection_t algorithms, file_ptr_t rawFile, 
 
 					//write results to raw data file
 					stringstream rawData;
-					rawData << delta.getDelta() << ", " << timeElapsed;
+					rawData << delta.getDelta() << ", " << timeElapsed << ", {" << delta.printNodes() << "}";
 					if (algIndex != algorithms.size()-1) rawData << ", ";
 					writeStringToFile(rawFile, rawData.str());
 					fflush(rawFile.get());
@@ -358,6 +509,12 @@ void runGivenAlgorithms(alg_runner_collection_t algorithms, file_ptr_t rawFile, 
 			sumData << ", " << minTime.get()[i] << ", " << timeAvg << ", " << maxTime.get()[i] << ", " << timeVar << ", ";
 		}
 
+        if (shouldCalculateUpperBound)
+        {
+            delta_t upperBound = calculateUpperBound(graph);
+            sumData << upperBound << ", ";
+        }
+
 		string sumDataStr = sumData.str();
 		writeStringToFile(sumFile, sumDataStr.substr(0, sumDataStr.length()-2) + "\n");
 
@@ -365,7 +522,7 @@ void runGivenAlgorithms(alg_runner_collection_t algorithms, file_ptr_t rawFile, 
 	}
 }
 
-void runAlgorithms(unsigned int runsPerGraph)
+void runAlgorithms()
 {
 	//make sure a graph has already been loaded
 	if (0 == graphs.size())
@@ -374,10 +531,16 @@ void runAlgorithms(unsigned int runsPerGraph)
 		return;
 	}
 
-	//file names are "<current-date&time>_<graph-title>_<alg_1>_<alg_2>...<alg_n>.csv"
-	//so far we only have the date/time & graph title...
+	//get # of runs per graph
+	string runsPerGraphStr;
+	cout << "Please enter the number of times to run on each graph: ";
+	getline(cin, runsPerGraphStr);
+	int runsPerGraph = atoi(runsPerGraphStr.c_str());
+
+	//file names are "<current-date&time>_<graph-title>_<comp-name>_<alg_1>_<alg_2>...<alg_n>.csv"
+	//so far we only have the date/time, graph title & computer name...
 	stringstream fileName;
-	fileName << outputDir << getCurrentTime() << "_" << graphsTitle << "_";
+	fileName << outputDir << getCurrentTime() << "_" << graphsTitle << "_" << getComputerName() << "_";
 
 	//receive input for algorithm names
 	alg_runner_collection_t algorithms;
@@ -427,54 +590,192 @@ void runAlgorithms(unsigned int runsPerGraph)
 	runGivenAlgorithms(algorithms, rawFile, sumFile, runsPerGraph);
 }
 
-int main()
+void calculateDelta()
 {
-	const unsigned int RunsPerGraph = 5;
-	try
+	if (1 != graphs.size())
 	{
-		string input;
-		unsigned int choice = 0;
-
-		printMenu();
-		cout << "Please select from the menu above: ";
-		getline(cin, input);
-		stringstream(input) >> choice;
-
-		//start loop, loading algorithms requested by the user (unless "exit" is typed)
-		while (5 != choice)
-		{
-			cout << endl;
-			switch (choice)
-			{
-			case 1:
-				loadSingleGraph();
-				break;
-
-			case 2:
-				loadGraphDirectory();
-				break;
-
-			case 3:
-				getOutputDirectory();
-				break;
-
-			case 4:
-				runAlgorithms(RunsPerGraph);
-				break;
-			}
-			cout << endl;
-
-			//get next choice
-			printMenu();
-			cout << "Please select from the menu above: ";
-			getline(cin, input);
-			stringstream(input) >> choice;
-		}
+		cout << "You must have one and only one graph loaded to use this feature!" << endl;
+		return;
 	}
-	catch (const std::exception& e)
+
+	graph_ptr_t g = graphs[0];
+
+	string input;
+	cout << "Enter the node indices, separated by commas: ";
+	getline(cin, input);
+	
+	boost::char_separator<char> sep(", ");
+	tokenizer tokens(input, sep);
+	
+	tokenizer::iterator it = tokens.begin();
+	node_ptr_t nodes[4];
+	for (int i = 0; i < 4; ++i)
 	{
-		cout << "Exception caught: " << e.what() << endl;
+		nodes[i] = g->getNode( boost::lexical_cast<int>(*it) );
+		++it;
 	}
+
+	node_quad_t state(nodes[0], nodes[1], nodes[2], nodes[3]);
+	cout << "The delta value for this state is: " << GraphAlgorithms::CalculateDelta(g, state) << endl;
+}
+
+void printUsage(char* imageName)
+{
+    cout << "Usage (ui):\t\t" << imageName << endl;
+    cout << "Usage (single execution):\t" << imageName << " [-i input-file -o output-dir -n num-of-executions -a algorithm1 algorithm2 ...]" << endl;
+}
+
+void commandLineExecution(int argc, char** argv)
+{
+    if (argc < 9)
+    {
+        printUsage(argv[0]);
+        return;
+    }
+
+    if (stricmp(argv[1], "-i") != 0 || stricmp(argv[3], "-o") != 0 || stricmp(argv[5], "-n") != 0 || stricmp(argv[7], "-a") != 0 )
+    {
+        printUsage(argv[0]);
+        return;
+    }
+
+    char* input = argv[2];
+    string myOutputDir(argv[4]);
+    unsigned int n = atoi(argv[6]);
+    vector<string> algs;
+    for (int i = 8; i < argc; ++i)
+    {
+        algs.push_back(string(argv[i]));
+    }
+
+
+    //load inputs
+    if (boost::filesystem::is_directory(input))
+    {
+        loadGraphDirectory(input);
+    }
+    else
+    {
+        loadGraph(input);
+    }
+
+    //set output folder
+    if (myOutputDir[myOutputDir.size()-1] != '\\') myOutputDir += '\\';
+
+    if (boost::filesystem::is_directory(myOutputDir))
+    {
+        outputDir = myOutputDir;
+    }
+    else
+    {
+        throw std::exception("Invalid output directory");
+    }
+
+    //run algorithm!
+    alg_runner_collection_t algorithms;
+    stringstream fileName;
+    fileName << outputDir << getCurrentTime() << "_" << graphsTitle << "_" << getComputerName() << "_";
+    for (vector<string>::const_iterator it = algs.cbegin(); it != algs.cend(); ++it)
+    {
+        //note: alg runner must be declared *outside* of the try/catch block, because an exception thrown
+        //inside the block may be thrown from the dll itself, in which case having it inside the block would
+        //cause it to be destructed (i.e. the dll freed) before the exception instance is destroyed! When trying
+        //to deallocate the exception instance, an access violation will occur as the dll is no longer loaded.
+        alg_runner_ptr_t alg(new AlgRunner(*it, outputDir));
+        try
+        {
+            //load the algorithm dll and add it to the algorithm collection
+            alg->load();
+            algorithms.push_back(alg);
+        }
+        catch (const exception& ex)
+        {
+            //loading/adding of dll failed
+            cout << "An error occurred while loading the algorithm: " << ex.what() << endl;
+        }
+
+        fileName << alg->getName() << "_";
+    }
+
+    string fileNameStr = fileName.str();
+    file_ptr_t rawFile = createRawDataFile(fileNameStr.substr(0, fileNameStr.length()-1) + "_raw.csv", algorithms);
+    file_ptr_t sumFile = createSummaryFile(fileNameStr.substr(0, fileNameStr.length()-1) + "_sum.csv", algorithms);
+
+
+    runGivenAlgorithms(algorithms, rawFile, sumFile, n);
+}
+
+void uiExecution()
+{
+    try
+    {
+        string input;
+        unsigned int choice = 0;
+
+        printMenu();
+        cout << "Please select from the menu above: ";
+        getline(cin, input);
+        stringstream(input) >> choice;
+
+        //start loop, loading algorithms requested by the user (unless "exit" is typed)
+        while (7 != choice)
+        {
+            cout << endl;
+            switch (choice)
+            {
+            case 1:
+                loadSingleGraph();
+                break;
+
+            case 2:
+                loadGraphDirectory();
+                break;
+
+            case 3:
+                getOutputDirectory();
+                break;
+
+            case 4:
+                runAlgorithms();
+                break;
+
+			case 5:
+				calculateDelta();
+				break;
+
+            case 6:
+                shouldCalculateUpperBound = !shouldCalculateUpperBound;
+                break;
+            }
+            cout << endl;
+
+            //get next choice
+            printMenu();
+            cout << "Please select from the menu above: ";
+            getline(cin, input);
+            stringstream(input) >> choice;
+        }
+    }
+	catch (const boost::exception&)
+	{
+		cout << "Boost exception caught" << endl;
+	}
+    catch (const std::exception& e)
+    {
+        cout << "Exception caught: " << e.what() << endl;
+    }
+}
+
+int main(int argc, char** argv)
+{
+	if (1 == argc)
+    {
+        uiExecution();
+    }
+    else
+    {
+        commandLineExecution(argc, argv);
+    }
 
 	return 0;
 }

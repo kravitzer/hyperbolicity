@@ -8,6 +8,7 @@
 
 #include "defs.h"
 #include "State.h"
+#include <string>
 
 namespace dhtoolkit
 {
@@ -40,6 +41,11 @@ public:
 	 * @throws	DataUnavailableException	If this instance was created without specifying these nodes.
 	 */
 	const node_quad_t& getNodes() const;
+
+	/*
+	 * @returns	A textual representation of the nodes this delta represents, e.g.: "3, 110, 166, 201".
+	 */
+	std::string printNodes() const;
 
 	//allow default copy ctor / assignment operator
 	//DeltaHyperbolicity(const DeltaHyperbolicity&);

@@ -9,6 +9,7 @@
 #include "DeltaHyperbolicity.h"
 #include "Graph.h"
 #include <vector>
+#include <queue>
 
 namespace dhtoolkit
 {
@@ -30,7 +31,7 @@ namespace dhtoolkit
 		 * @brief	Saves the given graph to a file.
 		 * @param	graph	The graph to be saved.
 		 * @param	path	The file path where the graph is to be stored.
-		 * @throws	std::exception	Upon an I/O failure.
+		 * @throws	std::exception	Upon an I/O failure or if graph is empty.
 		 * @note	The method will overwrite any previously existing file in the given path.
 		 */
 		static void SaveGraphToFile(const graph_ptr_t graph, const std::string& path);
@@ -71,38 +72,6 @@ namespace dhtoolkit
 		 * @returns	The delta obtained from the 3 distance pairs.
 		 */
 		static delta_t CalculateDeltaFromDistances(distance_t d1, distance_t d2, distance_t d3);
-
-		/*
-		 * @brief	Runs Dijkstra's algorithm, to find the distance between the given origin node and the various given
-		 *			destination nodes.
-		 * @param	graph	The graph to run on.
-		 * @param	origin	The origin node from where the distances are measures.
-		 * @param	destination	The destination nodes - upon finding the distances to all these nodes, 
-		 *						the algorithm will stop & return.
-		 * @returns	A dictionary where each of the destination nodes is mapped to its distance from the origin node.
-		 * @throws	InvalidParamException	If any of the nodes is invalid (i.e. null) or if they are not part of the graph.
-		 */
-		static distance_dict_t Dijkstra(const graph_ptr_t graph, const node_ptr_t origin, const node_collection_t& destination);
-
-		/*
-		 * @brief	Runs Dijkstra's algorithm, starting from the given node.
-		 * @param	graph	The graph to run on.
-		 * @param	origin	The origin node from where the distances are measures.
-		 * @returns	A dictionary where each node of the graph is mapped to its distance from the origin node.
-		 * @throws	InvalidParamException	Upon an invalid node (null pointer) or if node is not part of the graph.
-		 */
-		static distance_dict_t Dijkstra(const graph_ptr_t graph, const node_ptr_t origin);
-
-		/*
-		 * @brief	Runs Dijkstra's algorithm, to find the distance between the given nodes.
-		 * @param	graph	The graph to run on.
-		 * @param	origin	The origin node from where the distances are measures.
-		 * @param	destination	The destination node - upon finding the distance to this node the algorithm will stop & return.
-		 * @returns	The distance between origin and destination nodes.
-		 * @throws	InvalidParamException	If any of the nodes is invalid (i.e. null) or if they are not part of the graph.
-		 */
-		static distance_t Dijkstra(const graph_ptr_t graph, const node_ptr_t origin, const node_ptr_t destination);
-
 		/*
 		 * @brief	Runs a double-sweep on the given node. If several nodes are "the furthest", selects one randomly (equally distributed).
 		 * @param	graph	The graph to run on.
@@ -113,12 +82,6 @@ namespace dhtoolkit
 		 *			you might get the same results each run!
 		 */
 		static DoubleSweepResult DoubleSweep(const graph_ptr_t graph, const node_ptr_t origin = node_ptr_t(nullptr));
-
-		/*
-		 * @brief	Prunes trees from the graph. I.e. removes all nodes with degree 0 or 1 (and those that become of this degree as a result
-		 *			of these deletions, recursively).
-		 */
-		static void PruneTrees(graph_ptr_t graph);
 
 	private:
 		static const int NodeIndexMaxNumOfDigits;
@@ -133,17 +96,6 @@ namespace dhtoolkit
 			node_index_t src;
 			node_index_t dst;
 		};
-
-		/*
-		 * @brief	Removes the given current node and recursively calls itself on its neighbor (if exists).
-		 * @param	graph			The graph to prune.
-		 * @param	curNode			The current node to delete. Must have degree 0 or 1.
-		 * @param	originalNode	The node the recursion started with (i.e. first call to this method will have 
-		 *							both curNode and originalNode pointing at the same node).
-		 * @returns	The number of nodes whose index is <= originalNode's index that were removed due to the pruning.
-		 * @throws	std::exception	If the current node's degree is greater than 1.
-		 */
-		static unsigned int pruneTreesRecursion(graph_ptr_t graph, node_ptr_t curNode, node_ptr_t originalNode);
 
 		/*
 		 * @param	node			The node to be checked.

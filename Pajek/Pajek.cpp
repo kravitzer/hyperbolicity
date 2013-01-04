@@ -23,6 +23,7 @@ namespace dhtoolkit
 		string fileName = graph->getTitle() + FileExtension;
 		//if file name contains slashes - replace them with underscores (so that the file is saved in the local dir rather than someplace else...)
 		replace(fileName.begin(), fileName.end(), '\\', SlashReplacement);
+		fileName = _outputDir + fileName;
 
 		GraphAlgorithms::drawGraph(fileName, graph, nullptr);
 		
@@ -37,6 +38,7 @@ namespace dhtoolkit
 		string fileName = graph->getTitle() + FileExtension;
 		//if file name contains slashes - replace them with underscores (so that the file is saved in the local dir rather than someplace else...)
 		replace(fileName.begin(), fileName.end(), '\\', SlashReplacement);
+		fileName = _outputDir + fileName;
 
 		GraphAlgorithms::drawGraph(fileName, graph, &initialState);
 

@@ -134,8 +134,10 @@ namespace dhtoolkit
 		 * @param	graph			The graph to run on.
 		 * @param	curState		The current state for whom we find a neighboring state.
 		 * @param	This parameter is set to a new state that is one step away from the current state.
+         * @returns The index of the node in the state structure that changed (NOTE: not the index of the node,
+         *          but the index in the state collection! e.g. b/w 0 to 3!!).
 		 */
-		void step(const graph_ptr_t graph, const node_quad_t& curState, node_quad_t* newState) const;
+		unsigned int step(const graph_ptr_t graph, const node_quad_t& curState, node_quad_t* newState) const;
 
 		//SA parameters (see ctor for details)
 		sa_temp_t _temp;

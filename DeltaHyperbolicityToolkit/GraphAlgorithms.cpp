@@ -1,11 +1,14 @@
 #include "GraphAlgorithms.h"
 #include "Except.h"
 #include "defs.h"
+#include "FurthestNode.h"
+#include "NodeDistances.h"
 #include "boost/format.hpp"
 #include <memory>
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <queue>
 
 using namespace std;
 
@@ -23,6 +26,8 @@ namespace dhtoolkit
 
 	void GraphAlgorithms::SaveGraphToFile(const graph_ptr_t graph, const std::string& path)
 	{
+		if (0 == graph->size()) throw exception("Cannot save empty graph!");
+
 		shared_ptr<FILE> outputFile = OpenFile(path.c_str(), "w", _SH_DENYRW);
 		//write all nodes but last
 		for (unsigned int i = 0; i < graph->size() - 1; ++i)
@@ -93,11 +98,11 @@ namespace dhtoolkit
 
 			if (isNodeToBeMarked(curNode, nodesToMark))
 			{
-				vertices += (boost::format("%1% \"%2%\" ic Blue\n") % (i+1) % (i+1)).str();
+				vertices += (boost::format("%1% \"%2%\" ic Blue\n") % (i+1) % i).str();
 			}
 			else
 			{
-				vertices += (boost::format("%1% \"%2%\" ic Red\n") % (i+1) % (i+1)).str();
+				vertices += (boost::format("%1% \"%2%\" ic Red\n") % (i+1) % i).str();
 			}
 
 			edges += (boost::format("%1%") % (i+1)).str();
@@ -126,15 +131,18 @@ namespace dhtoolkit
 		nodeCollection.push_back(state[3]);
 
 		//calculate distances from v0 to v1, v2, v3
-		distance_dict_t v0dists = GraphAlgorithms::Dijkstra(graph, state[0], nodeCollection);
+		NodeDistances NDFromS0(graph, state[0]);
+		distance_dict_t v0dists = NDFromS0.getDistances(nodeCollection);
 
 		//calculate distances from v1 to v2, v3
 		nodeCollection.erase(nodeCollection.begin());
-		distance_dict_t v1dists = GraphAlgorithms::Dijkstra(graph, state[1], nodeCollection);
+		NodeDistances NDFromS1(graph, state[1]);
+		distance_dict_t v1dists = NDFromS1.getDistances(nodeCollection);
 
 		//calculate distances from v2 to v3
 		nodeCollection.erase(nodeCollection.begin());
-		distance_dict_t v2dists = GraphAlgorithms::Dijkstra(graph, state[2], nodeCollection);
+		NodeDistances NDFromS2(graph, state[2]);
+		distance_dict_t v2dists = NDFromS2.getDistances(nodeCollection);
 
 		//d1 = dist(v0, v1) + dist(v2, v3)
 		//d2 = dist(v0, v2) + dist(v1, v3)
@@ -173,99 +181,6 @@ namespace dhtoolkit
 		return static_cast<delta_t>(largest-secondLargest)/2;
 	}
 
-	distance_dict_t GraphAlgorithms::Dijkstra(const graph_ptr_t graph, const node_ptr_t origin, const node_collection_t& destination)
-	{
-		if (nullptr == origin.get()) throw InvalidParamException("Origin node is null");
-		for (node_collection_t::const_iterator it = destination.cbegin(); it != destination.cend(); ++it)
-		{
-			if ( (nullptr == it->get()) || (!graph->hasNode(*it)) ) throw InvalidParamException("Destination node is invalid");
-		}
-
-		//create the distance vector and initizlize all distances to infinity
-		distance_dict_t distance;
-		for (unsigned int i = 0; i < graph->size(); ++i)
-		{
-			distance[i] = InfiniteDistance;
-		}
-
-		//origin node is at distance 0, obviously
-		distance[origin->getIndex()] = 0;
-
-		//create the collection of nodes remaining to process (all nodes in the graph, at this point)
-		distance_dict_t remainingNodes(graph->size());
-		for (unsigned int i = 0; i < graph->size(); ++i)
-		{
-			remainingNodes[i] = i;
-		}
-
-		//run loop until there are no more nodes left, or until we found the nodes we're looking for
-		unsigned int nodesFound = 0;
-		while ( (remainingNodes.size() > 0) && (nodesFound < destination.size()) )
-		{
-			//in the remaining node collection, find the node whose distance to the origin is the smallest
-			node_index_t shortestDistanceNode = (remainingNodes.begin())->first;
-			for (distance_dict_t::const_iterator it = remainingNodes.cbegin(); it != remainingNodes.cend(); ++it)
-			{
-				//if current node's distance is infinity, then there's no way it is less than the currently shortest path, so skip
-				if (InfiniteDistance == distance[it->first]) continue;
-
-				//if current shortest path is infinity, or if the current node has a shorter path, update the shortest path
-				if ( (InfiniteDistance == distance[shortestDistanceNode]) || (distance[it->first] < distance[shortestDistanceNode]) ) shortestDistanceNode = it->first;
-			}
-
-			//if all nodes are infinitely far from the origin, we're done, as we won't make any progress
-			if (InfiniteDistance == distance[shortestDistanceNode]) break;
-
-			//remove the currently processed node from the remaining node collection
-			remainingNodes.erase(shortestDistanceNode);
-
-			//iterate through node's neighbors
-			node_collection_t neighbors = graph->getNode(shortestDistanceNode)->getEdges();
-			for (node_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
-			{
-				node_index_t curNode = (*it)->getIndex();
-
-				//skip neighbors that are not in the reamining node collection, as we've already found a shorter path to them
-				if (remainingNodes.end() == remainingNodes.find(curNode)) continue;
-
-				distance_t curNodeDistance = distance[curNode];
-				unsigned int pathLen = distance[shortestDistanceNode] + 1;
-				if ( (curNodeDistance == InfiniteDistance) || (static_cast<distance_t>(pathLen) < curNodeDistance) )
-				{
-					distance[curNode] = pathLen;
-					//increment the count of nodes found if this is one of the nodes we were looking for
-					if (find(destination.cbegin(), destination.cend(), *it) != destination.cend()) ++nodesFound;
-				}
-
-				//exit loop if we found all the nodes we were looking for
-				if (destination.size() == nodesFound) break;
-			}
-		}
-
-		//build the distance dictionary for the requested nodes only
-		if (destination.size() == distance.size()) return distance;
-		distance_dict_t ret;
-		for (node_collection_t::const_iterator it = destination.cbegin(); it != destination.cend(); ++it)
-		{
-			ret[(*it)->getIndex()] = distance[(*it)->getIndex()];
-		}
-		return ret;
-	}
-
-	distance_dict_t GraphAlgorithms::Dijkstra(const graph_ptr_t graph, const node_ptr_t origin)
-	{
-		node_collection_t graphNodes(graph->size());
-		for (unsigned int i = 0; i < graph->size(); ++i) graphNodes[i] = graph->getNode(i);
-		return Dijkstra(graph, origin, graphNodes);
-	}
-
-	distance_t GraphAlgorithms::Dijkstra(const graph_ptr_t graph, const node_ptr_t origin, const node_ptr_t destination)
-	{
-		node_collection_t nodeCollection(1);
-		nodeCollection[0] = destination;
-		return Dijkstra(graph, origin, nodeCollection)[destination->getIndex()];
-	}
-
 	GraphAlgorithms::DoubleSweepResult GraphAlgorithms::DoubleSweep(const graph_ptr_t graph, const node_ptr_t origin /* = node_ptr_t(nullptr) */)
 	{
 		node_ptr_t startNode = origin;
@@ -276,7 +191,8 @@ namespace dhtoolkit
 		}
 
 		//perform the double sweep
-		node_ptr_t firstSweepNode = Sweep(graph, startNode, nullptr, nullptr);
+		FurthestNode fn(graph, startNode);
+		node_ptr_t firstSweepNode = fn.getFurthestNodes()[0];
 		distance_t dist = 0;
 		distance_dict_t distanceCollection;
 		node_ptr_t secondSweepNode = Sweep(graph, firstSweepNode, &dist, &distanceCollection);
@@ -289,47 +205,6 @@ namespace dhtoolkit
 		res.uDistances = distanceCollection;
 
 		return res;
-	}
-
-	void GraphAlgorithms::PruneTrees(graph_ptr_t graph)
-	{
-		for (unsigned int i = 0; i < graph->size(); ++i)
-		{
-			node_ptr_t node = graph->getNode(i);
-
-			//check if current node needs to be pruned
-			if (node->getEdges().size() <= 1)
-			{
-				//prune node recursively
-				i -= pruneTreesRecursion(graph, node, node);
-			}
-		}
-	}
-
-	unsigned int GraphAlgorithms::pruneTreesRecursion(graph_ptr_t graph, node_ptr_t curNode, node_ptr_t originalNode)
-	{
-		node_collection_t edges = curNode->getEdges();
-		size_t edgesLen = edges.size();
-		unsigned int nodesRemoved = 0;
-
-		//assert degree is <= 1
-		if (edgesLen > 1) throw std::exception("Pruned node degree is > 1");
-		
-		//if node has a neighbor (can have only 1, if any), remember it before we remove the edge
-		node_ptr_t neighbor(nullptr);
-		if (1 == edgesLen) neighbor = edges[0];
-
-		//prune node from graph, and add 1 to node removal count if it is <= the original node (i.e. comes before it
-		//in the graph's node enumeration).
-		graph->removeNode(curNode);
-		if (curNode->getIndex() <= originalNode->getIndex()) ++nodesRemoved;
-
-		//if the pruned node had a neighbor, and it has now become a leaf, prune it recursively
-		if ( (nullptr != neighbor.get()) && (neighbor->getEdges().size() <= 1) ) nodesRemoved += pruneTreesRecursion(graph, neighbor, originalNode);
-
-		//the number returned here is the number of nodes we need to go back in the node iteration of the graph (since this
-		//many nodes have been removed prior to the original node)
-		return nodesRemoved;
 	}
 
 	bool GraphAlgorithms::isNodeToBeMarked(node_ptr_t node, const node_quad_t* nodesToMark)
@@ -346,28 +221,31 @@ namespace dhtoolkit
 
 	node_ptr_t GraphAlgorithms::Sweep(const graph_ptr_t graph, const node_ptr_t origin, distance_t* dist, distance_dict_t* distancesFromU)
 	{
-		distance_dict_t startNodeDistances = Dijkstra(graph, origin);
+		NodeDistances NDFromOrigin(graph, origin);
+		distance_dict_t startNodeDistances = NDFromOrigin.getDistances();
 		if (distancesFromU) *distancesFromU = startNodeDistances;
 
-		//find the maximal distance
+		//find nodes at maximal distance
+        node_collection_t furthestNodes;
 		distance_t maxDistance = 0;
 		for (distance_dict_t::const_iterator it = startNodeDistances.cbegin(); it != startNodeDistances.cend(); ++it)
 		{
 			if (InfiniteDistance == it->second) continue;
-			if (it->second > maxDistance) maxDistance = it->second;
-		}
-
-		//get the nodes that are furthest from the origin (i.e. maxDistance away)
-		node_collection_t furthestNode;
-		for (distance_dict_t::const_iterator it = startNodeDistances.cbegin(); it != startNodeDistances.cend(); ++it)
-		{
-			if (maxDistance == it->second) furthestNode.push_back(graph->getNode(it->first));
+			if (it->second >= maxDistance)
+            {
+                if (it->second > maxDistance)
+                {
+                    furthestNodes.clear();
+                    maxDistance = it->second;
+                }
+                furthestNodes.push_back(graph->getNode(it->first));
+            }
 		}
 
 		//randomly select node out of the furthest nodes
-		unsigned int selectedNodeIndex = rand() % furthestNode.size();
+		unsigned int selectedNodeIndex = rand() % furthestNodes.size();
 		if (dist) *dist = maxDistance;
-		return furthestNode[selectedNodeIndex];
+		return furthestNodes[selectedNodeIndex];
 	}
 
 	shared_ptr<FILE> GraphAlgorithms::OpenFile(const char* path, const char* mode, int share)
@@ -392,11 +270,11 @@ namespace dhtoolkit
 		int nodeIndexLen = 0;
 		if (isLast)
 		{
-			nodeIndexLen = sprintf_s(nodeIndexString, "%s%s", nodeIndex, Delimiter);
+			nodeIndexLen = sprintf_s(nodeIndexString, "%d%s", nodeIndex, Delimiter);
 		}
 		else
 		{
-			nodeIndexLen = sprintf_s(nodeIndexString, "%s, ", nodeIndex);
+			nodeIndexLen = sprintf_s(nodeIndexString, "%d, ", nodeIndex);
 		}
 
 		//check for errors and write to file

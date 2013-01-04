@@ -55,6 +55,21 @@ public:
 	 */
 	node_index_t getIndex() const;
 
+	/*
+	 * @returns	Whether or not the node is currently  marked.
+	 */
+	bool isMarked() const;
+
+	/*
+	 * @brief	Marks the current node.
+	 */
+	void mark() const;
+
+	/*
+	 * @brief	Unmarks the current node.
+	 */
+	void unmark() const;
+
 private:
 	//do *not* allow copy ctor / assignment operator
 	Node(const Node&);
@@ -77,6 +92,7 @@ private:
 	node_index_t _index;
 	node_collection_t _outgoingEdges;
 	node_collection_t _incomingEdges;
+	mutable bool _isMarked;
 };
 
 } // namespace dhtoolkit

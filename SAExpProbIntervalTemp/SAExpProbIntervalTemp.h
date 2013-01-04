@@ -77,7 +77,7 @@ namespace dhtoolkit
 		void reset();
 
 	private:
-		static const unsigned int IterationInterval = 25;
+		static const unsigned int IterationInterval = 5;
 		static const sa_temp_t InitialTemp;
 		static const sa_temp_t TerminationThreshold;
 

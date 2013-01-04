@@ -21,7 +21,7 @@ namespace dhtoolkit
 		
 		unsigned int numOfTrials = 1;
 
-		while ( (ds1.u == ds2.u) || (ds1.v == ds2.u) || (ds1.u == ds2.v) || (ds1.v == ds2.v) )
+		while ( (ds1.u == ds2.u) || (ds1.v == ds2.u) || (ds1.u == ds2.v) || (ds1.v == ds2.v) || (ds1.u == ds1.v) || (ds2.u == ds2.v) )
 		{
 			if (numOfTrials >= MaxNumOfTrials) throw std::exception("Exceeded the maximal number of trials allowed!");
 			ds2 = GraphAlgorithms::DoubleSweep(graph);

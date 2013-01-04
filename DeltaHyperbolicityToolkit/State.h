@@ -2,6 +2,7 @@
 #define DELTAHYPER_STATE_H
 
 #include "defs.h"
+#include <string>
 
 namespace dhtoolkit
 {
@@ -22,6 +23,13 @@ namespace dhtoolkit
 		 * @throws	std::exception If the same node is inserted twice (or more).
 		 */
 		State(const node_ptr_t n1, const node_ptr_t n2, const node_ptr_t n3, const node_ptr_t n4);
+
+		/*
+		 * @brief	Resets the state to the given nodes.
+		 * @param	n_i		The i-th node.
+		 * @throws	std::exception If the same node is inserted twice (or more).
+		 */
+		void reset(const node_ptr_t n1, const node_ptr_t n2, const node_ptr_t n3, const node_ptr_t n4);
 
 		/*
 		 * @brief	Trivial copy ctor & assignment operator. (Default implementation)
@@ -45,6 +53,11 @@ namespace dhtoolkit
 		 * @returns	The number of nodes stored in the state.
 		 */
 		static unsigned int size();
+
+		/*
+		 * @returns	A textual representation of the nodes this delta represents, e.g.: "3, 110, 166, 201".
+		 */
+		std::string printNodes() const;
 
 	private:
 		static const int NumberOfNodes = 4;

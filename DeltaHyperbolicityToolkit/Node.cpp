@@ -3,7 +3,7 @@
 
 namespace dhtoolkit
 {
-	Node::Node(node_index_t index) : _index(index), _outgoingEdges(), _incomingEdges()
+	Node::Node(node_index_t index) : _index(index), _outgoingEdges(), _incomingEdges(), _isMarked(false)
 	{
 		//empty
 	}
@@ -55,6 +55,21 @@ namespace dhtoolkit
 	node_index_t Node::getIndex() const
 	{
 		return _index;
+	}
+
+	bool Node::isMarked() const
+	{
+		return _isMarked;
+	}
+
+	void Node::mark() const
+	{
+		_isMarked = true;
+	}
+
+	void Node::unmark() const
+	{
+		_isMarked = false;
 	}
 
 	void Node::setIndex(node_index_t newIndex)

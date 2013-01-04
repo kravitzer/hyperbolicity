@@ -61,4 +61,4 @@ DeltaHyperbolicity AlgRunner::runWithInitialState(const graph_ptr_t graph, const
 string AlgRunner::getName() const
 {
 	return _dllPath;
-}
+}	

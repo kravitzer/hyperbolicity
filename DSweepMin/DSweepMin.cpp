@@ -1,4 +1,4 @@
-#include "DSweep.h"
+#include "DSweepMin.h"
 #include "DeltaHyperbolicityToolkit\defs.h"
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
@@ -10,6 +10,8 @@ using namespace std;
 
 namespace dhtoolkit
 {
+    const distance_t MaxDistance = INT_MAX;
+
 	DSweep::DSweep(const string& outputDir) : IGraphAlg(outputDir) 
 	{
 		//empty
@@ -23,11 +25,11 @@ namespace dhtoolkit
 		node_ptr_t& v1 = ds.u;
 		node_ptr_t& v2 = ds.v;
 		distance_dict_t& v1Dists = ds.uDistances;
-		distance_dict_t v2Dists = NodeDistances(graph, v2).getDistances();;
+		distance_dict_t v2Dists = NodeDistances(graph, v2).getDistances();
 
 		distance_t distV1V2 = v1Dists[v2->getIndex()];
-		distance_t distV1V3 = 0;
-		distance_t distV2V3 = 0;
+		distance_t distV1V3 = MaxDistance;
+		distance_t distV2V3 = MaxDistance;
 		node_collection_t v3Candidates;
 
 		for (unsigned int i = 0; i < graph->size(); ++i)
@@ -37,12 +39,13 @@ namespace dhtoolkit
 
 			distance_t distFromV1 = v1Dists[curNode->getIndex()];
 			distance_t distFromV2 = v2Dists[curNode->getIndex()];
+            if ( (InfiniteDistance == distFromV1) || (InfiniteDistance == distFromV2) ) continue;
 
 			if ( (distFromV1 <= distFromV2 && distFromV2 <= distFromV1 + 1) || (distFromV2 <= distFromV1 && distFromV1 <= distFromV2 + 1) )
 			{
-				if ( (distFromV2 >= distV2V3) && (distFromV1 >= distV1V3) )
+				if ( (distFromV2 <= distV2V3) && (distFromV1 <= distV1V3) )
 				{
-					if ( (distFromV2 > distV2V3) || (distFromV1 > distV1V3) )
+					if ( (distFromV2 < distV2V3) || (distFromV1 < distV1V3) )
 					{
 						distV2V3 = distFromV2;
 						distV1V3 = distFromV1;
@@ -71,6 +74,8 @@ namespace dhtoolkit
 			distance_t distFromV1 = v1Dists[curNode->getIndex()];
 			distance_t distFromV2 = v2Dists[curNode->getIndex()];
 			distance_t distFromV3 = v3Dists[curNode->getIndex()];
+
+            if ( (InfiniteDistance == distFromV1) || (InfiniteDistance == distFromV2) || (InfiniteDistance == distFromV3) ) continue;
 
 			distance_t d1 = distV1V2 + distFromV3;
 			distance_t d2 = distV1V3 + distFromV2;

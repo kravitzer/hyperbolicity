@@ -1,6 +1,9 @@
 #include "DeltaHyperbolicity.h"
 #include "defs.h"
 #include "GraphAlgorithms.h"
+#include <string>
+
+using namespace std;
 
 namespace dhtoolkit
 {
@@ -22,5 +25,10 @@ namespace dhtoolkit
 	const node_quad_t& DeltaHyperbolicity::getNodes() const
 	{
 		return _nodes;
+	}
+
+	string DeltaHyperbolicity::printNodes() const
+	{
+		return _nodes.printNodes();
 	}
 } // namespace dhtoolkit

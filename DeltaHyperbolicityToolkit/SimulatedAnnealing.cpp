@@ -2,6 +2,7 @@
 #include "SADefs.h"
 #include "Graph.h"
 #include "GraphAlgorithms.h"
+#include "NodeDistances.h"
 #include <random>
 #include <string>
 
@@ -35,9 +36,12 @@ namespace dhtoolkit
 			//select a random node, then make sure none of the previous nodes is the same as this one
 			do
 			{
-				//select a random node
+                //select a random node
 				node_index_t index = rand() % graph->size();
 				randomState[i] = graph->getNode(index);
+
+                //assume unique until proven otherwise
+                isUnique = true;
 
 				//compare to all previous nodes
 				for (unsigned int j = 0; (j < i) && isUnique; ++j)
@@ -72,13 +76,46 @@ namespace dhtoolkit
 
 		//copy initial state as current state
 		maxState = curState = initialState;
-		maxDelta = curDelta = GraphAlgorithms::CalculateDelta(graph, curState);
 
-		//TODO: optimization - for each current state we can hold the Dijksra's of each of its nodes. Then when performing a step to
-		//a neighboring state, we change only one node, so we may perform Dijkstra on that single node only (as opposed to 3 different
-		//Dijkstra's) to calculate the new delta. Perhaps we could think of a way to "modify" the replaced node's Dijkstra such that
-		//calculating its neighbor's Dijkstra would take only ~O(E[i]) time instead of O(|E|+|V|log|V|)!
-		
+        //distances are ordered as follows in the following array: d_01, d_02, d_03, d_12, d_13, d_23
+        distance_t nodeDistances[6];
+        //used to mark the nodes we're looking for in every search
+        node_collection_t destinationNodes;
+
+		//scope in order to release NodeDistances' memory after finding distances
+		{
+			NodeDistances NDFrom0(graph, curState[0]);
+			NodeDistances NDFrom1(graph, curState[1]);
+			NodeDistances NDFrom2(graph, curState[2]);
+			//calculate d_0X (d_01, d_02, d_3)
+			destinationNodes.clear();
+			destinationNodes.push_back(curState[1]);
+			destinationNodes.push_back(curState[2]);
+			destinationNodes.push_back(curState[3]);
+			distance_dict_t distances = NDFrom0.getDistances(destinationNodes);
+			nodeDistances[0] = distances[curState[1]->getIndex()];
+			nodeDistances[1] = distances[curState[2]->getIndex()];
+			nodeDistances[2] = distances[curState[3]->getIndex()];
+			//calculate d_1X (d1_2, d_13)
+			destinationNodes.clear();
+			destinationNodes.push_back(curState[2]);
+			destinationNodes.push_back(curState[3]);
+			distances = NDFrom1.getDistances(destinationNodes);
+			nodeDistances[3] = distances[curState[2]->getIndex()];
+			nodeDistances[4] = distances[curState[3]->getIndex()];
+			//calculate d_2X (d_23)
+			destinationNodes.clear();
+			destinationNodes.push_back(curState[3]);
+			distances = NDFrom2.getDistances(destinationNodes);
+			nodeDistances[5] = distances[curState[3]->getIndex()];
+		}
+
+        //calculate current delta
+        distance_t d1 = nodeDistances[0] + nodeDistances[5];
+        distance_t d2 = nodeDistances[1] + nodeDistances[4];
+        distance_t d3 = nodeDistances[2] + nodeDistances[3];
+		maxDelta = curDelta = GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
+
 		//loop as long as temperature is positive
 		while (_temp > 0)
 		{
@@ -87,10 +124,58 @@ namespace dhtoolkit
 
 			//perform a single step
 			node_quad_t newState;
-			step(graph, curState, &newState);
+			unsigned int replacedNodeIndexInState = step(graph, curState, &newState);
 
-			//calculate new step's new delta
-			delta_t newDelta = GraphAlgorithms::CalculateDelta(graph, newState);
+            //need to calculate distances from new node to other 3
+            destinationNodes.clear();
+            for (int i = 0; i < 4; ++i)
+            {
+                if (replacedNodeIndexInState != i) destinationNodes.push_back(newState[i]);
+            }
+			NodeDistances NDFromReplacedNode(graph, newState[replacedNodeIndexInState]);
+			distance_dict_t distances = NDFromReplacedNode.getDistances(destinationNodes);
+
+            //reset new distances to a side array
+            distance_t newNodeDistances[6];
+            copy(nodeDistances, nodeDistances+6, newNodeDistances);
+            //start from current array, replace distances that have changed
+            switch (replacedNodeIndexInState)
+            {
+            case 0:
+                newNodeDistances[0] = distances[newState[1]->getIndex()];
+                newNodeDistances[1] = distances[newState[2]->getIndex()];
+                newNodeDistances[2] = distances[newState[3]->getIndex()];
+                break;
+
+            case 1:
+                newNodeDistances[0] = distances[newState[0]->getIndex()];
+                newNodeDistances[3] = distances[newState[2]->getIndex()];
+                newNodeDistances[4] = distances[newState[3]->getIndex()];
+                break;
+
+            case 2:
+                newNodeDistances[1] = distances[newState[0]->getIndex()];
+                newNodeDistances[3] = distances[newState[1]->getIndex()];
+                newNodeDistances[5] = distances[newState[3]->getIndex()];
+                break;
+
+            case 3:
+                newNodeDistances[2] = distances[newState[0]->getIndex()];
+                newNodeDistances[4] = distances[newState[1]->getIndex()];
+                newNodeDistances[5] = distances[newState[2]->getIndex()];
+                break;
+
+            default:
+                throw exception("Invalid index for replaced node");
+            }
+
+            //recalculate distances of perfect matchings
+            d1 = newNodeDistances[0] + newNodeDistances[5];
+            d2 = newNodeDistances[1] + newNodeDistances[4];
+            d3 = newNodeDistances[2] + newNodeDistances[3];
+
+            //calculate new step's new delta
+			delta_t newDelta = GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
 
 			//if it is a current max, update the max values
 			if (newDelta > maxDelta)
@@ -111,6 +196,7 @@ namespace dhtoolkit
 			{
 				curState = newState;
 				curDelta = newDelta;
+                copy(newNodeDistances, newNodeDistances+6, nodeDistances);
 			}
 		}
 
@@ -120,11 +206,11 @@ namespace dhtoolkit
 		return DeltaHyperbolicity(maxDelta, maxState);
 	}
 
-	void SimulatedAnnealing::step(const graph_ptr_t graph, const node_quad_t& curState, node_quad_t* newState) const
+	unsigned int SimulatedAnnealing::step(const graph_ptr_t graph, const node_quad_t& curState, node_quad_t* newState) const
 	{
 		bool isUniqueNeighborFound = false;
-		unsigned int replacedNodeIndex = 0;
-		node_ptr_t newNode;
+		unsigned int replacedNodeIndexInState = 0;
+		node_ptr_t newNode = nullptr;
 
 		//repeat the process as long as we haven't found a new unique node (i.e. for a given state, two nodes
 		//may be neighbors, and we might (by chance) select a node that is already in the state thus receiving
@@ -133,9 +219,9 @@ namespace dhtoolkit
 		while (!isUniqueNeighborFound)
 		{
 			//select a random node to replace
-			replacedNodeIndex = rand() % node_quad_t::size();
-			node_ptr_t nodeReplaced = curState[replacedNodeIndex];
-
+			replacedNodeIndexInState = rand() % node_quad_t::size();
+			node_ptr_t nodeReplaced = curState[replacedNodeIndexInState];
+            
 			//select a neighbor node randomly
 			const node_collection_t& neighbors = nodeReplaced->getEdges();
 			unsigned int neighborIndex = rand() % neighbors.size();
@@ -154,7 +240,7 @@ namespace dhtoolkit
 		//modify new state data type, replacing the old node with the new one
 		for (unsigned int i = 0; i < node_quad_t::size(); ++i)
 		{
-			if (i != replacedNodeIndex) 
+			if (i != replacedNodeIndexInState) 
 			{
 				(*newState)[i] = curState[i];
 			}
@@ -163,5 +249,7 @@ namespace dhtoolkit
 				(*newState)[i] = newNode;
 			}
 		}
+
+        return replacedNodeIndexInState;
 	}
 } // namespace dhtoolkit

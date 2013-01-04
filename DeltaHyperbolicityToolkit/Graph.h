@@ -25,6 +25,10 @@ public:
 	 */
 	Graph(std::string title);
 
+	//copy ctor & assignment operator
+	Graph(const Graph& other);
+	Graph& operator=(const Graph& other);
+
 	/*
 	 * @returns	The graph title.
 	 */
@@ -69,16 +73,44 @@ public:
 	void removeNode(node_ptr_t node);
 
 	/*
-	 * @returns	True iff node is a node in this graph, false otherwise.
-	 * @param	node	The node to check.
+	 * @brief	Unmarks all nodes in the graph.
 	 */
-	bool hasNode(node_ptr_t node);
+	void unmarkNodes() const;
+
+    /*
+ 	 * @brief	Prunes trees from the graph. I.e. removes all nodes with degree 0 or 1 (and those that become of this degree as a result
+	 *			of these deletions, recursively).
+	 */
+    void pruneTrees();
 
 private:
-	//do *not* allow copy ctor / assignment operator
-	Graph(const Graph&);
-	Graph& operator=(const Graph&);
+    /*
+     * @brief   Removes the node's incoming & outgoing edges (also removes the corresponding edges from its neighbors).
+     */
+    void removeNodeEdges(node_ptr_t node);
 
+    /*
+     * @returns The first unmarked neighbor of the node given.
+     * @throws  std::exception if there is none.
+     */
+    node_ptr_t getUnmarkedNeighbor(const node_ptr_t node) const;
+    /*
+     * @returns The number of edges pointing to unmarked nodes.
+     */
+    unsigned int countUnmarkedNeighbors(node_ptr_t node) const;
+
+    /*
+	 * @brief	Marks the given current leaf node and recursively calls itself on its neighbor (if exists).
+	 * @param	curNode			The current node to mark for deletion. Must have degree 0 or 1.
+     * @returns The number of nodes marked for deletion.
+	 * @throws	std::exception	If the current node's degree is greater than 1.
+	 */
+    unsigned int pruneTreesRecursion(node_ptr_t curNode);
+
+	/*
+	 * @brief	Sets this graph to equal the other graph.
+	 */
+	void reset(const Graph& other);
 	/*
 	 * @brief	Asserts that the given index represents a valid node (i.e. the index is valid in the nodes collection).
 	 * @param	index	The index to assert.
