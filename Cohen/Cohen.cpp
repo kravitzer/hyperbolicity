@@ -56,7 +56,7 @@ namespace dhtoolkit
 	DeltaHyperbolicity Cohen::stepImpl()
 	{
         node_quad_t nodes(_graph->getNode(_pairs[_l1].at(_l1Pos).first), _graph->getNode(_pairs[_l1].at(_l1Pos).second), _graph->getNode(_pairs[_l2].at(_l2Pos).first), _graph->getNode(_pairs[_l2].at(_l2Pos).second));
-        distance_t d1 = _l1 + _l2;
+        distance_t d1 = static_cast<distance_t>(_l1 + _l2);
         distance_t d2 = _distances[_pairs[_l1].at(_l1Pos).first][_pairs[_l2].at(_l2Pos).first] + _distances[_pairs[_l1].at(_l1Pos).second][_pairs[_l2].at(_l2Pos).second];
         distance_t d3 = _distances[_pairs[_l1].at(_l1Pos).first][_pairs[_l2].at(_l2Pos).second] + _distances[_pairs[_l1].at(_l1Pos).second][_pairs[_l2].at(_l2Pos).first];
         delta_t delta = GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
@@ -83,18 +83,18 @@ namespace dhtoolkit
         pair<node_index_t, node_index_t> pairToAdd(origin, it->first);
 
         vector<pair<node_index_t, node_index_t>>& pairCollection = _pairs[it->second];
-        int32_t binaryLowerBound = -1, binaryUpperBound = pairCollection.size();
+        int32_t binaryLowerBound = -1, binaryUpperBound = static_cast<int32_t>(pairCollection.size());
         while (binaryLowerBound < binaryUpperBound - 1)
         {
             size_t binarySearchLocation = (binaryUpperBound + binaryLowerBound) / 2;
             if ( (pairCollection[binarySearchLocation].first < pairToAdd.first) ||
                  (pairCollection[binarySearchLocation].first == pairToAdd.first && (pairCollection[binarySearchLocation].second < pairToAdd.second) ) )
             {
-                binaryLowerBound = binarySearchLocation;
+                binaryLowerBound = static_cast<int32_t>(binarySearchLocation);
             }
             else
             {
-                binaryUpperBound = binarySearchLocation;
+                binaryUpperBound = static_cast<int32_t>(binarySearchLocation);
             }
         }
         

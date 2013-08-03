@@ -35,6 +35,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MDSweep", "MDSweep\MDSweep.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DSweepMin", "DSweepMin\DSweepMin.vcxproj", "{BC5AE7A6-1064-423D-8AD8-821872CEEA4B}"
 	ProjectSection(ProjectDependencies) = postProject
+		{BA59836F-2A3B-4EE4-985E-9B7854A881D9} = {BA59836F-2A3B-4EE4-985E-9B7854A881D9}
 		{4FE837FE-AC12-42B9-9275-72691CAE5D27} = {4FE837FE-AC12-42B9-9275-72691CAE5D27}
 	EndProjectSection
 EndProject
@@ -53,13 +54,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LargeDistances", "LargeDist
 		{4FE837FE-AC12-42B9-9275-72691CAE5D27} = {4FE837FE-AC12-42B9-9275-72691CAE5D27}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DSweepMinExt", "DSweepMinExt\DSweepMinExt.vcxproj", "{BA59836F-2A3B-4EE4-985E-9B7854A881D9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IDSweepMinExt", "IDSweepMinExt\IDSweepMinExt.vcxproj", "{BA59836F-2A3B-4EE4-985E-9B7854A881D9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4FE837FE-AC12-42B9-9275-72691CAE5D27} = {4FE837FE-AC12-42B9-9275-72691CAE5D27}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeltaHyperbolicityToolkitDll", "DeltaHyperbolicityToolkitDll\DeltaHyperbolicityToolkitDll.vcxproj", "{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}"
 	ProjectSection(ProjectDependencies) = postProject
+		{4FE837FE-AC12-42B9-9275-72691CAE5D27} = {4FE837FE-AC12-42B9-9275-72691CAE5D27}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DSweepMinNonBalanced", "DSweepMinNonBalanced\DSweepMinNonBalanced.vcxproj", "{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BA59836F-2A3B-4EE4-985E-9B7854A881D9} = {BA59836F-2A3B-4EE4-985E-9B7854A881D9}
 		{4FE837FE-AC12-42B9-9275-72691CAE5D27} = {4FE837FE-AC12-42B9-9275-72691CAE5D27}
 	EndProjectSection
 EndProject
@@ -229,6 +236,18 @@ Global
 		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Release|Win32.Build.0 = Release|Win32
 		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Release|x64.ActiveCfg = Release|x64
 		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Release|x64.Build.0 = Release|x64
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Debug|Win32.Build.0 = Debug|Win32
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Debug|x64.ActiveCfg = Debug|x64
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Debug|x64.Build.0 = Debug|x64
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Release|Win32.ActiveCfg = Release|Win32
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Release|Win32.Build.0 = Release|Win32
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Release|x64.ActiveCfg = Release|x64
+		{40F6DDD0-972A-46A5-9ED0-C8F1E19B31B1}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

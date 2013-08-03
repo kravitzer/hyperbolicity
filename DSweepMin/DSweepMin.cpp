@@ -12,102 +12,40 @@ namespace dhtoolkit
 {
     const distance_t MaxDistance = INT_MAX;
 
-	DSweep::DSweep(const string& outputDir) : IGraphAlg(outputDir) 
+	DSweepMin::DSweepMin(const string& outputDir) : IDSweepMinExt(outputDir), _minDistance(MaxDistance)
 	{
 		//empty
 	}
 
-	DSweep::~DSweep()
+	DSweepMin::~DSweepMin()
 	{
 		//empty
 	}
 
-	DeltaHyperbolicity DSweep::stepImpl()
+	void DSweepMin::initStep()
 	{
-		//first perform a double sweep
-		GraphAlgorithms::DoubleSweepResult ds = GraphAlgorithms::DoubleSweep(_graph);
+		_v3Candidates.clear();
+		_minDistance = MaxDistance;
+	}
 
-		node_ptr_t& v1 = ds.u;
-		node_ptr_t& v2 = ds.v;
-		distance_dict_t& v1Dists = ds.uDistances;
-		distance_dict_t v2Dists = NodeDistances(_graph, v2).getDistances();
-
-		distance_t distV1V2 = v1Dists[v2->getIndex()];
-		distance_t distV1V3 = MaxDistance;
-		distance_t distV2V3 = MaxDistance;
-		node_ptr_collection_t v3Candidates;
-
-		for (unsigned int i = 0; i < _graph->size(); ++i)
+	void DSweepMin::processV3Candidate(node_ptr_t v3Candidate, distance_t distFromV1, distance_t distFromV2)
+	{
+		if ( (distFromV1 <= distFromV2 && distFromV2 <= distFromV1 + 1) || (distFromV2 <= distFromV1 && distFromV1 <= distFromV2 + 1) )
 		{
-			node_ptr_t curNode = _graph->getNode(i);
-			if ( (curNode == v1) || (curNode == v2) ) continue;
-
-			distance_t distFromV1 = v1Dists[curNode->getIndex()];
-			distance_t distFromV2 = v2Dists[curNode->getIndex()];
-            if ( (InfiniteDistance == distFromV1) || (InfiniteDistance == distFromV2) ) continue;
-
-			if ( (distFromV1 <= distFromV2 && distFromV2 <= distFromV1 + 1) || (distFromV2 <= distFromV1 && distFromV1 <= distFromV2 + 1) )
+			if (distFromV1 + distFromV2 <=  _minDistance)
 			{
-				if ( (distFromV2 <= distV2V3) && (distFromV1 <= distV1V3) )
+				if (distFromV1 + distFromV2 <  _minDistance)
 				{
-					if ( (distFromV2 < distV2V3) || (distFromV1 < distV1V3) )
-					{
-						distV2V3 = distFromV2;
-						distV1V3 = distFromV1;
-
-						v3Candidates.clear();						
-					}
-					v3Candidates.push_back(curNode);
+					_minDistance = distFromV1 + distFromV2;
+					_v3Candidates.clear();						
 				}
+				_v3Candidates.push_back(v3Candidate);
 			}
 		}
-
-		//select one node from the v3 candidates
-		unsigned int index = rand() % v3Candidates.size();
-		node_ptr_t v3 = v3Candidates[index];
-
-		//calculate distances for the newly selected v3
-		distance_dict_t v3Dists = NodeDistances(_graph, v3).getDistances();
-
-		node_ptr_t v4;
-		delta_t maxDelta = -1;
-		for (unsigned int i = 0; i < _graph->size(); ++i)
-		{
-			node_ptr_t curNode = _graph->getNode(i);
-			if ( (curNode == v1) || (curNode == v2) || (curNode == v3) ) continue;
-
-			distance_t distFromV1 = v1Dists[curNode->getIndex()];
-			distance_t distFromV2 = v2Dists[curNode->getIndex()];
-			distance_t distFromV3 = v3Dists[curNode->getIndex()];
-
-            if ( (InfiniteDistance == distFromV1) || (InfiniteDistance == distFromV2) || (InfiniteDistance == distFromV3) ) continue;
-
-			distance_t d1 = distV1V2 + distFromV3;
-			distance_t d2 = distV1V3 + distFromV2;
-			distance_t d3 = distV2V3 + distFromV1;
-
-			delta_t curDelta = GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
-			if (curDelta > maxDelta)
-			{
-				maxDelta = curDelta;
-				v4 = curNode;
-			}
-		}
-
-		node_quad_t state(v1, v2, v3, v4);
-		return DeltaHyperbolicity(maxDelta, state);
 	}
 
-	void DSweep::initImpl(const node_quad_t&)
-	{
-		//empty
-	}
 
-	bool DSweep::isComplete() const
-	{
-		//we can always run one more...
-		return false;
-	}
+
 
 
 
@@ -116,7 +54,7 @@ namespace dhtoolkit
 		//initialize random seed (necessary before calling DoubleSweep() ).
 		srand(static_cast<unsigned int>(time(nullptr)));
 
-		IGraphAlg* alg = new DSweep(outputDir);
+		IGraphAlg* alg = new DSweepMin(outputDir);
 		return alg;
 	}
 

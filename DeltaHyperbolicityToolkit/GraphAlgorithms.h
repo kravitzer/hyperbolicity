@@ -102,6 +102,30 @@ namespace dhtoolkit
 		 */
 		static graph_ptr_collection_t getBiconnectedComponents(const graph_ptr_t graph);
 
+		/*
+		 * @brief	Removes the cycle that origin is a part of, if really is a part of a cycle, and if cycle may be removed without
+		 *			affecting the hyperbolicity.
+		 *
+		 *			The cycle removal algorithm is as follows:
+		 *				Starting at the origin node v,  for each of v's neighbors u: as long as degree(u) == 2, go to the neighbor that you did 
+		 *				not come from. Of course, if we've somehow reached the first node - the graph is a simple cycle and we're done...
+		 *				We now reached two vertices, s & t, whose degree > 2. Check d(s, t).
+		 *				If d(s, t) < number of nodes iterated + 1 (excluding s & t) then the nodes iterated (excluding s & t) may be removed!
+		 *				Before removal, we calculate the delta value produced from the cycle (truncate(length / 4) if length % 4 != 1, 
+		 *				or truncate(length / 4) - 0.5 otherwise).
+		 *				If d(s, t) = number of nodes iterated + 1 (excluding s & t), then unfortunatelly we cannot remove the cycle as it may
+		 *				affect other distances in the graph. We simply calculate the delta of the cycle, assuming that the shortest path from s to
+		 *				t that does not go through the chain of nodes iterated is of the same length (this yields a delta that cannot be larger than
+		 *				the real value).
+		 * @param	graph	The graph to run on.
+		 * @param	origin	The node to start from.
+		 * @param	delta	Will be set to the delta of the cycle found.
+		 * @param	irremovableNodes	In case the cycle cannot be removed, the labels of the nodes processed will be added to this set (the user 
+		 *								may keep them in order to avoid running on them in the future).
+		 * @returns	Whether a cycle was removed from the graph or not.
+		 */
+		static bool removeCycle(graph_ptr_t graph, node_ptr_t origin, delta_t& delta, std::unordered_set<std::string>& irremovableNodes);
+
 	private:
 		static const int NodeIndexMaxNumOfDigits;
 		static const char* EdgeMarker;
@@ -115,6 +139,11 @@ namespace dhtoolkit
 			node_index_t src;
 			node_index_t dst;
 		};
+
+		/*
+		 * @returns	The delta value of a cycle-graph whose length is given.
+		 */
+		static delta_t cycleDelta(size_t length);
 
 		static void biconnected(const graph_ptr_t graph, node_index_t v, node_index_t u, std::unordered_map<node_index_t, unsigned int>& number, std::unordered_map<node_index_t, unsigned int>& lowpt, unsigned int index, std::vector<std::pair<node_index_t, node_index_t>>& edgeStack, graph_ptr_collection_t& biconnectedGraphs);
 

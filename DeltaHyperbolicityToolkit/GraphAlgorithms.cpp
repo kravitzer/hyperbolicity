@@ -293,6 +293,107 @@ namespace dhtoolkit
 		return biconnectedGraphs;
 	}
 
+	bool GraphAlgorithms::removeCycle(graph_ptr_t graph, node_ptr_t origin, delta_t& delta, unordered_set<string>& irremovableNodes)
+	{
+		//the chains of nodes from each side of origin to be deleted, if possible (excluding origin)
+		node_ptr_collection_t chain1, chain2;
+
+		node_weak_ptr_collection_t neighbors = origin->getEdges();
+		if (neighbors.size() != 2) return 0;
+
+		node_weak_ptr_t n1 = neighbors[0];
+		node_weak_ptr_t n2 = neighbors[1];
+
+		//the nodes that end the cycle
+		node_ptr_t s, t;
+
+		//start walking on chain1
+		node_weak_ptr_t prev = origin;
+		node_weak_ptr_t cur1 = neighbors[0];
+		node_weak_ptr_collection_t curNeighbors = cur1.lock()->getEdges();
+		for (; curNeighbors.size() == 2; curNeighbors = cur1.lock()->getEdges())
+		{
+			chain1.push_back(cur1.lock());
+
+			node_weak_ptr_t tmp = cur1;
+			cur1 = (curNeighbors[0].lock() == prev.lock() ? curNeighbors[1] : curNeighbors[0]);
+			prev = tmp;
+
+			//check extreme case: graph is a cycle?
+			if (cur1.lock() == neighbors[1].lock())
+			{
+				//graph is a single cycle!
+				delta_t curDelta = cycleDelta(graph->size());
+				graph.reset(new Graph(graph->getTitle()));
+				delta = curDelta;
+				return true;
+			}
+		}
+
+		//start walking on chain2
+		prev = origin;
+		node_weak_ptr_t cur2 = neighbors[1];
+		curNeighbors = cur2.lock()->getEdges();
+		for (; curNeighbors.size() == 2; curNeighbors = cur2.lock()->getEdges())
+		{
+			chain2.push_back(cur2.lock());
+
+			node_weak_ptr_t tmp = cur2;
+			cur2 = (curNeighbors[0].lock() == prev.lock() ? curNeighbors[1] : curNeighbors[0]);
+			prev = tmp;
+		}
+
+		NodeDistances distCalculator(graph, cur1.lock());
+		distance_t stDist = distCalculator.getDistance(cur2.lock());
+
+		if (stDist == chain1.size() + chain2.size() + 2)
+		{
+			//we cannot remove the cycle as it may affect the value of delta
+
+			//add this chain's nodes to the irremovable set
+			irremovableNodes.insert(origin->getLabel());
+			for (auto it = chain1.cbegin(); it != chain1.cend(); ++it)
+			{
+				irremovableNodes.insert((*it)->getLabel());
+			}
+			for (auto it = chain2.cbegin(); it != chain2.cend(); ++it)
+			{
+				irremovableNodes.insert((*it)->getLabel());
+			}
+
+			//calculate maximal cycle size
+			size_t cycleSize = (chain1.size() + chain2.size() + 2) * 2;
+			delta = cycleDelta(cycleSize);
+			return false;
+		}
+		else if (stDist < chain1.size() + chain2.size() + 2)
+		{
+			//calculate cycle size
+			size_t cycleSize = chain1.size() + chain2.size() + 2 + stDist;
+
+			//remove cycle!
+			graph->unmarkNodes();
+			origin->mark();
+			for (auto it = chain1.begin(); it != chain1.cend(); ++it) (*it)->mark();
+			for (auto it = chain2.begin(); it != chain2.cend(); ++it) (*it)->mark();
+			graph->deleteMarkedNodes();
+
+			delta = cycleDelta(cycleSize);
+			return true;
+		}
+		else
+		{
+			//impossible - distance from s to t is at most the chains' length + 1 (origin)
+			throw exception("Impossible distance received");
+		}
+	}
+
+	delta_t GraphAlgorithms::cycleDelta(size_t length)
+	{
+		if (length % 4 == 1) return length/4.0 - 0.5;
+		return length/4.0;
+	}
+
 	void GraphAlgorithms::biconnected(const graph_ptr_t graph, node_index_t v, node_index_t u, unordered_map<node_index_t, unsigned int>& number, unordered_map<node_index_t, unsigned int>& lowpt, unsigned int index, vector<pair<node_index_t, node_index_t>>& edgeStack, graph_ptr_collection_t& biconnectedGraphs)
 	{
 		number[v] = ++index;
