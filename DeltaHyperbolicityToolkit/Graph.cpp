@@ -1,16 +1,51 @@
 #include "Graph.h"
 #include "defs.h"
 #include "Node.h"
+#include "NodeHasher.h"
 #include "Except.h"
 #include <string>
+#include <unordered_map>
+#include <boost/format.hpp>
 
-using std::string;
+using namespace std;
 
 namespace dhtoolkit
 {
-	Graph::Graph(string title) : _nodes(), _title(title)
+	Graph::Graph(const string& title) : _nodes(), _title(title)
 	{
 		//empty
+	}
+
+	Graph::Graph(const string& title, const node_unordered_set_ptr_t scc) : _nodes(), _title(title)
+	{
+		//mapping from scc's node index to current graph's index
+		//e.g. if scc has 4 nodes, indexed: 1, 5, 14, 22 then mapping would look something like:
+		//1-->3, 5-->1, 14-->2, 22-->0
+		//i.e. a mapping from the scc indices to the new graphs (0 to size-1) indices, not in any particular order.
+		unordered_map<node_index_t, node_index_t> mapping;
+
+		//insert a node for each node of the scc, and update the mapping
+		for (node_unordered_set_t::const_iterator it = scc->cbegin(); it != scc->cend(); ++it)
+		{
+			node_ptr_t curNode = insertNode();
+			mapping[(*it)->getIndex()] = curNode->getIndex();
+		}
+
+		//iterate through scc nodes and insert edges correspondingly in the graph (with the help of the mapping)
+		for (node_unordered_set_t::const_iterator it = scc->cbegin(); it != scc->cend(); ++it)
+		{
+			//current scc node and edges
+			node_index_t curIndex = (*it)->getIndex();
+			node_weak_ptr_collection_t edges = (*it)->getEdges();
+
+			for (node_weak_ptr_collection_t::const_iterator edgeIt = edges.cbegin(); edgeIt != edges.cend(); ++edgeIt)
+			{
+				//scc neighbor node's index
+				node_index_t neightborIndex = edgeIt->lock()->getIndex();
+				//draw an edge between the two nodes in the graph corresponding to the scc node and its neighbor
+				getNode(mapping[curIndex])->insertUnidirectionalEdgeTo(getNode(mapping[neightborIndex]));
+			}
+		}
 	}
 
 	Graph::Graph(const Graph& other)
@@ -30,10 +65,11 @@ namespace dhtoolkit
 		return _title;
 	}
 
-	node_ptr_t Graph::insertNode()
+	node_ptr_t Graph::insertNode(string label)
 	{
 		//create new node whose index is the next avilable number (0-based)
-		node_ptr_t newNode(new Node(_nodes.size()));
+		if (label.empty()) label = (boost::format("%1%") % _nodes.size()).str();
+		node_ptr_t newNode(new Node(_nodes.size(), label));
 		_nodes.push_back(newNode);
 
 		return newNode;
@@ -45,14 +81,14 @@ namespace dhtoolkit
 		return _nodes[index];
 	}
 
-	unsigned int Graph::size() const
+	size_t Graph::size() const
 	{
 		return _nodes.size();
 	}
 
-	unsigned int Graph::edgeCount() const
+	size_t Graph::edgeCount() const
 	{
-		unsigned int edgeCount = 0;
+		size_t edgeCount = 0;
 		for (unsigned int i = 0; i < size(); ++i)
 		{
 			edgeCount += getNode(i)->getEdges().size();
@@ -72,7 +108,7 @@ namespace dhtoolkit
 
 		//update indecis of the nodes following the current node (each is actually decremented by 1)
 		node_index_t curIndex = index;
-		for (node_collection_t::const_iterator it = _nodes.begin()+index; it != _nodes.end(); ++it)
+		for (node_ptr_collection_t::const_iterator it = _nodes.begin()+index; it != _nodes.end(); ++it)
 		{
 			(*it)->setIndex(curIndex++);
 		}
@@ -95,29 +131,53 @@ namespace dhtoolkit
 
 	void Graph::unmarkNodes() const
 	{
-		for (node_collection_t::const_iterator it = _nodes.cbegin(); it != _nodes.cend(); ++it)
+		for (node_ptr_collection_t::const_iterator it = _nodes.cbegin(); it != _nodes.cend(); ++it)
 		{
 			(*it)->unmark();
 		}
     }
+
+	void Graph::deleteMarkedNodes()
+	{
+        node_ptr_collection_t newCollection;
+        unsigned int index = 0;
+        for (node_ptr_collection_t::const_iterator it = _nodes.cbegin(); it != _nodes.cend(); ++it)
+        {
+            //check if node is marked for deletion or not
+            if (!(*it)->isMarked())
+            {
+                //not marked - copy to new array, and set index
+				newCollection.push_back(*it);
+				(*it)->setIndex(index++);
+            }
+            else
+            {
+                //marked for deletion - remove its incoming & outgoing edges
+                removeNodeEdges(*it);
+            }
+        }
+
+        //store new collection in class instance
+        _nodes.swap(newCollection);
+	}
 
     void Graph::removeNodeEdges(node_ptr_t node)
     {
         //erase node's outgoing edges
         while (node->getEdges().size() > 0)
         {
-            node->removeEdge(node->getEdges()[0]);
+            node->removeEdge(node->getEdges()[0].lock());
         }
 
         //erase node's incoming edges
         while (node->_incomingEdges.size() > 0)
         {
-            node_ptr_t otherNode = node->_incomingEdges[0];
+            node_ptr_t otherNode = node->_incomingEdges[0].lock();
             otherNode->removeEdge(node);
         }
     }
 
-    void Graph::pruneTrees()
+	void Graph::pruneTrees()
     {
         //unmark all nodes
         unmarkNodes();
@@ -125,7 +185,7 @@ namespace dhtoolkit
         unsigned int removed = 0;
 
         //run on all nodes, mark the ones that need to be removed
-        for (node_collection_t::const_iterator it = _nodes.cbegin(); it != _nodes.cend(); ++it)
+        for (node_ptr_collection_t::const_iterator it = _nodes.cbegin(); it != _nodes.cend(); ++it)
         {
             //check if current node needs to be pruned & not already pruned
             if ( (countUnmarkedNeighbors(*it) <= 1) && (!(*it)->isMarked()) )
@@ -139,30 +199,7 @@ namespace dhtoolkit
         //a new collection and copy only the necessary nodes into it, while setting their index appropriately
         //tests: using deletion, pruning of a large graph (1M+ nodes) took ~310 seconds. with this method - 0.238 seconds!!!
 
-        //set new collection size to be the old size minus the nodes that are going to be removed
-        node_collection_t newCollection(_nodes.size() - removed);
-        node_collection_t::iterator writeIt = newCollection.begin();
-        unsigned int index = 0;
-        for (node_collection_t::const_iterator it = _nodes.cbegin(); it != _nodes.cend(); ++it)
-        {
-            //check if node is marked for deletion or not
-            if (!(*it)->isMarked())
-            {
-                //not marked - copy to new array, and set index
-                *writeIt = *it;
-                (*writeIt)->setIndex(index);
-                ++writeIt;
-                ++index;
-            }
-            else
-            {
-                //marked for deletion - remove its incoming & outgoing edges
-                removeNodeEdges(*it);
-            }
-        }
-
-        //store new collection in class instance
-        _nodes.swap(newCollection);
+        deleteMarkedNodes();
     }
 
     unsigned int Graph::pruneTreesRecursion(node_ptr_t curNode)
@@ -188,10 +225,10 @@ namespace dhtoolkit
 
     node_ptr_t Graph::getUnmarkedNeighbor(const node_ptr_t node) const
     {
-        const node_collection_t& neighbors = node->getEdges();
-        for (node_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
+        const node_weak_ptr_collection_t& neighbors = node->getEdges();
+        for (node_weak_ptr_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
         {
-            if (!(*it)->isMarked()) return *it;
+            if (!it->lock()->isMarked()) return it->lock();
         }
 
         throw std::exception("No unmarked neighbor found!");
@@ -200,10 +237,10 @@ namespace dhtoolkit
     unsigned int Graph::countUnmarkedNeighbors(const node_ptr_t node) const
     {
         unsigned int unmarkedNodes = 0;
-        const node_collection_t& neighbors = node->getEdges();
-        for (node_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
+        const node_weak_ptr_collection_t& neighbors = node->getEdges();
+        for (node_weak_ptr_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
         {
-            if (!(*it)->isMarked()) ++unmarkedNodes;
+            if (!it->lock()->isMarked()) ++unmarkedNodes;
         }
 
         return unmarkedNodes;
@@ -217,20 +254,20 @@ namespace dhtoolkit
 		//create as many nodes as the other graph has
 		for (unsigned int i = 0; i < other.size(); ++i)
 		{
-			node_ptr_t curNode = insertNode();
+			node_ptr_t curNode = insertNode(other._nodes[i]->getLabel());
 		}
 
 		//create edges according to other graph
-		for (node_collection_t::const_iterator it = other._nodes.cbegin(); it != other._nodes.cend(); ++it)
+		for (node_ptr_collection_t::const_iterator it = other._nodes.cbegin(); it != other._nodes.cend(); ++it)
 		{
 			//current node in our graph
 			node_ptr_t curNode = getNode((*it)->getIndex());
 			//its edges in other graph
-			const node_collection_t& edges = (*it)->getEdges();
+			const node_weak_ptr_collection_t& edges = (*it)->getEdges();
 			//for each edge in other graph, create one here as well
-			for (node_collection_t::const_iterator edgeIt = edges.cbegin(); edgeIt != edges.cend(); ++edgeIt)
+			for (node_weak_ptr_collection_t::const_iterator edgeIt = edges.cbegin(); edgeIt != edges.cend(); ++edgeIt)
 			{
-				curNode->insertUnidirectionalEdgeTo( getNode( (*edgeIt)->getIndex() ) );
+				curNode->insertUnidirectionalEdgeTo( getNode( edgeIt->lock()->getIndex() ) );
 			}
 		}
 	}

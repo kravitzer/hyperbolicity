@@ -31,50 +31,44 @@ namespace dhtoolkit
 		virtual ~IGraphAlg();
 
 		/*
-		 * @brief	Runs the implementation for the algorithm, after performing some input validity checks.
-		 * @throws	std::exception	Upon invalid input.
-		 * @see		runImpl
+		 * @brief	Calls the derived class' implementation for initializing the run.
+		 * @param	graph		The graph to run on.
+		 * @param	initialState	A state to start from. May be irrelevant for some algorithms, in which case it is ignored.
+		 *							This parameter is optional.
 		 */
-		DeltaHyperbolicity run(const graph_ptr_t graph);
+		void initialize(const graph_ptr_t graph, const node_quad_t& initialState = node_quad_t());
 
 		/*
-		 * @brief	Runs the implementation for the algorithm, after performing some input validity checks.
-		 * @throws	std::exception	Upon invalid input.
-		 * @see		runWithInitialStateImpl
+		 * @brief	Runs a single step of the implementation for the algorithm.
+		 * @throws	std::exception	Upon an error.
+		 * @returns	The delta & state found in this step (not necessarily the best ones found so far - it is the based class' responsibility to keep the best one).
+		 * @see		stepImpl
 		 */
-		DeltaHyperbolicity runWithInitialState(const graph_ptr_t graph, const node_quad_t& initialState);
+		DeltaHyperbolicity step();
+
+		/*
+		 * @returns	True iff algorithm run has completed, false otherwise.
+		 *			If true, a call to step() will raise an exception.
+		 */
+		virtual bool isComplete() const = 0;
 
 	protected:
 		/*
-		 * @brief	The implementation of this method should containg the algorithm logic to be run on the given graph.
-		 * @param	graph	The graph to run the algorithm on.
-		 * @throws	The implementation may throw standard std::exception upon error.
+		 * @brief	Derived implementation should perform initialization steps here.
 		 */
-		virtual DeltaHyperbolicity runImpl(const graph_ptr_t graph) = 0;
+		virtual void initImpl(const node_quad_t& initialState) = 0;
 
 		/*
-		 * @brief	The implementation of this method should containg the algorithm logic to be run on the given graph.
-		 * @param	graph			The graph to run the algorithm on.
-		 * @param	initialState	Some initial state for the algorithm to start from.
+		 * @brief	The implementation of this method should contain the algorithm logic for a single step, to run on the graph.
 		 * @throws	The implementation may throw standard std::exception upon error.
 		 */
-		virtual DeltaHyperbolicity runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t& initialState) = 0;
-
-		/*
-		 * @brief	Resets any internal state the instance might have, in order to run the algorithm again on a new graph.
-		 */
-		virtual void reset() = 0;
-
-		/* 
-		 * @brief	Runs the algorithm with *no* initial state, and then compares the result to the state given.
-		 * @param	graph			The graph to run the algorithm on.
-		 * @param	state			The state to compare the result to.
-		 * @returns	The delta hyperbolicity that's the higher of the two.
-		 */
-		DeltaHyperbolicity runAndReturnBetter(const graph_ptr_t graph, const node_quad_t& state);
+		virtual DeltaHyperbolicity stepImpl() = 0;
 
 		//the output dir into which any output files are to be written
 		std::string _outputDir;
+
+		//the graph to run on
+		graph_ptr_t _graph;
 
 	private:
 		/*

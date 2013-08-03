@@ -18,7 +18,14 @@ AlgRunner::~AlgRunner()
 {
 	try
 	{
-		if (_releaseAlg && _algorithm) _releaseAlg(_algorithm);
+		if (_releaseAlg && _algorithm) 
+		{
+			_releaseAlg(_algorithm);
+		}
+		else
+		{
+			if (_algorithm) cout << "WARNING: Algorithm has no release method!" << endl;
+		}
 	}
 	catch (...)
 	{
@@ -46,16 +53,22 @@ void AlgRunner::load()
 	_algorithm = _createAlg(_outputDir);
 }
 
-DeltaHyperbolicity AlgRunner::run(const graph_ptr_t graph) const
+DeltaHyperbolicity AlgRunner::step() const
 {
 	if (nullptr == _dll.get()) throw std::exception("Dll must be loaded first");
-	return _algorithm->run(graph);
+	return _algorithm->step();
 }
 
-DeltaHyperbolicity AlgRunner::runWithInitialState(const graph_ptr_t graph, const node_quad_t& state) const
+bool AlgRunner::isComplete() const
 {
 	if (nullptr == _dll.get()) throw std::exception("Dll must be loaded first");
-	return _algorithm->runWithInitialState(graph, state);
+	return _algorithm->isComplete();
+}
+
+void AlgRunner::initialize(const graph_ptr_t graph, const node_quad_t& initialState /* = dhtoolkit::node_quad_t() */)
+{
+	if (nullptr == _dll.get()) throw std::exception("Dll must be loaded first");
+	_algorithm->initialize(graph, initialState);
 }
 
 string AlgRunner::getName() const

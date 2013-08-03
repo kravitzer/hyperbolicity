@@ -20,9 +20,9 @@ class DeltaHyperbolicity
 {
 public:
 	/*
-	 * @param	delta	The delta hyperbolicity value.
+	 * @brief	Default ctor.
 	 */
-	DeltaHyperbolicity(delta_t delta);
+	DeltaHyperbolicity();
 
 	/*
 	 * @param	delta	The delta hyperbolicity value.
@@ -37,10 +37,20 @@ public:
 	delta_t getDelta() const;
 
 	/*
-	 * @returns	The nodes that produce this instance's delta value.
+	 * @brief	Sets the current instance's delta.
+	 */
+	void setDelta(delta_t delta);
+
+	/*
+	 * @returns	The state that produces this instance's delta value.
 	 * @throws	DataUnavailableException	If this instance was created without specifying these nodes.
 	 */
-	const node_quad_t& getNodes() const;
+	const node_quad_t& getState() const;
+
+	/*
+	 * @brief	Sets the current instance's state.
+	 */
+	void setState(const node_quad_t& state);
 
 	/*
 	 * @returns	A textual representation of the nodes this delta represents, e.g.: "3, 110, 166, 201".

@@ -55,6 +55,16 @@ namespace dhtoolkit
 		static unsigned int size();
 
 		/*
+		 * @returns	True if state nodes are unique, false otherwise.
+		 */
+		static bool isStateValid(const node_ptr_t v1, const node_ptr_t v2, const node_ptr_t v3, const node_ptr_t v4);
+
+		/*
+		 * @returns	Whether or not this state instance is initialized with nodes.
+		 */
+		bool isInitialized() const;
+
+		/*
 		 * @returns	A textual representation of the nodes this delta represents, e.g.: "3, 110, 166, 201".
 		 */
 		std::string printNodes() const;

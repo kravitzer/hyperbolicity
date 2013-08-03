@@ -22,6 +22,7 @@ namespace dhtoolkit
 		 * @brief	Default ctor.
 		 */
 		ExpProbability();
+		virtual ~ExpProbability();
 
 		//allow default ctor, copy ctor & assignment operator
 		//ExpProbability(const ExpProbability& other);
@@ -53,6 +54,7 @@ namespace dhtoolkit
 		 * @brief	Default ctor.
 		 */
 		IntervalTemperature();
+		virtual ~IntervalTemperature();
 
 		//allow copy ctor & assignment operator
 		//IntervalTemperature(const IntervalTemperature& other);
@@ -77,7 +79,7 @@ namespace dhtoolkit
 		void reset();
 
 	private:
-		static const unsigned int IterationInterval = 5;
+		static const unsigned int IterationInterval = 25;
 		static const sa_temp_t InitialTemp;
 		static const sa_temp_t TerminationThreshold;
 
@@ -98,6 +100,7 @@ namespace dhtoolkit
 		 * @param	outputDir		The folder into which drawing files will be created.
 		 */
 		DrawingCallback(const std::string& outputDir);
+		virtual ~DrawingCallback();
 
 		/*
 		 * @brief	Once every DrawingInterval times, draws th graph into a file whose name is:

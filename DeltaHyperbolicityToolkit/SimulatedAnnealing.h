@@ -100,6 +100,11 @@ namespace dhtoolkit
 		 */
 		virtual ~SimulatedAnnealing();
 
+		/*
+		 * @returns	True if temperature is <= 0, false otherwise.
+		 */
+		virtual bool isComplete() const;
+
 	private:
 		//do *not* allow copy ctor / assignment operator
 		SimulatedAnnealing(const SimulatedAnnealing& other);
@@ -108,17 +113,18 @@ namespace dhtoolkit
 		/*
 		 * @brief	Implementation of the base class' method. Implements a delta hyperbolicity process on the graph (random initial state).
 		 */
-		virtual DeltaHyperbolicity runImpl(const graph_ptr_t graph);
+		virtual DeltaHyperbolicity stepImpl();
 
 		/*
-		 * @brief	Implementation of the base class' method. Implements a delta hyperbolicity process on the graph, starting from the given state.
+		 * @brief	Resets any internal state the instance might have, in order to run the algorithm again from scratch.
 		 */
-		virtual DeltaHyperbolicity runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t& initialState);
-		
+		virtual void initImpl(const node_quad_t& initialState);
+
 		/*
-		 * @brief	Resets any internal state the instance might have, in order to run the algorithm again on a new graph.
+		 * @brief	Calculates the 6 distances for the current state.
+		 * @returns	The delta for the current state, based on those 6 distances.
 		 */
-		virtual void reset();
+		delta_t calculateCurrentDelta();
 
 		/*
 		 * @brief	Starts the SA process.
@@ -137,7 +143,19 @@ namespace dhtoolkit
          * @returns The index of the node in the state structure that changed (NOTE: not the index of the node,
          *          but the index in the state collection! e.g. b/w 0 to 3!!).
 		 */
-		unsigned int step(const graph_ptr_t graph, const node_quad_t& curState, node_quad_t* newState) const;
+		unsigned int getNeighbor(const graph_ptr_t graph, const node_quad_t& curState, node_quad_t* newState) const;
+
+		//current state & delta
+		node_quad_t _curState;
+		delta_t _curDelta;
+
+		//is this the first step after initialization
+		bool _isFirstStep;
+
+		//collection to be used when calculating distances to some specific nodes
+		node_ptr_collection_t _destinationNodes;
+		//the 6 distances needed to calculate delta (v1->v2, v1->v3, v1->v4, v2->v3, v2->v4, v3->v4, in that order!)
+		distance_t _nodeDistances[6];
 
 		//SA parameters (see ctor for details)
 		sa_temp_t _temp;

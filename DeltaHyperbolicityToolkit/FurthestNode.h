@@ -29,7 +29,7 @@ namespace dhtoolkit
 		/*
 		 * @returns	The collection of nodes that are furthest away from the origin.
 		 */
-		node_collection_t getFurthestNodes() const;
+		node_ptr_collection_t getFurthestNodes() const;
 
 		/*
 		 * @returns	The distance of the node(s) furthest away from the origin.
@@ -43,7 +43,7 @@ namespace dhtoolkit
 		bool nodeTraversal(const node_ptr_t curNode, const node_ptr_t prevNode, distance_t distanceFromOrigin);
 
 		//results
-		node_collection_t _nodes;
+		node_ptr_collection_t _nodes;
 		distance_t _distance;
 	};
 

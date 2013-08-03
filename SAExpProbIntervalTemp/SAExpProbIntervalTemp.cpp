@@ -21,6 +21,11 @@ namespace dhtoolkit
 		reset();
 	}
 
+	ExpProbability::~ExpProbability()
+	{
+		//empty
+	}
+
 	sa_probability_t ExpProbability::ProbabilityToAcceptChange(delta_t curDelta, delta_t newDelta, sa_temp_t curTemp)
 	{
 		if (newDelta > curDelta) return 1.0;
@@ -40,12 +45,14 @@ namespace dhtoolkit
 		reset();
 	}
 
+	IntervalTemperature::~IntervalTemperature()
+	{
+		//empty
+	}
+
 	sa_temp_t IntervalTemperature::TemperatureChange(sa_temp_t curTemp, delta_t curDelta, delta_t newDelta)
 	{
 		++_numOfIterations;
-        //TODO: remove patch
-        if (100 == _numOfIterations) return 0;
-
 		if ( (newDelta > curDelta) && (_numOfIterations - _lastChange > IterationInterval) )
 		{
 			_lastChange = _numOfIterations;
@@ -77,6 +84,11 @@ namespace dhtoolkit
 	{
 		if ( (_outputDir.size() > 0) && (_outputDir[_outputDir.size()-1] != '\\') ) _outputDir += '\\';
 		reset();
+	}
+
+	DrawingCallback::~DrawingCallback()
+	{
+		//empty
 	}
 
 	void DrawingCallback::callback(const graph_ptr_t graph, const node_quad_t& currentState, delta_t currentDelta, sa_temp_t currentTemperature, bool isFinal)

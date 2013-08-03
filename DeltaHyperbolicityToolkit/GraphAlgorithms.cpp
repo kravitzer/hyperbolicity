@@ -3,12 +3,14 @@
 #include "defs.h"
 #include "FurthestNode.h"
 #include "NodeDistances.h"
+#include "StronglyConnectedComponent.h"
 #include "boost/format.hpp"
 #include <memory>
 #include <vector>
 #include <algorithm>
 #include <string>
 #include <queue>
+#include <unordered_set>
 
 using namespace std;
 
@@ -16,19 +18,19 @@ namespace dhtoolkit
 {
 	const int GraphAlgorithms::NodeIndexMaxNumOfDigits = 20;		//including null-terminator
 	const char* GraphAlgorithms::EdgeMarker = "->";
-	const unsigned int GraphAlgorithms::EdgeMarkerLen = strlen(EdgeMarker);
+	const size_t GraphAlgorithms::EdgeMarkerLen = strlen(EdgeMarker);
 	//calculation is: 2*nodes (null is counted twice, therefore:) minus 1, plus length of edge marker, plus length of 
 	//newline character
 	const int GraphAlgorithms::EdgeMaxLen = (2*NodeIndexMaxNumOfDigits - 1) + sizeof(EdgeMarker) + 1;
 	const char* GraphAlgorithms::Delimiter = "\r\n";
-	const unsigned int GraphAlgorithms::DelimiterLen = strlen(Delimiter);
+	const size_t GraphAlgorithms::DelimiterLen = strlen(Delimiter);
 	
 
 	void GraphAlgorithms::SaveGraphToFile(const graph_ptr_t graph, const std::string& path)
 	{
 		if (0 == graph->size()) throw exception("Cannot save empty graph!");
 
-		shared_ptr<FILE> outputFile = OpenFile(path.c_str(), "w", _SH_DENYRW);
+		shared_ptr<FILE> outputFile = OpenFile(path.c_str(), "wb", _SH_DENYRW);
 		//write all nodes but last
 		for (unsigned int i = 0; i < graph->size() - 1; ++i)
 		{
@@ -41,10 +43,10 @@ namespace dhtoolkit
 		for (node_index_t i = 0; i < graph->size(); ++i)
 		{
 			node_ptr_t node = graph->getNode(i);
-			const node_collection_t& edges = node->getEdges();
-			for (node_collection_t::const_iterator edgeIt = edges.begin(); edgeIt != edges.end(); ++edgeIt)
+			const node_weak_ptr_collection_t& edges = node->getEdges();
+			for (node_weak_ptr_collection_t::const_iterator edgeIt = edges.begin(); edgeIt != edges.end(); ++edgeIt)
 			{
-				WriteEdgeToFile(outputFile, node->getIndex(), (*edgeIt)->getIndex());
+				WriteEdgeToFile(outputFile, node->getIndex(), edgeIt->lock()->getIndex());
 			}
 		}
 	}
@@ -94,7 +96,7 @@ namespace dhtoolkit
 		for (unsigned int i = 0; i < graph->size(); ++i)
 		{
 			node_ptr_t curNode = graph->getNode(i);
-			node_collection_t neighbors = curNode->getEdges();
+			node_weak_ptr_collection_t neighbors = curNode->getEdges();
 
 			if (isNodeToBeMarked(curNode, nodesToMark))
 			{
@@ -106,9 +108,9 @@ namespace dhtoolkit
 			}
 
 			edges += (boost::format("%1%") % (i+1)).str();
-			for (node_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
+			for (node_weak_ptr_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
 			{
-				edges += (boost::format(" %1%") % ((**it).getIndex() + 1)).str();
+				edges += (boost::format(" %1%") % (it->lock()->getIndex() + 1)).str();
 			}
 			edges += "\n";
 		}
@@ -125,7 +127,7 @@ namespace dhtoolkit
 
 	delta_t GraphAlgorithms::CalculateDelta(const graph_ptr_t graph, const node_quad_t& state)
 	{
-		node_collection_t nodeCollection;
+		node_ptr_collection_t nodeCollection;
 		nodeCollection.push_back(state[1]);
 		nodeCollection.push_back(state[2]);
 		nodeCollection.push_back(state[3]);
@@ -207,7 +209,172 @@ namespace dhtoolkit
 		return res;
 	}
 
-	bool GraphAlgorithms::isNodeToBeMarked(node_ptr_t node, const node_quad_t* nodesToMark)
+	node_quad_t GraphAlgorithms::getRandomState(const graph_ptr_t graph)
+	{
+		//choose initial state at random
+		node_quad_t randomState;
+		for (unsigned int i = 0; i < node_quad_t::size(); ++i)
+		{
+			bool isUnique = true;
+
+			//repeat the following process:
+			//select a random node, then make sure none of the previous nodes is the same as this one
+			do
+			{
+                //select a random node
+				node_index_t index = rand() % graph->size();
+				randomState[i] = graph->getNode(index);
+
+                //assume unique until proven otherwise
+                isUnique = true;
+
+				//compare to all previous nodes
+				for (unsigned int j = 0; (j < i) && isUnique; ++j)
+				{
+					if (randomState[j]->getIndex() == index) isUnique = false;
+				}
+			} while (!isUnique);
+
+			//node at place i has been selected, move on to next index
+		}
+
+		return randomState;
+	}
+
+	graph_ptr_collection_t GraphAlgorithms::getStronglyConnectedComponents(const graph_ptr_t graph)
+	{
+		//collection of sccs
+		typedef vector<node_unordered_set_ptr_t> node_unordered_set_ptr_collection_t;
+		node_unordered_set_ptr_collection_t components;
+
+		//collection to return
+		graph_ptr_collection_t graphs;
+
+		//number of nodes already assigned to an scc
+		size_t processedNodeCount = 0;
+
+		//go over all nodes in graph, an search for their strongly-connected-component
+		for (unsigned int i = 0; processedNodeCount < graph->size(); ++i)
+		{
+			node_ptr_t curNode = graph->getNode(i);
+			bool isFoundInSomeComponent = false;
+			for (node_unordered_set_ptr_collection_t::const_iterator componentIt = components.cbegin(); componentIt != components.cend() && !isFoundInSomeComponent; ++componentIt)
+			{
+				isFoundInSomeComponent =  ( (*componentIt)->find(curNode) != (*componentIt)->cend() );
+			}
+
+			//if node is not in any of the currently known components, find its strongly-connected-component and add to collection
+			if (!isFoundInSomeComponent)
+			{
+				//find node's scc
+				StronglyConnectedComponent scc(graph, graph->getNode(i));
+				node_unordered_set_ptr_t curComponent = scc.getNodes();
+				string title = (boost::format("%1%_%2%") % graph->getTitle() % (graphs.size()+1)).str();
+				graphs.push_back(graph_ptr_t(new Graph(title, curComponent)));
+				components.push_back(curComponent);
+				processedNodeCount += curComponent->size();
+			}
+		}
+
+		return graphs;
+	}
+
+	graph_ptr_collection_t GraphAlgorithms::getBiconnectedComponents(const graph_ptr_t graph)
+	{
+		std::unordered_map<node_index_t, unsigned int> number, lowpt;
+		unsigned int index = 0;
+		graph_ptr_collection_t biconnectedGraphs;
+		vector<pair<node_index_t, node_index_t>> edgeStack;
+		for (unsigned int nodeIndex = 0; nodeIndex < graph->size(); ++nodeIndex)
+		{
+			if (number.cend() == number.find(nodeIndex)) biconnected(graph, nodeIndex, -1, number, lowpt, index, edgeStack, biconnectedGraphs);
+		}
+
+		return biconnectedGraphs;
+	}
+
+	void GraphAlgorithms::biconnected(const graph_ptr_t graph, node_index_t v, node_index_t u, unordered_map<node_index_t, unsigned int>& number, unordered_map<node_index_t, unsigned int>& lowpt, unsigned int index, vector<pair<node_index_t, node_index_t>>& edgeStack, graph_ptr_collection_t& biconnectedGraphs)
+	{
+		number[v] = ++index;
+		lowpt[v] = number[v];
+		const node_weak_ptr_collection_t& vEdges = graph->getNode(v)->getEdges();
+		for (node_weak_ptr_collection_t::const_iterator it = vEdges.cbegin(); it != vEdges.cend(); ++it)
+		{
+			node_index_t w = it->lock()->getIndex();
+			if (number.cend() == number.find(w))
+			{
+				edgeStack.push_back(pair<node_index_t, node_index_t>(v, w));
+				biconnected(graph, w, v, number, lowpt, index, edgeStack, biconnectedGraphs);
+				lowpt[v] = min(lowpt[v], lowpt[w]);
+				if (lowpt[w] >= number[v])
+				{
+					unordered_map<node_index_t, node_index_t> indexMap;
+					string title = (boost::format("%1%_%2%") % graph->getTitle() % (biconnectedGraphs.size()+1)).str();
+					graph_ptr_t newGraph(new Graph(title));
+					for (pair<node_index_t, node_index_t>& curEdge = edgeStack[edgeStack.size()-1]; number[curEdge.first] >= number[w]; curEdge = edgeStack[edgeStack.size()-1])
+					{
+						node_ptr_t u1, u2;
+						//add stack top as an edge - map its elements to new node indecis
+						if (indexMap.cend() == indexMap.find(curEdge.first))
+						{
+							u1 = newGraph->insertNode(graph->getNode(curEdge.first)->getLabel());
+							indexMap[curEdge.first] = u1->getIndex();
+						}
+						else
+						{
+							u1 = newGraph->getNode(indexMap[curEdge.first]);
+						}
+
+						if (indexMap.cend() == indexMap.find(curEdge.second))
+						{
+							u2 = newGraph->insertNode(graph->getNode(curEdge.second)->getLabel());
+							indexMap[curEdge.second] = u2->getIndex();
+						}
+						else
+						{
+							u2 = newGraph->getNode(indexMap[curEdge.second]);
+						}
+
+						u1->insertBidirectionalEdgeTo(u2);
+						edgeStack.resize(edgeStack.size()-1);
+					}
+					edgeStack.erase(find(edgeStack.cbegin(), edgeStack.cend(), pair<node_index_t, node_index_t>(v, w)));
+
+					node_ptr_t u1, u2;
+					//add stack top as an edge - map its elements to new node indecis
+					if (indexMap.cend() == indexMap.find(v))
+					{
+						u1 = newGraph->insertNode(graph->getNode(v)->getLabel());
+						indexMap[v] = u1->getIndex();
+					}
+					else
+					{
+						u1 = newGraph->getNode(indexMap[v]);
+					}
+
+					if (indexMap.cend() == indexMap.find(w))
+					{
+						u2 = newGraph->insertNode(graph->getNode(w)->getLabel());
+						indexMap[w] = u2->getIndex();
+					}
+					else
+					{
+						u2 = newGraph->getNode(indexMap[w]);
+					}
+					u1->insertBidirectionalEdgeTo(u2);
+
+					biconnectedGraphs.push_back(newGraph);
+				}
+			}
+			else if (number[w] < number[v] && w != u)
+			{
+				edgeStack.push_back(pair<node_index_t, node_index_t>(v, w));
+				lowpt[v] = min(lowpt[v], number[w]);
+			}
+		}
+	}
+
+    bool GraphAlgorithms::isNodeToBeMarked(node_ptr_t node, const node_quad_t* nodesToMark)
 	{
 		if (nullptr == nodesToMark) return false;
 
@@ -226,7 +393,7 @@ namespace dhtoolkit
 		if (distancesFromU) *distancesFromU = startNodeDistances;
 
 		//find nodes at maximal distance
-        node_collection_t furthestNodes;
+        node_ptr_collection_t furthestNodes;
 		distance_t maxDistance = 0;
 		for (distance_dict_t::const_iterator it = startNodeDistances.cbegin(); it != startNodeDistances.cend(); ++it)
 		{
@@ -290,7 +457,7 @@ namespace dhtoolkit
 		char edgeString[EdgeMaxLen];
 		memset(edgeString, '\0', EdgeMaxLen);
 
-		int len = sprintf_s(edgeString, "%s%s%s%s", srcIndex, EdgeMarker, dstIndex, Delimiter);
+		int len = sprintf_s(edgeString, "%d%s%d%s", srcIndex, EdgeMarker, dstIndex, Delimiter);
 		if (-1 == len) throw exception("Error creating edge string");
 		if (len != fwrite(edgeString, sizeof(char), len, filePtr.get()))
 		{
@@ -310,8 +477,8 @@ namespace dhtoolkit
 
 		while (!delimiterReached)
 		{
-			unsigned int bytesRead = fread(buf, sizeof(char), BufSize, filePtr.get());
-			if ((BufSize != bytesRead) && (0 != feof(filePtr.get())))
+			size_t bytesRead = fread(buf, sizeof(char), BufSize, filePtr.get());
+			if ((BufSize != bytesRead) && (0 == feof(filePtr.get())))
 			{
 				throw std::exception("Failed reading from file");
 			}
@@ -325,8 +492,9 @@ namespace dhtoolkit
 				else if (StringStartsWith(buf+i, Delimiter))
 				{
 					delimiterReached = true;
+                    long newLinePosition = static_cast<long>(i - bytesRead + DelimiterLen);
 					//seek back to the position of the newline (right after it, actually)
-					if (0 != fseek(filePtr.get(), i - bytesRead + DelimiterLen, SEEK_CUR))
+					if (0 != fseek(filePtr.get(), newLinePosition, SEEK_CUR))
 					{
 						throw std::exception("Failed setting file's position indicator");
 					}
@@ -347,7 +515,7 @@ namespace dhtoolkit
 		//last character is always null, and never overwritten, to avoid a buffer overrun
 		buf[BufSize] = '\0';
 		char* curPos = buf;
-		unsigned int bufDataSize = 0;
+		size_t bufDataSize = 0;
 
 		while (0 == feof(filePtr.get()))
 		{
@@ -368,7 +536,7 @@ namespace dhtoolkit
 			{
 				while (curPos < buf + bufDataSize + bytesRead)
 				{
-					unsigned int dataRead = 0;
+					size_t dataRead = 0;
 					Edge edge = ReadSingleEdge(curPos, true, &dataRead);
 					edges.push_back(edge);
 					curPos += dataRead;
@@ -395,7 +563,7 @@ namespace dhtoolkit
 		return edges;
 	}
 
-	GraphAlgorithms::Edge GraphAlgorithms::ReadSingleEdge(const char* buf, bool delimiterPresent, unsigned int* dataReadFromBuffer)
+	GraphAlgorithms::Edge GraphAlgorithms::ReadSingleEdge(const char* buf, bool delimiterPresent, size_t* dataReadFromBuffer)
 	{
 		const char* edgeMarker = strstr(buf, EdgeMarker);
 		if (!edgeMarker) throw InvalidFormatException("Edge marker not found");
@@ -403,8 +571,8 @@ namespace dhtoolkit
 		if (delimiterPresent && !delimiter) throw InvalidFormatException("No delimiter found");
 		
 		//calculate length of each node (e.g. length of node index "123" is 3, as in 3 characters)
-		unsigned int node1len = edgeMarker - buf;
-		unsigned int node2len = 0;
+		size_t node1len = edgeMarker - buf;
+		size_t node2len = 0;
 		if (delimiter)
 			node2len = delimiter - edgeMarker - EdgeMarkerLen;
 		else

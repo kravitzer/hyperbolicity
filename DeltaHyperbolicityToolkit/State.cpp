@@ -24,13 +24,6 @@ namespace dhtoolkit
 		_nodes[1] = n2;
 		_nodes[2] = n3;
 		_nodes[3] = n4;
-
-		if ( (_nodes[1] == _nodes[0]) ||
-			 (_nodes[2] == _nodes[0]) ||
-			 (_nodes[3] == _nodes[0]) ||
-			 (_nodes[2] == _nodes[1]) ||
-			 (_nodes[3] == _nodes[1]) ||
-			 (_nodes[3] == _nodes[2]) ) throw std::exception("State nodes are not unique");
 	}
 
 	const node_ptr_t& State::operator[](int index) const
@@ -50,13 +43,30 @@ namespace dhtoolkit
 		return NumberOfNodes;
 	}
 
+	bool State::isStateValid(const node_ptr_t v1, const node_ptr_t v2, const node_ptr_t v3, const node_ptr_t v4)
+	{
+		return !( (v1 == v2) ||
+			      (v1 == v3) ||
+				  (v1 == v4) ||
+				  (v2 == v3) ||
+				  (v2 == v4) ||
+				  (v3 == v4) );
+	}
+
+	bool State::isInitialized() const
+	{
+		return (_nodes[0] != nullptr && _nodes[1] != nullptr && _nodes[2] != nullptr && _nodes[3] != nullptr);;
+	}
+
 	string State::printNodes() const
 	{
+		if (!isInitialized()) throw std::exception("State instance is not initialized");
+
 		string res;
 
 		for (unsigned int i = 0; i < NumberOfNodes; ++i)
 		{
-			res += (boost::format("%1% ") % _nodes[i]->getIndex()).str();
+			res += _nodes[i]->getLabel() + " ";
 		}
 
 		return res.substr(0, res.size()-1);

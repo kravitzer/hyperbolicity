@@ -23,7 +23,12 @@ public:
 	 * @brief	Default ctor. Nodes may be added using the insertion methods.
 	 * @param	title	Graph title.
 	 */
-	Graph(std::string title);
+	Graph(const std::string& title);
+
+	/*
+	 * @brief	Creates the graph from the given strongly-connected-component.
+	 */
+	Graph(const std::string& title, const node_unordered_set_ptr_t scc);
 
 	//copy ctor & assignment operator
 	Graph(const Graph& other);
@@ -36,9 +41,10 @@ public:
 
 	/*
 	 * @brief	Inserts a new node to the graph.
+	 * @param	label	Node's label. If empty, it will be set to the node's index.
 	 * @returns	A pointer to the newly created node.
 	 */
-	node_ptr_t insertNode();
+	node_ptr_t insertNode(std::string label = std::string());
 
 	/*
 	 * @returns	The node whose index is given.
@@ -49,13 +55,13 @@ public:
 	/*
 	 * @returns	The size of the graph (i.e. # of nodes).
 	 */
-	unsigned int size() const;
+	size_t size() const;
 
 	/*
 	 * @returns	The number of edges in the graph.
 	 * @note	Bidirectional edges are counted twice!
 	 */
-	unsigned int edgeCount() const;
+	size_t edgeCount() const;
 
 	/*
 	 * @brief	Removes a node from the graph, based on the given index.
@@ -76,6 +82,11 @@ public:
 	 * @brief	Unmarks all nodes in the graph.
 	 */
 	void unmarkNodes() const;
+
+	/*
+	 * @brief	Deletes all nodes that are currently marked from the graph.
+	 */
+	void deleteMarkedNodes();
 
     /*
  	 * @brief	Prunes trees from the graph. I.e. removes all nodes with degree 0 or 1 (and those that become of this degree as a result
@@ -119,7 +130,7 @@ private:
 	void assertIndexInBounds(node_index_t index) const;
 
 	std::string _title;
-	node_collection_t _nodes;
+	node_ptr_collection_t _nodes;
 };
 
 } // namespace dhtoolkit

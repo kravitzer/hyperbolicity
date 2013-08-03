@@ -24,7 +24,7 @@ public:
 	/*
 	 * @returns	A read-only vecotr of the node's pointed to by this node.
 	 */
-	const node_collection_t& getEdges() const;
+	const node_weak_ptr_collection_t& getEdges() const;
 
 	/*
 	 * @brief	Adds an edge from this instance's node to the given node.
@@ -51,6 +51,14 @@ public:
 	void removeEdge(const node_ptr_t otherNode);
 
 	/*
+	 * @brief	Checks whether there's an edge to the given node.
+	 * @param	otherNode	The node that is the destination of the edge searched.
+	 * @returns	True if an edge exists to or from other node, false otherwise.
+	 * @throws	InvalidParamException	Upon null pointer or nodes not belonging to the same graph.
+	 */
+	bool hasEdge(const node_ptr_t otherNode) const;
+
+	/*
 	 * @returns	The node's index.
 	 */
 	node_index_t getIndex() const;
@@ -70,6 +78,11 @@ public:
 	 */
 	void unmark() const;
 
+	/*
+	 * @returns	The node's label
+	 */
+	std::string getLabel() const;
+
 private:
 	//do *not* allow copy ctor / assignment operator
 	Node(const Node&);
@@ -79,7 +92,7 @@ private:
 	 * @brief	Ctor receiving the node's index. A node may only be created by a Graph instace.
 	 * @param	index	Node's index - must be unique in the graph!
 	 */
-	Node(node_index_t index);
+	Node(node_index_t index, std::string label);
 
 	/*
 	 * @brief	A node's index may need to change (if a node is removed, for example). This
@@ -89,9 +102,18 @@ private:
 	 */
 	void setIndex(node_index_t newIndex);
 
+	//node's index (0-based)
 	node_index_t _index;
-	node_collection_t _outgoingEdges;
-	node_collection_t _incomingEdges;
+
+	//collection of node's incoming & outgoing nodes. NOTE: must be a weak pointer, otherwise when freeing
+	//a graph, the nodes won't be released, as they will have cyclic references to each other!
+	node_weak_ptr_collection_t _outgoingEdges;
+	node_weak_ptr_collection_t _incomingEdges;
+
+	//node's label - doesn't change even when the index changes
+	std::string _label;
+
+	//is node marked or not
 	mutable bool _isMarked;
 };
 

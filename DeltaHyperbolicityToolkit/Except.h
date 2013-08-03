@@ -43,6 +43,13 @@ namespace dhtoolkit
 		InvalidFormatException(const char* what) : DeltaHyperbolicityException(what) {}
 	};
 
+	class AlgorithmCompletedException : public DeltaHyperbolicityException
+	{
+	public:
+		AlgorithmCompletedException() : DeltaHyperbolicityException() {}
+		AlgorithmCompletedException(const char* what) : DeltaHyperbolicityException(what) {}
+	};
+
 } // namespace dhtoolkit
 
 #endif // DELTAHYPER_EXCEPT_H

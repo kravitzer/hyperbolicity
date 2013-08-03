@@ -20,7 +20,7 @@ BFS::~BFS()
 void BFS::run(const node_ptr_t origin)
 {
 	//create first BFS entry - the origin itself
-	bfs_entry_t originEntry = {origin, 0};
+	bfs_entry_t originEntry = {origin, nullptr, 0};
     std::queue<bfs_entry_t>().swap(_bfsQueue);
 	_bfsQueue.push(originEntry);
 
@@ -60,20 +60,21 @@ void BFS::runBfsLoop()
         bfs_entry_t entry = _bfsQueue.front();
         _bfsQueue.pop();
 
+		//call derived class implementation
+        keepRunning = nodeTraversal(entry.node, entry.prevNode, entry.distance);
+
         //iterate through neighbors
-        const node_collection_t& neighbors = entry.node->getEdges();
-        for (node_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend() && keepRunning; ++it)
+        const node_weak_ptr_collection_t& neighbors = entry.node->getEdges();
+        for (node_weak_ptr_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
         {
             //skip if neighbor has already been marked
-            if ((*it)->isMarked()) continue;
+            if (it->lock()->isMarked()) continue;
 
             //mark neighbor
-            (*it)->mark();
+            it->lock()->mark();
             //add neighbor to queue
-            bfs_entry_t newEntry = {(*it), entry.distance+1};
+            bfs_entry_t newEntry = {it->lock(), entry.node, entry.distance+1};
             _bfsQueue.push(newEntry);
-            //call derived class implementation
-            keepRunning = nodeTraversal(newEntry.node, entry.node, newEntry.distance);
         }
     }
 

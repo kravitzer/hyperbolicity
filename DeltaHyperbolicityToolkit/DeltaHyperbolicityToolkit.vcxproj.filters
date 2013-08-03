@@ -63,6 +63,9 @@
     <ClInclude Include="SpanningTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StronglyConnectedComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graph.cpp">
@@ -97,6 +100,12 @@
     </ClCompile>
     <ClCompile Include="SpanningTree.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StronglyConnectedComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeHasher.h">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

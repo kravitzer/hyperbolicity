@@ -29,6 +29,9 @@ graph_ptr_t SpanningTree::getTree() const
 
 bool SpanningTree::nodeTraversal(const node_ptr_t curNode, const node_ptr_t prevNode, distance_t distanceFromOrigin)
 {
+	//skip root (has no previous edge)
+	if (nullptr == prevNode) return true;
+
 	//insert edge b/w corresponding nodes in our graph as well
 	_tree->getNode( curNode->getIndex() )->insertBidirectionalEdgeTo( _tree->getNode( prevNode->getIndex() ) );
 	return true;

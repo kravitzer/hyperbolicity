@@ -62,6 +62,7 @@ private:
 	typedef struct
 	{
 		node_ptr_t	node;
+		node_ptr_t	prevNode;
 		distance_t	distance;
 	} bfs_entry_t;
 

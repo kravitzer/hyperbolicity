@@ -21,14 +21,15 @@ namespace dhtoolkit
 	{
 	public:
 		DDSweep(const std::string& outputDir);
+		virtual ~DDSweep();
 
 	private:
 		/*
 		 * @brief	See documentation in IGraphAlg and in the class description above.
 		 */
-		virtual DeltaHyperbolicity runImpl(const graph_ptr_t graph);
-		virtual DeltaHyperbolicity runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t& initialState);
-		virtual void reset();
+		virtual DeltaHyperbolicity stepImpl();
+		virtual void initImpl(const node_quad_t& initialState);
+		virtual bool isComplete() const;
 
 		//The maximal number of trials to get 4 different nodes out of separate double-sweeps
 		static const unsigned int MaxNumOfTrials = 50;

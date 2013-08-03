@@ -17,7 +17,7 @@ namespace dhtoolkit
 		//empty on purpose
 	}
 
-	node_collection_t FurthestNode::getFurthestNodes() const
+	node_ptr_collection_t FurthestNode::getFurthestNodes() const
 	{
 		return _nodes;
 	}

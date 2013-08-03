@@ -7,7 +7,7 @@ using namespace std;
 
 namespace dhtoolkit
 {
-	DeltaHyperbolicity::DeltaHyperbolicity(delta_t delta) : _delta(delta), _nodesAvailable(false), _nodes() 
+	DeltaHyperbolicity::DeltaHyperbolicity() : _delta(0), _nodesAvailable(false), _nodes() 
 	{
 		//empty
 	}
@@ -22,9 +22,19 @@ namespace dhtoolkit
 		return _delta;
 	}
 
-	const node_quad_t& DeltaHyperbolicity::getNodes() const
+	void DeltaHyperbolicity::setDelta(delta_t delta)
+	{
+		_delta = delta;
+	}
+
+	const node_quad_t& DeltaHyperbolicity::getState() const
 	{
 		return _nodes;
+	}
+
+	void DeltaHyperbolicity::setState(const node_quad_t& state)
+	{
+		_nodes = state;
 	}
 
 	string DeltaHyperbolicity::printNodes() const

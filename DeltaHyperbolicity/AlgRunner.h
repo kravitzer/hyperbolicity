@@ -35,19 +35,32 @@ public:
 	void load();
 
 	/*
-	 * @brief	Wrapper for running the algorithm. See IGraphAlg documentation for details.
+	 * @brief	Initializes the loaded algorithm.
+	 * @param	graph	The graph to run on.
+	 * @param	initialState	The initial state for the algorithm to start running from (relevant only to some algortihms, others will ignore this parameter).
+	 *							May be left unspecified.
 	 */
-	dhtoolkit::DeltaHyperbolicity run(const dhtoolkit::graph_ptr_t graph) const;
+	void initialize(const dhtoolkit::graph_ptr_t graph, const dhtoolkit::node_quad_t& initialState = dhtoolkit::node_quad_t());
 
 	/*
-	 * @brief	Wrapper for running the algorithm. See IGraphAlg documentation for details.
+	 * @brief	Wrapper for running a single step of the algorithm. See IGraphAlg documentation for details.
 	 */
-	dhtoolkit::DeltaHyperbolicity runWithInitialState(const dhtoolkit::graph_ptr_t graph, const dhtoolkit::node_quad_t& state) const;
+	dhtoolkit::DeltaHyperbolicity step() const;
+
+	/*
+	 * @returns	True if the algorithm has completed its run, false otherwise.
+	 */
+	bool isComplete() const;
 
 	/*
 	 * @returns	The algorithm's name.
 	 */
 	std::string getName() const;
+
+	/*
+	 * @returns	The output dir.
+	 */
+	std::string getOutputDir() const { return _outputDir; }
 
 private:
 	//do *not* allow copy ctor / assignment operator

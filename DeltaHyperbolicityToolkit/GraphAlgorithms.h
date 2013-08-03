@@ -8,8 +8,10 @@
 
 #include "DeltaHyperbolicity.h"
 #include "Graph.h"
+#include "StronglyConnectedComponent.h"
 #include <vector>
 #include <queue>
+#include <unordered_map>
 
 namespace dhtoolkit
 {
@@ -83,19 +85,39 @@ namespace dhtoolkit
 		 */
 		static DoubleSweepResult DoubleSweep(const graph_ptr_t graph, const node_ptr_t origin = node_ptr_t(nullptr));
 
+		/*
+		 * @returns	A random state from the graph given.
+		 */
+		static node_quad_t getRandomState(const graph_ptr_t graph);
+
+		/*
+		 * @returns	Returns a collection of graphs, each of which contains a single strongly-connected-component, that altogether sum up to the given graph.
+		 *			E.g. a graph which is already a single strongly-connected-component would return a collection of size 1 with the graph itself. A graph that
+		 *			has 2 strongly-connected-components would return 2 separate graphs, each containing a single scc, etc.
+		 */
+		static graph_ptr_collection_t getStronglyConnectedComponents(const graph_ptr_t graph);
+
+		/*
+		 * @returns	Returns the collection of the sub-graphs that are biconnected within the graph.
+		 */
+		static graph_ptr_collection_t getBiconnectedComponents(const graph_ptr_t graph);
+
 	private:
 		static const int NodeIndexMaxNumOfDigits;
 		static const char* EdgeMarker;
-		static const unsigned int EdgeMarkerLen;
+		static const size_t EdgeMarkerLen;
 		static const int EdgeMaxLen;
 		static const char* Delimiter;
-		static const unsigned int DelimiterLen;
+		static const size_t DelimiterLen;
 
 		struct Edge
 		{
 			node_index_t src;
 			node_index_t dst;
 		};
+
+		static void biconnected(const graph_ptr_t graph, node_index_t v, node_index_t u, std::unordered_map<node_index_t, unsigned int>& number, std::unordered_map<node_index_t, unsigned int>& lowpt, unsigned int index, std::vector<std::pair<node_index_t, node_index_t>>& edgeStack, graph_ptr_collection_t& biconnectedGraphs);
+
 
 		/*
 		 * @param	node			The node to be checked.
@@ -165,7 +187,7 @@ namespace dhtoolkit
 		 * @returns	The edge read.
 		 * @throws	std::excetion Upon an error (e.g. invalid buffer - no edge marker is present).
 		 */
-		static Edge ReadSingleEdge(const char* buf, bool delimiterPresent, unsigned int* dataReadFromBuffer);
+		static Edge ReadSingleEdge(const char* buf, bool delimiterPresent, size_t* dataReadFromBuffer);
 
 		/*
 		 * @returns	True iff s starts with p or p starts with s.

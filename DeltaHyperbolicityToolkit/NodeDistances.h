@@ -45,7 +45,7 @@ namespace dhtoolkit
         /*
          * @returns The distances from the origin to the given destination nodes.
          */
-        distance_dict_t getDistances(const node_collection_t& dests);
+        distance_dict_t getDistances(const node_ptr_collection_t& dests);
 
 	protected:
 		/*
@@ -63,7 +63,7 @@ namespace dhtoolkit
         node_ptr_t _origin;
 
         //when this collection of nodes is found, the search stops. Empty means find all.
-        node_collection_t _dests;
+        node_ptr_collection_t _dests;
 
         //counts the number of nodes in _dests that have been found
         unsigned int _nodesFound;
@@ -73,7 +73,7 @@ namespace dhtoolkit
          * @brief   Starts or continues the BFS traversal if necessary until all nodes in the node collection given are found.
          *          An empty collection means find all nodes.
          */
-        void startTraversalForNodes(const node_collection_t& dests);
+        void startTraversalForNodes(const node_ptr_collection_t& dests);
 	};
 
 }

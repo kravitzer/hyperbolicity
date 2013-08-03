@@ -15,24 +15,29 @@ namespace dhtoolkit
 		//empty
 	}
 
-	DeltaHyperbolicity DSweep::runImpl(const graph_ptr_t graph) 
+	DSweep::~DSweep()
+	{
+		//empty
+	}
+
+	DeltaHyperbolicity DSweep::stepImpl() 
 	{
 		//first perform a double sweep
-		GraphAlgorithms::DoubleSweepResult ds = GraphAlgorithms::DoubleSweep(graph);
+		GraphAlgorithms::DoubleSweepResult ds = GraphAlgorithms::DoubleSweep(_graph);
 
 		node_ptr_t& v1 = ds.u;
 		node_ptr_t& v2 = ds.v;
 		distance_dict_t& v1Dists = ds.uDistances;
-		distance_dict_t v2Dists = NodeDistances(graph, v2).getDistances();;
+		distance_dict_t v2Dists = NodeDistances(_graph, v2).getDistances();;
 
 		distance_t distV1V2 = v1Dists[v2->getIndex()];
 		distance_t distV1V3 = 0;
 		distance_t distV2V3 = 0;
-		node_collection_t v3Candidates;
+		node_ptr_collection_t v3Candidates;
 
-		for (unsigned int i = 0; i < graph->size(); ++i)
+		for (unsigned int i = 0; i < _graph->size(); ++i)
 		{
-			node_ptr_t curNode = graph->getNode(i);
+			node_ptr_t curNode = _graph->getNode(i);
 			if ( (curNode == v1) || (curNode == v2) ) continue;
 
 			distance_t distFromV1 = v1Dists[curNode->getIndex()];
@@ -59,13 +64,13 @@ namespace dhtoolkit
 		node_ptr_t v3 = v3Candidates[index];
 
 		//calculate distances for the newly selected v3
-		distance_dict_t v3Dists = NodeDistances(graph, v3).getDistances();
+		distance_dict_t v3Dists = NodeDistances(_graph, v3).getDistances();
 
 		node_ptr_t v4;
 		delta_t maxDelta = 0;
-		for (unsigned int i = 0; i < graph->size(); ++i)
+		for (unsigned int i = 0; i < _graph->size(); ++i)
 		{
-			node_ptr_t curNode = graph->getNode(i);
+			node_ptr_t curNode = _graph->getNode(i);
 			if ( (curNode == v1) || (curNode == v2) || (curNode == v3) ) continue;
 
 			distance_t distFromV1 = v1Dists[curNode->getIndex()];
@@ -88,14 +93,15 @@ namespace dhtoolkit
 		return DeltaHyperbolicity(maxDelta, state);
 	}
 
-	DeltaHyperbolicity DSweep::runWithInitialStateImpl(const graph_ptr_t graph, const node_quad_t& initialState)
-	{
-		return runAndReturnBetter(graph, initialState);
-	}
-
-	void DSweep::reset()
+	void DSweep::initImpl(const node_quad_t&)
 	{
 		//empty
+	}
+
+	bool DSweep::isComplete() const
+	{
+		//we can always run one more...
+		return false;
 	}
 
 

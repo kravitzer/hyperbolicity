@@ -17,25 +17,25 @@ NodeDistances::~NodeDistances()
 
 distance_dict_t NodeDistances::getDistances()
 {
-    startTraversalForNodes(node_collection_t());
+    startTraversalForNodes(node_ptr_collection_t());
 
 	//add nodes that are not connected to origin with infinite distance
 	for (unsigned int i = 0; i < _graph->size(); ++i)
 	{
-		if ( _distances.find(i) == _distances.end() ) _distances[i] = InfiniteDelta;
+		if ( _distances.find(i) == _distances.end() ) _distances[i] = InfiniteDistance;
 	}
     
     //by this point, the run was completed and all nodes were found
 	return _distances;
 }
 
-distance_dict_t NodeDistances::getDistances(const node_collection_t& dests)
+distance_dict_t NodeDistances::getDistances(const node_ptr_collection_t& dests)
 {
-    if (dests.empty()) throw std::exception("Destination collection must not be empty");
+    if (dests.empty()) return distance_dict_t();
 
     startTraversalForNodes(dests);
     distance_dict_t ret;
-    for (node_collection_t::const_iterator it = dests.cbegin(); it != dests.cend(); ++it)
+    for (node_ptr_collection_t::const_iterator it = dests.cbegin(); it != dests.cend(); ++it)
     {
 		if ( _distances.find((*it)->getIndex()) == _distances.end() )
 		{
@@ -52,7 +52,7 @@ distance_dict_t NodeDistances::getDistances(const node_collection_t& dests)
 
 distance_t NodeDistances::getDistance(node_ptr_t dest)
 {
-    node_collection_t singleNodeCollection;
+    node_ptr_collection_t singleNodeCollection;
     singleNodeCollection.push_back(dest);
     startTraversalForNodes(singleNodeCollection);
     return _distances[dest->getIndex()];
@@ -86,7 +86,7 @@ bool NodeDistances::nodeTraversal(const node_ptr_t curNode, const node_ptr_t pre
     }
 }
 
-void NodeDistances::startTraversalForNodes(const node_collection_t& dests)
+void NodeDistances::startTraversalForNodes(const node_ptr_collection_t& dests)
 {
     if (!_runStarted)
     {
@@ -110,7 +110,7 @@ void NodeDistances::startTraversalForNodes(const node_collection_t& dests)
         else
         {
             //find which nodes are still to be found
-            for (node_collection_t::const_iterator it = dests.cbegin(); it != dests.cend(); ++it)
+            for (node_ptr_collection_t::const_iterator it = dests.cbegin(); it != dests.cend(); ++it)
             {
                 if ( _distances.end() == _distances.find( (*it)->getIndex() ) )
                 {
