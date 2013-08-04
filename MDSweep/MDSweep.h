@@ -33,6 +33,12 @@ namespace dhtoolkit
 		virtual bool isComplete() const;
 
 		/*
+		 * @brief	Finds a new, unique double-sweep result and adds it to the collection of results.
+		 *			Also calculates the distances from the previous double sweep's v node to the rest of the graph.
+		 */
+		void prepareNextStep();
+
+		/*
 		 * @returns true iff the two double sweep results have no nodes in common.
 		 */
 		bool areSweepsUnique(GraphAlgorithms::DoubleSweepResult& res1, GraphAlgorithms::DoubleSweepResult& res2);
@@ -43,13 +49,15 @@ namespace dhtoolkit
 		bool isNewSweep(const GraphAlgorithms::DoubleSweepResult& ds) const;
 
 		//The maximal number of trials to get 4 different nodes out of separate double-sweeps
-		static const unsigned int MaxNumOfTrials = 50;
+		static const unsigned int MaxNumOfTrials = 500;
 
 		//sweeps collected so far
 		std::vector<GraphAlgorithms::DoubleSweepResult> _sweeps;
 		//the distances from the "other" vertex of the double sweep to the rest of the nodes
 		//i.e. _vDists[i] has the distances from _sweeps[i]'s second vertex to the rest of the graph
 		std::vector<distance_dict_t> _vDists;
+		//we only decide that we're done if the maximal allowed number of trials to achieve a new unique double-sweep has been exceeded
+		bool _isCompleted;
 	};
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm(const std::string& outputDir);

@@ -10,11 +10,9 @@
 
 using namespace std;
 
-const unsigned int MinNumOfSweeps = 100;
-
 namespace dhtoolkit
 {
-	MDSweep::MDSweep(const string& outputDir) : IGraphAlg(outputDir) 
+	MDSweep::MDSweep(const string& outputDir) : IGraphAlg(outputDir), _isCompleted(false)
 	{
 		//empty
 	}
@@ -26,19 +24,7 @@ namespace dhtoolkit
 
 	DeltaHyperbolicity MDSweep::stepImpl()
 	{	
-		GraphAlgorithms::DoubleSweepResult curDS = GraphAlgorithms::DoubleSweep(_graph);
-		unsigned int numOfTrials = 1;
-		for (; numOfTrials < MaxNumOfTrials && !isNewSweep(curDS); ++numOfTrials)
-		{
-			//calculate another double-sweep
-			curDS = GraphAlgorithms::DoubleSweep(_graph);
-		}
-		if (!isNewSweep(curDS)) throw std::exception("Exceeded the maximal number of trials allowed!");
-
-		_sweeps.push_back(curDS);
-		//calculate all v-distances from previous-to-last double-sweep
-		_vDists.push_back( NodeDistances(_graph, _sweeps[_sweeps.size()-2].v).getDistances() );
-
+		GraphAlgorithms::DoubleSweepResult curDS = _sweeps[_sweeps.size()-1];
 		delta_t maxDelta = 0;
 		node_quad_t maxState;
 		for (unsigned int i = 0; i < _sweeps.size()-1; ++i)
@@ -62,10 +48,34 @@ namespace dhtoolkit
 				maxState.reset(_sweeps[i].u, _sweeps[i].v, curDS.u, curDS.v);
 			}
 		}
+
+		prepareNextStep();
 		
 		return DeltaHyperbolicity(maxDelta, maxState);
 	}
 	
+	void MDSweep::prepareNextStep()
+	{
+		GraphAlgorithms::DoubleSweepResult curDS = GraphAlgorithms::DoubleSweep(_graph);
+		unsigned int numOfTrials = 1;
+		for (; numOfTrials < MaxNumOfTrials && !isNewSweep(curDS); ++numOfTrials)
+		{
+			//calculate another double-sweep
+			curDS = GraphAlgorithms::DoubleSweep(_graph);
+		}
+
+		//if couldn't find another double-sweep before exceeding maximal number of trials, we're done
+		if (!isNewSweep(curDS))
+		{
+			_isCompleted = true;
+			return;
+		}
+
+		_sweeps.push_back(curDS);
+		//calculate all v-distances from previous-to-last double-sweep
+		_vDists.push_back( NodeDistances(_graph, _sweeps[_sweeps.size()-2].v).getDistances() );
+	}
+
 	bool MDSweep::areSweepsUnique(GraphAlgorithms::DoubleSweepResult& res1, GraphAlgorithms::DoubleSweepResult& res2)
 	{
 		return ( (res1.u != res2.u) && (res1.v != res2.u) && (res1.u != res2.v) && (res1.v != res2.v) && (res1.u != res1.v) && (res2.u != res2.v) );
@@ -83,17 +93,19 @@ namespace dhtoolkit
 
 	void MDSweep::initImpl(const node_quad_t&)
 	{
+		_isCompleted = false;
 		_vDists.clear();
 		_sweeps.clear();
 
 		//we need at least one double-sweep before each step
 		_sweeps.push_back(GraphAlgorithms::DoubleSweep(_graph));
+		prepareNextStep();
 	}
 
 	bool MDSweep::isComplete() const
 	{
 		//we can always run one more...
-		return false;
+		return _isCompleted;
 	}
 
 
