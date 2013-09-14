@@ -8,9 +8,9 @@
 
 #include <string>
 #include <Windows.h>
-#include "DeltaHyperbolicityToolkit\defs.h"
-#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
-#include "DeltaHyperbolicityToolkit\IGraphAlg.h"
+#include "defs.h"
+#include "DeltaHyperbolicity.h"
+#include "IGraphAlg.h"
 
 typedef dhtoolkit::IGraphAlg* (*AlgCreationMethod)(const std::string& outputDir);
 typedef void (*AlgReleaseMethod)(dhtoolkit::IGraphAlg*);

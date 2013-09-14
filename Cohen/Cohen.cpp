@@ -24,7 +24,7 @@ namespace dhtoolkit
 
 	bool Cohen::isComplete() const
 	{
-        return (_end == _l1);
+        return (_end >= _l1);
 	}
 
 	void Cohen::initImpl(const node_quad_t&)
@@ -49,8 +49,8 @@ namespace dhtoolkit
         _l1 = _l2 = _pairs.size()-1;
         _l1Pos = 0;
 		_l2Pos = 0;
+		_end = 0;
 		advancePointers();
-        _end = 0;
 	}
 
 	DeltaHyperbolicity Cohen::stepImpl()
@@ -112,11 +112,17 @@ namespace dhtoolkit
 				++_l1Pos;
 				while (_l1Pos == _pairs[_l1].size() || ( _l1 == _l2 && _l1Pos == _pairs[_l1].size()-1 ))
 				{
+					//if _l2 is at 0, we can't take it any lower - i.e. we're done
+					if (0 == _l2) return;
+
 					--_l2;
 					while (_l2 < _l1)
 					{
 						--_l1;
 						_l2 = _pairs.size() - 1;
+
+						//if we've reached end position - we're done
+						if (_end >= _l1) return;
 					}
 					_l1Pos = 0;
 				}

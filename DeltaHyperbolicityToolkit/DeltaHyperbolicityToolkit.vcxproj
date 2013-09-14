@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AlgRunner.h" />
     <ClInclude Include="BFS.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="DeltaHyperbolicity.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="FurthestNode.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphAlgorithms.h" />
+    <ClInclude Include="GraphBuilder.h" />
     <ClInclude Include="IGraphAlg.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeDistances.h" />
@@ -165,7 +167,9 @@
     <ClInclude Include="StronglyConnectedComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AlgRunner.cpp" />
     <ClCompile Include="BFS.cpp" />
+    <ClCompile Include="GraphBuilder.cpp" />
     <ClCompile Include="NodeHasher.h" />
     <ClCompile Include="DeltaHyperbolicity.cpp" />
     <ClCompile Include="FurthestNode.cpp" />

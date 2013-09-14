@@ -47,6 +47,18 @@ namespace dhtoolkit
 		 */
 		static graph_ptr_t LoadGraphFromFile(const std::string& path);
 
+
+		/*
+		 * @brief	Loads the graph from a given file, where each line is of the form: <node-id1>\t<node-id2>\n
+		 *			Comments are allowed if line starts with "#".
+		 * @param	path			The file path to be loaded.
+		 * @param	isBidirectional	True if each line represents a bidirectional edge, false otherwise.
+		 * @returns	A graph instance loaded from the file.
+		 * @throws	InvalidFormatException	Upon an invalid file format.
+		 * @throws	std::exception			Upon an I/O failure.
+		 */
+		static graph_ptr_t LoadGraphFromEdgeListFile(const std::string& path, bool isBidirectional);
+
 		/*
 		 * @brief	Creates a Pajek net file that can be visualized using Pajek.
 		 * @param	fileName		The name of the files to be created.
@@ -120,11 +132,12 @@ namespace dhtoolkit
 		 * @param	graph	The graph to run on.
 		 * @param	origin	The node to start from.
 		 * @param	delta	Will be set to the delta of the cycle found.
-		 * @param	irremovableNodes	In case the cycle cannot be removed, the labels of the nodes processed will be added to this set (the user 
+		 * @param	processedNodes		In case the cycle cannot be removed, the labels of the nodes processed will be added to this set (the user 
 		 *								may keep them in order to avoid running on them in the future).
+		 *								In case a cycle was removed, the labels of the nodes revmoed.
 		 * @returns	Whether a cycle was removed from the graph or not.
 		 */
-		static bool removeCycle(graph_ptr_t graph, node_ptr_t origin, delta_t& delta, std::unordered_set<std::string>& irremovableNodes);
+		static bool removeCycle(graph_ptr_t graph, node_ptr_t origin, delta_t& delta, std::unordered_set<std::string>& processedNodes);
 
 	private:
 		static const int NodeIndexMaxNumOfDigits;

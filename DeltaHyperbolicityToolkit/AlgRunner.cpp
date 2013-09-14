@@ -1,6 +1,6 @@
 #include "AlgRunner.h"
-#include "DeltaHyperbolicityToolkit\defs.h"
-#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
+#include "defs.h"
+#include "DeltaHyperbolicity.h"
 #include <Windows.h>
 #include <memory>
 #include <string>
@@ -39,7 +39,7 @@ void AlgRunner::load()
 	if (nullptr != _dll.get()) return;
 
 	//load the dll
-	_dll.reset(LoadLibrary(_dllPath.c_str()), &FreeLibrary);
+	_dll.reset(LoadLibraryA(_dllPath.c_str()), &FreeLibrary);
 	if (nullptr == _dll.get()) throw std::exception("Failed loading dll");
 
 	//get the creation / release methods

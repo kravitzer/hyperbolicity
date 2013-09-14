@@ -11,6 +11,7 @@
 #include <string>
 #include <queue>
 #include <unordered_set>
+#include <fstream>
 
 using namespace std;
 
@@ -75,6 +76,76 @@ namespace dhtoolkit
 		{
 			node_ptr_t src = g->getNode(it->src);
 			src->insertUnidirectionalEdgeTo(g->getNode(it->dst));
+		}
+
+		return g;
+	}
+
+	graph_ptr_t GraphAlgorithms::LoadGraphFromEdgeListFile(const std::string& path, bool isBidirectional)
+	{
+		//create graph
+		string title = path;
+		size_t slashIndex = title.size();
+		for (unsigned int i = 0; (i < 3) && (slashIndex != string::npos); ++i)
+		{
+			slashIndex = title.find_last_of('\\', slashIndex-1);
+		}
+		if (slashIndex != string::npos) title = title.substr(slashIndex+1);
+		graph_ptr_t g(new Graph(title));
+
+		//start reading from file
+		ifstream inputFile;
+		inputFile.exceptions(ios::badbit);
+		inputFile.open(path.c_str());
+
+		unordered_map<node_index_t,node_index_t> addedNodes;
+		string line;
+		while (!inputFile.eof())
+		{
+			getline(inputFile, line);
+
+			//skip empty lines and comments
+			if (line.size() == 0 || line[0] == '#') continue;
+			int tabIndex = line.find('\t');
+			if (string::npos == tabIndex) throw runtime_error("Invalid line format: Failed to find tab character");
+			//if we get a pointer to the text (line.c_str()) we'll currently have <id1>\t<id2>\0
+			//we set the tab to be null, this way we can treat it as two different strings - one from the beginning up to the tab (which will become null),
+			//and another starting right after the tab an up until the end
+			line[tabIndex] = '\0';
+			node_index_t node1Index = atoi(line.c_str());
+			node_index_t node2Index = atoi(line.c_str() + tabIndex + 1);
+
+			//get node pointers (either from graph if already added before, or create and get the new node pointers)
+			node_ptr_t node1,node2;
+			if (addedNodes.cend() == addedNodes.find(node1Index))
+			{
+				node1 = g->insertNode();
+				addedNodes[node1Index] = node1->getIndex();
+			}
+			else
+			{
+				node1 = g->getNode(addedNodes[node1Index]);
+			}
+
+			if (addedNodes.cend() == addedNodes.find(node2Index))
+			{
+				node2 = g->insertNode();
+				addedNodes[node2Index] = node2->getIndex();
+			}
+			else
+			{
+				node2 = g->getNode(addedNodes[node2Index]);
+			}
+
+			//add edge(s)
+			if (isBidirectional)
+			{
+				node1->insertBidirectionalEdgeTo(node2);
+			}
+			else
+			{
+				node1->insertUnidirectionalEdgeTo(node2);
+			}
 		}
 
 		return g;
@@ -293,7 +364,7 @@ namespace dhtoolkit
 		return biconnectedGraphs;
 	}
 
-	bool GraphAlgorithms::removeCycle(graph_ptr_t graph, node_ptr_t origin, delta_t& delta, unordered_set<string>& irremovableNodes)
+	bool GraphAlgorithms::removeCycle(graph_ptr_t graph, node_ptr_t origin, delta_t& delta, unordered_set<string>& processedNodes)
 	{
 		//the chains of nodes from each side of origin to be deleted, if possible (excluding origin)
 		node_ptr_collection_t chain1, chain2;
@@ -346,20 +417,20 @@ namespace dhtoolkit
 		NodeDistances distCalculator(graph, cur1.lock());
 		distance_t stDist = distCalculator.getDistance(cur2.lock());
 
+		//add this chain's nodes to the irremovable set
+		processedNodes.insert(origin->getLabel());
+		for (auto it = chain1.cbegin(); it != chain1.cend(); ++it)
+		{
+			processedNodes.insert((*it)->getLabel());
+		}
+		for (auto it = chain2.cbegin(); it != chain2.cend(); ++it)
+		{
+			processedNodes.insert((*it)->getLabel());
+		}
+
 		if (stDist == chain1.size() + chain2.size() + 2)
 		{
 			//we cannot remove the cycle as it may affect the value of delta
-
-			//add this chain's nodes to the irremovable set
-			irremovableNodes.insert(origin->getLabel());
-			for (auto it = chain1.cbegin(); it != chain1.cend(); ++it)
-			{
-				irremovableNodes.insert((*it)->getLabel());
-			}
-			for (auto it = chain2.cbegin(); it != chain2.cend(); ++it)
-			{
-				irremovableNodes.insert((*it)->getLabel());
-			}
 
 			//calculate maximal cycle size
 			size_t cycleSize = (chain1.size() + chain2.size() + 2) * 2;
@@ -390,8 +461,10 @@ namespace dhtoolkit
 
 	delta_t GraphAlgorithms::cycleDelta(size_t length)
 	{
-		if (length % 4 == 1) return length/4.0 - 0.5;
-		return length/4.0;
+		unsigned int remainder = (length % 4);
+		size_t p = length / 4;
+		if (1 == remainder) return p-0.5;
+		else return static_cast<delta_t>(p);
 	}
 
 	void GraphAlgorithms::biconnected(const graph_ptr_t graph, node_index_t v, node_index_t u, unordered_map<node_index_t, unsigned int>& number, unordered_map<node_index_t, unsigned int>& lowpt, unsigned int index, vector<pair<node_index_t, node_index_t>>& edgeStack, graph_ptr_collection_t& biconnectedGraphs)

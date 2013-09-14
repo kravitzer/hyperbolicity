@@ -1,4 +1,3 @@
-#include "AlgRunner.h"
 #include <iostream>
 #include <Windows.h>
 #include <string>
@@ -8,9 +7,11 @@
 #include <memory>
 #include <iomanip>
 #include <stdio.h>
+#include <random>
 #include <boost\filesystem.hpp>
 #include <boost\tokenizer.hpp>
 #include <boost\lexical_cast.hpp>
+#include "DeltaHyperbolicityToolkit\AlgRunner.h"
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
 #include "DeltaHyperbolicityToolkit\defs.h"
 #include "DeltaHyperbolicityToolkit\IGraphAlg.h"
@@ -700,7 +701,7 @@ void runAlgorithms()
 		}
 
 		//add algorithm name to the file name string
-		fileName << alg->getName() << "_";
+		fileName << alg->getName() << "_" << rand() << "_";
 
 		//create raw & sum files for current algorithm chain
 		string fileNameStr = fileName.str();
@@ -893,7 +894,7 @@ void commandLineExecution(int argc, char** argv)
 			cout << "An error occurred while loading the algorithm: " << ex.what() << endl;
 		}
 
-		fileName << alg->getName() << "_";
+		fileName << alg->getName() << "_" << rand() << "_";
 
 		string fileNameStr = fileName.str();
 		if (shouldProduceRawFiles) rawFiles.push_back(createRawDataFile(fileNameStr.substr(0, fileNameStr.length()-1) + "_raw.csv"));
@@ -1026,6 +1027,9 @@ void uiExecution()
 
 int main(int argc, char** argv)
 {
+	DWORD pid = GetCurrentProcessId();
+	srand(static_cast<unsigned int>(time(nullptr) + pid));
+
 	if (1 == argc)
 	{
 		uiExecution();
