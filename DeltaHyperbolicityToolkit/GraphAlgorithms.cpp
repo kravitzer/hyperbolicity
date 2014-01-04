@@ -25,6 +25,11 @@ namespace dhtoolkit
 	const int GraphAlgorithms::EdgeMaxLen = (2*NodeIndexMaxNumOfDigits - 1) + sizeof(EdgeMarker) + 1;
 	const char* GraphAlgorithms::Delimiter = "\r\n";
 	const size_t GraphAlgorithms::DelimiterLen = strlen(Delimiter);
+#ifdef _WIN32
+	const char GraphAlgorithms::PathSeparator = '\\';
+#else
+	const char GraphAlgorithms::PathSeparator = '/';
+#endif
 	
 
 	void GraphAlgorithms::SaveGraphToFile(const graph_ptr_t graph, const std::string& path)
@@ -57,14 +62,7 @@ namespace dhtoolkit
 		shared_ptr<FILE> inputFile = OpenFile(path.c_str(), "rb", _SH_DENYWR);
 		
 		//create graph
-		string title = path;
-		size_t slashIndex = title.size();
-		for (unsigned int i = 0; (i < 3) && (slashIndex != string::npos); ++i)
-		{
-			slashIndex = title.find_last_of('\\', slashIndex-1);
-		}
-		if (slashIndex != string::npos) title = title.substr(slashIndex+1);
-		graph_ptr_t g(new Graph(title));
+		graph_ptr_t g(new Graph(shortPath(path)));
 
 		//create graph nodes
 		unsigned int nodeCount = ReadNodeCount(inputFile);
@@ -84,14 +82,7 @@ namespace dhtoolkit
 	graph_ptr_t GraphAlgorithms::LoadGraphFromEdgeListFile(const std::string& path, bool isBidirectional)
 	{
 		//create graph
-		string title = path;
-		size_t slashIndex = title.size();
-		for (unsigned int i = 0; (i < 3) && (slashIndex != string::npos); ++i)
-		{
-			slashIndex = title.find_last_of('\\', slashIndex-1);
-		}
-		if (slashIndex != string::npos) title = title.substr(slashIndex+1);
-		graph_ptr_t g(new Graph(title));
+		graph_ptr_t g(new Graph(shortPath(path)));
 
 		//start reading from file
 		ifstream inputFile;
@@ -106,7 +97,7 @@ namespace dhtoolkit
 
 			//skip empty lines and comments
 			if (line.size() == 0 || line[0] == '#') continue;
-			int tabIndex = line.find('\t');
+			size_t tabIndex = line.find('\t');
 			if (string::npos == tabIndex) throw runtime_error("Invalid line format: Failed to find tab character");
 			//if we get a pointer to the text (line.c_str()) we'll currently have <id1>\t<id2>\0
 			//we set the tab to be null, this way we can treat it as two different strings - one from the beginning up to the tab (which will become null),
@@ -457,6 +448,20 @@ namespace dhtoolkit
 			//impossible - distance from s to t is at most the chains' length + 1 (origin)
 			throw exception("Impossible distance received");
 		}
+	}
+
+	string GraphAlgorithms::shortPath(const string& path)
+	{
+		//find the 3rd to last path separator
+		size_t slashIndex = path.size();
+		for (unsigned int i = 0; (i < 3) && (slashIndex != string::npos); ++i)
+		{
+			slashIndex = path.find_last_of(PathSeparator, slashIndex-1);
+		}
+		//check if there actually are at least 3 parts - if so, return only the last 3
+		if (slashIndex != string::npos) return path.substr(slashIndex+1);
+		//otherwise return the original parameter
+		return path;
 	}
 
 	delta_t GraphAlgorithms::cycleDelta(size_t length)

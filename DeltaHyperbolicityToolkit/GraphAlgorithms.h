@@ -146,12 +146,19 @@ namespace dhtoolkit
 		static const int EdgeMaxLen;
 		static const char* Delimiter;
 		static const size_t DelimiterLen;
+		static const char PathSeparator;
 
 		struct Edge
 		{
 			node_index_t src;
 			node_index_t dst;
 		};
+
+		/*
+		 * @returns	Shortens the path given such that it contains only the last three parts (e.g. "C:\dir1\dir2\dir3\dir4\dir5\file.txt" --> "dir4\dir5\file.txt").
+		 *			If there are less than three parts, return the same string given (e.g. "C:\dir1\file.txt" --> "C:\dir1\file.txt").
+		 */
+		static std::string shortPath(const std::string& path);
 
 		/*
 		 * @returns	The delta value of a cycle-graph whose length is given.

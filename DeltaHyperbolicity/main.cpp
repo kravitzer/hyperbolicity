@@ -104,9 +104,12 @@ void printMenu()
 	cout << endl;
 }
 
-void loadGraph(string graphPath)
+void loadGraph(string graphPath, unsigned int type)
 {
-	graph_ptr_t curGraph = GraphAlgorithms::LoadGraphFromFile(graphPath.c_str());
+	graph_ptr_t curGraph;
+	if (1 == type)	curGraph = GraphAlgorithms::LoadGraphFromFile(graphPath.c_str());
+	else if (2 == type) curGraph = GraphAlgorithms::LoadGraphFromEdgeListFile(graphPath.c_str(), true);
+	else throw runtime_error("Invalid graph type entered");
 
 	//if graph path is too long, trim the beginning, and display it
 	const unsigned int MaxPathLen = 20;
@@ -146,10 +149,17 @@ void loadSingleGraph()
 	getline(cin, graphPath);
 	cout << endl;
 
+	string graphType;
+	cout << "Enter graph type: " << endl;
+	cout << "1. Simple Type." << endl;
+	cout << "2. Edge List Type." << endl;
+	getline(cin, graphType);
+	cout << endl;
+
 	try
 	{
 		graphs.clear();
-		loadGraph(graphPath);
+		loadGraph(graphPath, boost::lexical_cast<unsigned int>(graphType));
 	}
 	catch (const exception& ex)
 	{
@@ -179,7 +189,7 @@ void loadGraphDirectory(string dirPath)
 				fs::path curPath = it->path();
 				if (fs::is_regular(curPath))
 				{
-					loadGraph(curPath.string());
+					loadGraph(curPath.string(), 1);
 					cout << endl;
 				}
 			}
@@ -468,11 +478,11 @@ void runGivenAlgorithms(alg_runner_collection_t algorithms, const vector<file_pt
 					unordered_map<delta_t, unsigned int> deltaDistributions;
 					double maxTime = 0;
 					double minTime = InfiniteTime;
-					double timeSum = 0;
+					long double timeSum = 0;
 					double timeSquareSum = 0;
-					unsigned int numOfIterationsToMax = 0;
+					uint64_t numOfIterationsToMax = 0;
 					double lastRawWriteTime = (-static_cast<int>(SecondsBetweenWriteToRaw)-1) * CLOCKS_PER_SEC;
-					unsigned int runCount = 0;
+					uint64_t runCount = 0;
 
 					//calculate upper bound for subgraph
 					delta_t upperBound = 0;
@@ -568,7 +578,7 @@ void runGivenAlgorithms(alg_runner_collection_t algorithms, const vector<file_pt
 							}
 							if (!maxDeltaState.isInitialized()) throw std::exception("Max delta state should be initialized by this point");
 							sumData << ", {" << maxDeltaState.printNodes() << "}, ";
-							double timeAvg = timeSum / static_cast<double>(runCount);
+							double timeAvg = timeSum / static_cast<long double>(runCount);
 							double timeVar = (timeSquareSum - timeAvg*timeSum) / static_cast<double>(runCount);
 							sumData << minTime << ", " << timeAvg << ", " << maxTime << ", " << timeVar << ", " << runBf << ", " << upperBound << "\n";
 						}
@@ -701,7 +711,7 @@ void runAlgorithms()
 		}
 
 		//add algorithm name to the file name string
-		fileName << alg->getName() << "_" << rand() << "_";
+		fileName << alg->getName() << "_" << GetCurrentProcessId() << "_";
 
 		//create raw & sum files for current algorithm chain
 		string fileNameStr = fileName.str();
@@ -852,7 +862,7 @@ void commandLineExecution(int argc, char** argv)
 	}
 	else
 	{
-		loadGraph(input);
+		loadGraph(input, 1);
 	}
 
 	//set output folder
@@ -894,7 +904,7 @@ void commandLineExecution(int argc, char** argv)
 			cout << "An error occurred while loading the algorithm: " << ex.what() << endl;
 		}
 
-		fileName << alg->getName() << "_" << rand() << "_";
+		fileName << alg->getName() << "_" << GetCurrentProcessId() << "_";
 
 		string fileNameStr = fileName.str();
 		if (shouldProduceRawFiles) rawFiles.push_back(createRawDataFile(fileNameStr.substr(0, fileNameStr.length()-1) + "_raw.csv"));
@@ -1027,9 +1037,6 @@ void uiExecution()
 
 int main(int argc, char** argv)
 {
-	DWORD pid = GetCurrentProcessId();
-	srand(static_cast<unsigned int>(time(nullptr) + pid));
-
 	if (1 == argc)
 	{
 		uiExecution();
