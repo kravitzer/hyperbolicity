@@ -108,10 +108,11 @@ namespace dhtoolkit
 		}
 
 		//just before returning the results, see if we can remove cycles
-		delta_t deltaFromCycle = runOnSweepCollection();
+		node_ptr_t nodeFromCycle = _graph->getNode(0);
+		delta_t deltaFromCycle = runOnSweepCollection(nodeFromCycle);
 		//make sure that after (potentially) removing nodes, the graph still has enough nodes to run on (otherwise we're done)
 		_isComplete = (_graph->size() < State::size());
-		if (deltaFromCycle > maxDelta) return DeltaHyperbolicity(deltaFromCycle, node_quad_t(_graph->getNode(0), _graph->getNode(0), _graph->getNode(0), _graph->getNode(0)));
+		if (deltaFromCycle > maxDelta) return DeltaHyperbolicity(deltaFromCycle, node_quad_t(nodeFromCycle, nodeFromCycle, nodeFromCycle, nodeFromCycle));
 
 		//return current step's result
 		node_quad_t state(v1, v2, v3, v4);
@@ -120,37 +121,44 @@ namespace dhtoolkit
 
 	bool IDSweepMinExt::isComplete() const
 	{
-		//we can always run one more...
 		return _isComplete;
 	}
 
-	delta_t IDSweepMinExt::runOnSweepCollection()
+	delta_t IDSweepMinExt::runOnSweepCollection(node_ptr_t& node)
 	{
 		//make sure there's enough "history" to even have a node passing the threshold
 		if (_doubleSweeps.size() < DoubleSweepCacheSize * PercentageOfSweeps) return 0;
 
 		//iterate over node counts and look for one that reached the threshold
 		delta_t bestDelta = 0;
+		node_ptr_t bestNode = _graph->getNode(0);
 		for (auto it = _nodeCountInSweeps.cbegin(); it != _nodeCountInSweeps.cend(); ++it)
 		{
 			//if current node is not marked as irremovable, and reached the threshold of iterations, remove cycles for that node
 			if ( (_irremovableNodes.find(_graph->getNode(it->first)->getLabel()) == _irremovableNodes.cend()) && 
 				(it->second >= DoubleSweepCacheSize * PercentageOfSweeps) )
 			{
-				delta_t delta;
-				if (GraphAlgorithms::removeCycle(_graph, _graph->getNode(it->first), delta, _irremovableNodes))
+				delta_t delta = 0;
+				node_ptr_t curNode = _graph->getNode(it->first);
+				bool isCycleRemoved = GraphAlgorithms::removeCycle(_graph, curNode, delta, _irremovableNodes);
+				
+				if (bestDelta < delta)
+				{
+					bestDelta = delta;
+					bestNode = curNode;
+				}
+
+				if (isCycleRemoved)
 				{
 					_doubleSweeps.clear();
 					_nodeCountInSweeps.clear();
-					return delta;
-				}
-				else if (bestDelta < delta)
-				{
-					bestDelta = delta;
+					//cycle found - break out of the loop as we do not wish to remove more than one cycle at once
+					break;
 				}
 			}
 		}
 
-		return 0;
+		node = bestNode;
+		return bestDelta;
 	}
 } // namespace dhtoolkit

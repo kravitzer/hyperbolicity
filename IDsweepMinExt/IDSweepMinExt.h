@@ -60,9 +60,10 @@ namespace dhtoolkit
 
 		/*
 		 * @brief	Runs on the double-sweep collection and run the cycle removal algorithm if necessary
-		 * @returns	The delta found from the cycle removed, or 0 if no cycle is removed.
+		 * @param	node	A node that's part of the largest cycle found (which thus yielded the largest delta).
+		 * @returns	The delta of the largest cycle found when scanning for nodes to be removed (or 0 if none found).
 		 */
-		delta_t runOnSweepCollection();
+		delta_t runOnSweepCollection(node_ptr_t& node);
 
 		//collection of the last X double sweep results (X is a constant set in the cpp file)
 		boost::circular_buffer<std::pair<node_index_t, node_index_t>> _doubleSweeps;
