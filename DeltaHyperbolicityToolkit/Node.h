@@ -22,7 +22,7 @@ class Node : public std::enable_shared_from_this<Node>
 	friend Graph;
 public:
 	/*
-	 * @returns	A read-only vecotr of the node's pointed to by this node.
+	 * @returns	A read-only vector of the node's pointed to by this node.
 	 */
 	const node_weak_ptr_collection_t& getEdges() const;
 

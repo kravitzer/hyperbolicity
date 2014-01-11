@@ -8,7 +8,6 @@
 
 #include "DeltaHyperbolicity.h"
 #include "Graph.h"
-#include "StronglyConnectedComponent.h"
 #include <vector>
 #include <queue>
 #include <unordered_map>
@@ -101,13 +100,6 @@ namespace dhtoolkit
 		 * @returns	A random state from the graph given.
 		 */
 		static node_quad_t getRandomState(const graph_ptr_t graph);
-
-		/*
-		 * @returns	Returns a collection of graphs, each of which contains a single strongly-connected-component, that altogether sum up to the given graph.
-		 *			E.g. a graph which is already a single strongly-connected-component would return a collection of size 1 with the graph itself. A graph that
-		 *			has 2 strongly-connected-components would return 2 separate graphs, each containing a single scc, etc.
-		 */
-		static graph_ptr_collection_t getStronglyConnectedComponents(const graph_ptr_t graph);
 
 		/*
 		 * @returns	Returns the collection of the sub-graphs that are biconnected within the graph.

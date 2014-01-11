@@ -30,7 +30,7 @@ int main()
         cout << "# of edges: " << (graph->edgeCount() / 2) << endl << endl;
 
 		t1 = clock();
-		graph_ptr_collection_t graphs = GraphAlgorithms::getStronglyConnectedComponents(graph);
+		graph_ptr_collection_t graphs = GraphAlgorithms::getBiconnectedComponents(graph);
 		timeElapsed = (clock() - t1) / static_cast<double>(CLOCKS_PER_SEC);
 		cout << "Pruning scc's took " << timeElapsed << " seconds" << endl;
 		cout << "# of graphs: " << graphs.size() << endl;

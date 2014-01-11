@@ -63,13 +63,7 @@
     <ClInclude Include="SpanningTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StronglyConnectedComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AlgRunner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -107,16 +101,10 @@
     <ClCompile Include="SpanningTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StronglyConnectedComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NodeHasher.h">
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="AlgRunner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

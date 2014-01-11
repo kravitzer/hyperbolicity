@@ -3,7 +3,6 @@
 #include "defs.h"
 #include "FurthestNode.h"
 #include "NodeDistances.h"
-#include "StronglyConnectedComponent.h"
 #include "boost/format.hpp"
 #include <memory>
 #include <vector>
@@ -301,44 +300,6 @@ namespace dhtoolkit
 		}
 
 		return randomState;
-	}
-
-	graph_ptr_collection_t GraphAlgorithms::getStronglyConnectedComponents(const graph_ptr_t graph)
-	{
-		//collection of sccs
-		typedef vector<node_unordered_set_ptr_t> node_unordered_set_ptr_collection_t;
-		node_unordered_set_ptr_collection_t components;
-
-		//collection to return
-		graph_ptr_collection_t graphs;
-
-		//number of nodes already assigned to an scc
-		size_t processedNodeCount = 0;
-
-		//go over all nodes in graph, an search for their strongly-connected-component
-		for (unsigned int i = 0; processedNodeCount < graph->size(); ++i)
-		{
-			node_ptr_t curNode = graph->getNode(i);
-			bool isFoundInSomeComponent = false;
-			for (node_unordered_set_ptr_collection_t::const_iterator componentIt = components.cbegin(); componentIt != components.cend() && !isFoundInSomeComponent; ++componentIt)
-			{
-				isFoundInSomeComponent =  ( (*componentIt)->find(curNode) != (*componentIt)->cend() );
-			}
-
-			//if node is not in any of the currently known components, find its strongly-connected-component and add to collection
-			if (!isFoundInSomeComponent)
-			{
-				//find node's scc
-				StronglyConnectedComponent scc(graph, graph->getNode(i));
-				node_unordered_set_ptr_t curComponent = scc.getNodes();
-				string title = (boost::format("%1%_%2%") % graph->getTitle() % (graphs.size()+1)).str();
-				graphs.push_back(graph_ptr_t(new Graph(title, curComponent)));
-				components.push_back(curComponent);
-				processedNodeCount += curComponent->size();
-			}
-		}
-
-		return graphs;
 	}
 
 	graph_ptr_collection_t GraphAlgorithms::getBiconnectedComponents(const graph_ptr_t graph)

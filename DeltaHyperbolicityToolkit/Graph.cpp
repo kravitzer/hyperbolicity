@@ -5,6 +5,7 @@
 #include "Except.h"
 #include <string>
 #include <unordered_map>
+#include <algorithm>
 #include <boost/format.hpp>
 
 using namespace std;
@@ -16,46 +17,40 @@ namespace dhtoolkit
 		//empty
 	}
 
-	Graph::Graph(const string& title, const node_unordered_set_ptr_t scc) : _nodes(), _title(title)
+	Graph::Graph(const Graph& other)
 	{
-		//mapping from scc's node index to current graph's index
-		//e.g. if scc has 4 nodes, indexed: 1, 5, 14, 22 then mapping would look something like:
-		//1-->3, 5-->1, 14-->2, 22-->0
-		//i.e. a mapping from the scc indices to the new graphs (0 to size-1) indices, not in any particular order.
-		unordered_map<node_index_t, node_index_t> mapping;
+		_nodes.clear();
+		_title = other._title;
 
-		//insert a node for each node of the scc, and update the mapping
-		for (node_unordered_set_t::const_iterator it = scc->cbegin(); it != scc->cend(); ++it)
+		//create as many nodes as the other graph has
+		for (unsigned int i = 0; i < other.size(); ++i)
 		{
-			node_ptr_t curNode = insertNode();
-			mapping[(*it)->getIndex()] = curNode->getIndex();
+			node_ptr_t curNode = insertNode(other._nodes[i]->getLabel());
 		}
 
-		//iterate through scc nodes and insert edges correspondingly in the graph (with the help of the mapping)
-		for (node_unordered_set_t::const_iterator it = scc->cbegin(); it != scc->cend(); ++it)
+		//create edges according to other graph
+		for (node_ptr_collection_t::const_iterator it = other._nodes.cbegin(); it != other._nodes.cend(); ++it)
 		{
-			//current scc node and edges
-			node_index_t curIndex = (*it)->getIndex();
-			node_weak_ptr_collection_t edges = (*it)->getEdges();
-
+			//current node in our graph
+			node_ptr_t curNode = getNode((*it)->getIndex());
+			//its edges in other graph
+			const node_weak_ptr_collection_t& edges = (*it)->getEdges();
+			//for each edge in other graph, create one here as well
 			for (node_weak_ptr_collection_t::const_iterator edgeIt = edges.cbegin(); edgeIt != edges.cend(); ++edgeIt)
 			{
-				//scc neighbor node's index
-				node_index_t neightborIndex = edgeIt->lock()->getIndex();
-				//draw an edge between the two nodes in the graph corresponding to the scc node and its neighbor
-				getNode(mapping[curIndex])->insertUnidirectionalEdgeTo(getNode(mapping[neightborIndex]));
+				curNode->insertUnidirectionalEdgeTo( getNode( edgeIt->lock()->getIndex() ) );
 			}
 		}
 	}
 
-	Graph::Graph(const Graph& other)
+	Graph::Graph(Graph&& other) : _nodes(), _title()
 	{
-		reset(other);
+		swap(*this, other);
 	}
 
-	Graph& Graph::operator=(const Graph& other)
+	Graph& Graph::operator=(Graph other)
 	{
-		reset(other);
+		swap(*this, other);
 
 		return *this;
 	}
@@ -246,32 +241,6 @@ namespace dhtoolkit
         return unmarkedNodes;
     }
 
-	void Graph::reset(const Graph& other)
-	{
-		_nodes.clear();
-		_title = other._title;
-
-		//create as many nodes as the other graph has
-		for (unsigned int i = 0; i < other.size(); ++i)
-		{
-			node_ptr_t curNode = insertNode(other._nodes[i]->getLabel());
-		}
-
-		//create edges according to other graph
-		for (node_ptr_collection_t::const_iterator it = other._nodes.cbegin(); it != other._nodes.cend(); ++it)
-		{
-			//current node in our graph
-			node_ptr_t curNode = getNode((*it)->getIndex());
-			//its edges in other graph
-			const node_weak_ptr_collection_t& edges = (*it)->getEdges();
-			//for each edge in other graph, create one here as well
-			for (node_weak_ptr_collection_t::const_iterator edgeIt = edges.cbegin(); edgeIt != edges.cend(); ++edgeIt)
-			{
-				curNode->insertUnidirectionalEdgeTo( getNode( edgeIt->lock()->getIndex() ) );
-			}
-		}
-	}
-
 	void Graph::assertIndexInBounds(node_index_t index) const
 	{
 		//check assertion
@@ -290,5 +259,14 @@ namespace dhtoolkit
 			//throw exception with formatted message
 			throw OutOfBoundsException(errMsg);
 		}
+	}
+
+	void swap(Graph& first, Graph& second)
+	{
+		//enable ADL
+		using std::swap;
+
+		swap(first._title, second._title);
+		swap(first._nodes, second._nodes);
 	}
 }

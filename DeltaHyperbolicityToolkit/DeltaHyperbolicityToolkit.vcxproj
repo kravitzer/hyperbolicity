@@ -164,7 +164,6 @@
     <ClInclude Include="SimulatedAnnealing.h" />
     <ClInclude Include="SpanningTree.h" />
     <ClInclude Include="State.h" />
-    <ClInclude Include="StronglyConnectedComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlgRunner.cpp" />
@@ -181,7 +180,6 @@
     <ClCompile Include="SimulatedAnnealing.cpp" />
     <ClCompile Include="SpanningTree.cpp" />
     <ClCompile Include="State.cpp" />
-    <ClCompile Include="StronglyConnectedComponent.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

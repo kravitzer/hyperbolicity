@@ -25,14 +25,10 @@ public:
 	 */
 	Graph(const std::string& title);
 
-	/*
-	 * @brief	Creates the graph from the given strongly-connected-component.
-	 */
-	Graph(const std::string& title, const node_unordered_set_ptr_t scc);
-
-	//copy ctor & assignment operator
+	//move ctor, copy ctor & assignment operator
 	Graph(const Graph& other);
-	Graph& operator=(const Graph& other);
+	Graph(Graph&& other);
+	Graph& operator=(Graph other);
 
 	/*
 	 * @returns	The graph title.
@@ -93,6 +89,11 @@ public:
 	 *			of these deletions, recursively).
 	 */
     void pruneTrees();
+
+	/*
+	 * @brief	Swaps the contents of the given graph with that of the current instance.
+	 */
+	friend void swap(Graph& first, Graph& second);
 
 private:
     /*
