@@ -21,7 +21,7 @@ namespace dhtoolkit
 	class Cohen : public IGraphAlg
 	{
 	public:
-		Cohen(const std::string& outputDir);
+		Cohen();
 		virtual ~Cohen();
 		bool isComplete() const;
 
@@ -29,7 +29,7 @@ namespace dhtoolkit
 		/*
 		 * @brief	See documentation in IGraphAlg and in the class description above.
 		 */
-		virtual void initImpl(const node_quad_t&);
+		virtual void initImpl(const node_combination_t&);
 		virtual DeltaHyperbolicity stepImpl();
 
         /*

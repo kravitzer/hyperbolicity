@@ -12,7 +12,7 @@ using namespace std;
 
 namespace dhtoolkit
 {
-	MDSweep::MDSweep(const string& outputDir) : IGraphAlg(outputDir), _isCompleted(false)
+	MDSweep::MDSweep() : IGraphAlg(), _isCompleted(false)
 	{
 		//empty
 	}
@@ -26,7 +26,7 @@ namespace dhtoolkit
 	{	
 		GraphAlgorithms::DoubleSweepResult curDS = _sweeps[_sweeps.size()-1];
 		delta_t maxDelta = 0;
-		node_quad_t maxState;
+		node_combination_t maxState;
 		for (unsigned int i = 0; i < _sweeps.size()-1; ++i)
 		{
 			delta_t curDelta = 0;
@@ -91,7 +91,7 @@ namespace dhtoolkit
 		return true;
 	}
 
-	void MDSweep::initImpl(const node_quad_t&)
+	void MDSweep::initImpl(const node_combination_t&)
 	{
 		_isCompleted = false;
 		_vDists.clear();
@@ -110,12 +110,12 @@ namespace dhtoolkit
 
 
 
-	IGraphAlg* CreateAlgorithm(const string& outputDir)
+	IGraphAlg* CreateAlgorithm()
 	{
 		//initialize random seed (necessary before calling DoubleSweep() )
 		srand(static_cast<unsigned int>(time(nullptr)));
 
-		IGraphAlg* alg = new MDSweep(outputDir);
+		IGraphAlg* alg = new MDSweep();
 		return alg;
 	}
 

@@ -11,14 +11,13 @@ using namespace std;
 namespace dhtoolkit
 {
 
-	SimulatedAnnealing::SimulatedAnnealing(const string& outputDir, sa_prob_func_ptr probabilityFunction, 
-											sa_temp_func_ptr tempFunction, sa_callback_func_ptr callback) : IGraphAlg(outputDir),
-																											_temp(0), 
-																											_probFunc(probabilityFunction), 
-																											_tempFunc(tempFunction), 
-																											_callbackFunc(callback),
-																											_curState(),
-																											_curDelta(0)
+	SimulatedAnnealing::SimulatedAnnealing(sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction, sa_callback_func_ptr callback) : IGraphAlg(),
+										_temp(0), 
+										_probFunc(probabilityFunction), 
+										_tempFunc(tempFunction), 
+										_callbackFunc(callback),
+										_curState(),
+										_curDelta(0)
 	{
 		//empty
 	}
@@ -33,7 +32,7 @@ namespace dhtoolkit
 		return _temp <= 0;
 	}
 
-	void SimulatedAnnealing::initImpl(const node_quad_t& initialState)
+	void SimulatedAnnealing::initImpl(const node_combination_t& initialState)
 	{
 		//reset SA parameters
 		_probFunc->reset();
@@ -95,7 +94,7 @@ namespace dhtoolkit
 		if (nullptr != _callbackFunc.get()) _callbackFunc->callback(_graph, _curState, _curDelta, _temp, false);
 
 		//perform a single step
-		node_quad_t newState;
+		node_combination_t newState;
 		unsigned int replacedNodeIndexInState = getNeighbor(_graph, _curState, &newState);
 
         //need to calculate distances from new node to other 3
@@ -167,7 +166,7 @@ namespace dhtoolkit
 		return DeltaHyperbolicity(_curDelta, _curState);
 	}
 
-	unsigned int SimulatedAnnealing::getNeighbor(const graph_ptr_t graph, const node_quad_t& curState, node_quad_t* newState) const
+	unsigned int SimulatedAnnealing::getNeighbor(const graph_ptr_t graph, const node_combination_t& curState, node_combination_t* newState) const
 	{
 		bool isUniqueNeighborFound = false;
 		unsigned int replacedNodeIndexInState = 0;
@@ -180,7 +179,7 @@ namespace dhtoolkit
 		while (!isUniqueNeighborFound)
 		{
 			//select a random node to replace
-			replacedNodeIndexInState = rand() % node_quad_t::size();
+			replacedNodeIndexInState = rand() % node_combination_t::size();
 			node_ptr_t nodeReplaced = curState[replacedNodeIndexInState];
             
 			//select a neighbor node randomly
@@ -191,7 +190,7 @@ namespace dhtoolkit
 			//assume new node is unique (i.e. not already in current state) and go through current state
 			//to see if this assumption is wrong...
 			isUniqueNeighborFound = true;
-			for (unsigned int i = 0; (i < node_quad_t::size()) && (isUniqueNeighborFound); ++i)
+			for (unsigned int i = 0; (i < node_combination_t::size()) && (isUniqueNeighborFound); ++i)
 			{
 				//if new node is already in the current state, it is not unique!
 				if (curState[i]->getIndex() == newNode->getIndex()) isUniqueNeighborFound = false;
@@ -199,7 +198,7 @@ namespace dhtoolkit
 		}
 
 		//modify new state data type, replacing the old node with the new one
-		for (unsigned int i = 0; i < node_quad_t::size(); ++i)
+		for (unsigned int i = 0; i < node_combination_t::size(); ++i)
 		{
 			if (i != replacedNodeIndexInState) 
 			{

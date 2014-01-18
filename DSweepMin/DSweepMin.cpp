@@ -12,7 +12,7 @@ namespace dhtoolkit
 {
     const distance_t MaxDistance = INT_MAX;
 
-	DSweepMin::DSweepMin(const string& outputDir) : IDSweepMinExt(outputDir), _minDistance(MaxDistance)
+	DSweepMin::DSweepMin() : IDSweepMinExt(), _minDistance(MaxDistance)
 	{
 		//empty
 	}
@@ -49,12 +49,12 @@ namespace dhtoolkit
 
 
 
-	IGraphAlg* CreateAlgorithm(const string& outputDir)
+	IGraphAlg* CreateAlgorithm()
 	{
 		//initialize random seed (necessary before calling DoubleSweep() ).
 		srand(static_cast<unsigned int>(time(nullptr)));
 
-		IGraphAlg* alg = new DSweepMin(outputDir);
+		IGraphAlg* alg = new DSweepMin();
 		return alg;
 	}
 

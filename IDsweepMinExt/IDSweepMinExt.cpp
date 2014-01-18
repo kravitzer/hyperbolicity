@@ -16,7 +16,7 @@ namespace dhtoolkit
 	const unsigned int DoubleSweepCacheSize = 500;
 	const float PercentageOfSweeps = 0.25;
 
-	IDSweepMinExt::IDSweepMinExt(const string& outputDir) : IGraphAlg(outputDir), _doubleSweeps(DoubleSweepCacheSize)
+	IDSweepMinExt::IDSweepMinExt() : IGraphAlg(), _doubleSweeps(DoubleSweepCacheSize)
 	{
 		//empty
 	}
@@ -26,7 +26,7 @@ namespace dhtoolkit
 		//empty
 	}
 
-	void IDSweepMinExt::initImpl(const node_quad_t&)
+	void IDSweepMinExt::initImpl(const node_combination_t&)
 	{
 		_isComplete = false;
 		_doubleSweeps.clear();
@@ -112,10 +112,10 @@ namespace dhtoolkit
 		delta_t deltaFromCycle = runOnSweepCollection(nodeFromCycle);
 		//make sure that after (potentially) removing nodes, the graph still has enough nodes to run on (otherwise we're done)
 		_isComplete = (_graph->size() < State::size());
-		if (deltaFromCycle > maxDelta) return DeltaHyperbolicity(deltaFromCycle, node_quad_t(nodeFromCycle, nodeFromCycle, nodeFromCycle, nodeFromCycle));
+		if (deltaFromCycle > maxDelta) return DeltaHyperbolicity(deltaFromCycle, node_combination_t(nodeFromCycle, nodeFromCycle, nodeFromCycle, nodeFromCycle));
 
 		//return current step's result
-		node_quad_t state(v1, v2, v3, v4);
+		node_combination_t state(v1, v2, v3, v4);
 		return DeltaHyperbolicity(maxDelta, state);
 	}
 

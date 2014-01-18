@@ -23,7 +23,7 @@ namespace dhtoolkit
 	class LargeDistances : public IGraphAlg
 	{
 	public:
-		LargeDistances(const std::string& outputDir);
+		LargeDistances();
 		virtual ~LargeDistances();
 
 	private:
@@ -31,7 +31,7 @@ namespace dhtoolkit
 		 * @brief	See documentation in IGraphAlg and in the class description above.
 		 */
 		virtual DeltaHyperbolicity stepImpl();
-		virtual void initImpl(const node_quad_t& initialState);
+		virtual void initImpl(const node_combination_t& initialState);
 		virtual bool isComplete() const;
 
 		//the minimal number of pairs to collect

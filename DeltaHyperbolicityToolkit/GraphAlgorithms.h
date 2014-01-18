@@ -11,6 +11,7 @@
 #include <vector>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 
 namespace dhtoolkit
 {
@@ -65,7 +66,7 @@ namespace dhtoolkit
 		 * @param	nodesToMark		Nodes in this parameter will be given a unique color.
 		 * @throws	std::exception	Upon any error.
 		 */
-		static void GraphAlgorithms::drawGraph(const std::string& fileName, const graph_ptr_t graph, const node_quad_t* nodesToMark);
+		static void GraphAlgorithms::drawGraph(const std::string& fileName, const graph_ptr_t graph, const node_combination_t* nodesToMark);
 
 		/*
 		 * @brief	Calculates the delta value of the given state nodes.
@@ -73,7 +74,7 @@ namespace dhtoolkit
 		 * @param	state	The state for which we need to calculate the delta value.
 		 * @returns	The calculated delta hyperbolicity value.
 		 */
-		static delta_t CalculateDelta(const graph_ptr_t graph, const node_quad_t& state);
+		static delta_t CalculateDelta(const graph_ptr_t graph, const node_combination_t& state);
 
 		/*
 		 * @brief	Delta calculation considers all possible distances between 4 nodes (3 pairs of distances).
@@ -99,7 +100,7 @@ namespace dhtoolkit
 		/*
 		 * @returns	A random state from the graph given.
 		 */
-		static node_quad_t getRandomState(const graph_ptr_t graph);
+		static node_combination_t getRandomState(const graph_ptr_t graph);
 
 		/*
 		 * @returns	Returns the collection of the sub-graphs that are biconnected within the graph.
@@ -192,7 +193,7 @@ namespace dhtoolkit
 		 * @param	nodesToMark		The collection of nodes to be marked. May be null (function will return false).
 		 * @returns	True if node is to be marked, false otherwise.
 		 */
-		static bool GraphAlgorithms::isNodeToBeMarked(node_ptr_t node, const node_quad_t* nodesToMark);
+		static bool GraphAlgorithms::isNodeToBeMarked(node_ptr_t node, const node_combination_t* nodesToMark);
 
 		/*
 		 * @brief Performs a single sweep on the graph - i.e. takes the origin node and randomly selects one of the nodes furthest away from it.

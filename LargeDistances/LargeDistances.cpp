@@ -15,7 +15,7 @@ const unsigned int MinDistanceDifferenceFromDistanceFound = 4;
 
 namespace dhtoolkit
 {
-	LargeDistances::LargeDistances(const string& outputDir) : IGraphAlg(outputDir), _minDistance(0), _isComplete(false), _minNumberOfPairs(0)
+	LargeDistances::LargeDistances() : IGraphAlg(), _minDistance(0), _isComplete(false), _minNumberOfPairs(0)
 	{
 		
 	}
@@ -25,7 +25,7 @@ namespace dhtoolkit
 		//empty
 	}
 
-	void LargeDistances::initImpl(const node_quad_t&)
+	void LargeDistances::initImpl(const node_combination_t&)
 	{
 		node_index_t randNode = rand() % _graph->size();
 		FurthestNode fn(_graph, _graph->getNode(randNode));
@@ -99,7 +99,7 @@ namespace dhtoolkit
 
 
 		delta_t bestDelta = 0;
-		node_quad_t bestState;
+		node_combination_t bestState;
 		//iterate all pairs of pairs of nodes and calculate their delta
 		for (auto it1 = _pairsByDistance.cbegin(); it1 != _pairsByDistance.cend(); ++it1)
 		{
@@ -143,12 +143,12 @@ namespace dhtoolkit
 
 
 
-	IGraphAlg* CreateAlgorithm(const string& outputDir)
+	IGraphAlg* CreateAlgorithm()
 	{
 		//initialize random seed (necessary before calling DoubleSweep() )
 		srand(static_cast<unsigned int>(time(nullptr)));
 
-		IGraphAlg* alg = new LargeDistances(outputDir);
+		IGraphAlg* alg = new LargeDistances();
 		return alg;
 	}
 

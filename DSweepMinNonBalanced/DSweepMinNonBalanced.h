@@ -21,7 +21,7 @@ namespace dhtoolkit
 	class DSweepMinNonBalanced : public IDSweepMinExt
 	{
 	public:
-		DSweepMinNonBalanced(const std::string& outputDir);
+		DSweepMinNonBalanced();
 		virtual ~DSweepMinNonBalanced();
 
 	private:

@@ -12,35 +12,31 @@
 #include "DeltaHyperbolicity.h"
 #include "IGraphAlg.h"
 
-typedef dhtoolkit::IGraphAlg* (*AlgCreationMethod)(const std::string& outputDir);
+typedef dhtoolkit::IGraphAlg* (*AlgCreationMethod)();
 typedef void (*AlgReleaseMethod)(dhtoolkit::IGraphAlg*);
 
 class AlgRunner
 {
 public:
 	/*
-	 * @param	dllPath		The dll to be loaded.
+	 * @brief	Loads the shared library & instantiates the algorithm instance.
+	 * @param	libraryPath		The path of the shared library to be loaded.
+	 * @throws	std::exception	Upon any error (missing library file / expected methods).
 	 */
-	AlgRunner(const std::string& dllPath, const std::string& outputDir);
+	AlgRunner(const std::string& libraryPath);
 
 	/*
-	 * @brief	Dtor, releases algorithm instance.
+	 * @brief	Dtor, releases algorithm instance & shared library.
 	 */ 
 	~AlgRunner();
 
 	/*
-	 * @brief	Loads the dll & instantiates the algorithm instance.
-	 * @throws	std::exception	Upon any error (missing dll / expected methods).
-	 */
-	void load();
-
-	/*
 	 * @brief	Initializes the loaded algorithm.
-	 * @param	graph	The graph to run on.
+	 * @param	graph			The graph to run on.
 	 * @param	initialState	The initial state for the algorithm to start running from (relevant only to some algortihms, others will ignore this parameter).
 	 *							May be left unspecified.
 	 */
-	void initialize(const dhtoolkit::graph_ptr_t graph, const dhtoolkit::node_quad_t& initialState = dhtoolkit::node_quad_t());
+	void initialize(const dhtoolkit::graph_ptr_t graph, const dhtoolkit::node_combination_t& initialState = dhtoolkit::node_combination_t());
 
 	/*
 	 * @brief	Wrapper for running a single step of the algorithm. See IGraphAlg documentation for details.
@@ -57,24 +53,16 @@ public:
 	 */
 	std::string getName() const;
 
-	/*
-	 * @returns	The output dir.
-	 */
-	std::string getOutputDir() const { return _outputDir; }
-
 private:
 	//do *not* allow copy ctor / assignment operator
 	AlgRunner(const AlgRunner&);
 	AlgRunner& operator=(const AlgRunner&);
 
-	//the dll to be loaded
-	std::string _dllPath;
+	//the shared library to be loaded
+	std::string _libraryPath;
 
-	//the output directory
-	std::string _outputDir;
-
-	//handle to the loaded dll
-	std::shared_ptr<HINSTANCE__> _dll;
+	//handle to the loaded algorithm library
+	std::shared_ptr<HINSTANCE__> _libraryHandle;
 
 	//creation & release method pointers
 	AlgCreationMethod _createAlg;

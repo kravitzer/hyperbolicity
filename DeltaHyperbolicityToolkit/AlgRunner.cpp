@@ -9,9 +9,20 @@
 using namespace std;
 using namespace dhtoolkit;
 
-AlgRunner::AlgRunner(const string& dllPath, const string& outputDir) : _dllPath(dllPath), _outputDir(outputDir), _algorithm(nullptr), _createAlg(nullptr), _releaseAlg(nullptr)
+AlgRunner::AlgRunner(const string& libraryPath) : _libraryPath(libraryPath), _libraryHandle(nullptr), _algorithm(nullptr), _createAlg(nullptr), _releaseAlg(nullptr)
 {
-	//empty
+	//load the shared library
+	_libraryHandle.reset(LoadLibraryA(_libraryPath.c_str()), &FreeLibrary);
+	if (nullptr == _libraryHandle.get()) throw std::exception("Failed loading the shared library");
+
+	//get the creation / release methods
+	_createAlg = reinterpret_cast<AlgCreationMethod>(GetProcAddress(_libraryHandle.get(), "CreateAlgorithm"));
+	if (nullptr == _createAlg) throw std::exception("Failed to get the algorithm creation method");
+	_releaseAlg = reinterpret_cast<AlgReleaseMethod>(GetProcAddress(_libraryHandle.get(), "ReleaseAlgorithm"));
+	if (nullptr == _releaseAlg) throw std::exception("Failed to get the algorithm release method");
+
+	//create the algorithm instance
+	_algorithm = _createAlg();
 }
 
 AlgRunner::~AlgRunner()
@@ -33,45 +44,22 @@ AlgRunner::~AlgRunner()
 	}
 }
 
-void AlgRunner::load()
-{
-	//do nothing if already loaded
-	if (nullptr != _dll.get()) return;
-
-	//load the dll
-	_dll.reset(LoadLibraryA(_dllPath.c_str()), &FreeLibrary);
-	if (nullptr == _dll.get()) throw std::exception("Failed loading dll");
-
-	//get the creation / release methods
-	_createAlg = reinterpret_cast<AlgCreationMethod>(GetProcAddress(_dll.get(), "CreateAlgorithm"));
-	if (nullptr == _createAlg) throw std::exception("Failed to get the algorithm creation method");
-
-	_releaseAlg = reinterpret_cast<AlgReleaseMethod>(GetProcAddress(_dll.get(), "ReleaseAlgorithm"));
-	if (nullptr == _releaseAlg) throw std::exception("Failed to get the algorithm release method");
-
-	//create the algorithm instance
-	_algorithm = _createAlg(_outputDir);
-}
-
 DeltaHyperbolicity AlgRunner::step() const
 {
-	if (nullptr == _dll.get()) throw std::exception("Dll must be loaded first");
 	return _algorithm->step();
 }
 
 bool AlgRunner::isComplete() const
 {
-	if (nullptr == _dll.get()) throw std::exception("Dll must be loaded first");
 	return _algorithm->isComplete();
 }
 
-void AlgRunner::initialize(const graph_ptr_t graph, const node_quad_t& initialState /* = dhtoolkit::node_quad_t() */)
+void AlgRunner::initialize(const graph_ptr_t graph, const node_combination_t& initialState /* = dhtoolkit::node_combination_t() */)
 {
-	if (nullptr == _dll.get()) throw std::exception("Dll must be loaded first");
 	_algorithm->initialize(graph, initialState);
 }
 
 string AlgRunner::getName() const
 {
-	return _dllPath;
+	return _libraryPath;
 }	

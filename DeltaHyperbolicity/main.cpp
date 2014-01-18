@@ -428,8 +428,7 @@ void runGivenAlgorithms(alg_runner_collection_t algorithms, const vector<file_pt
 	const unsigned int BruteForceThreshold = 100;
 	alg_runner_collection_t* algsToRun = &algorithms;
 	alg_runner_collection_t bfAlg(1);
-	bfAlg[0] = alg_runner_ptr_t(new AlgRunner("BruteForce", (*algsToRun)[0]->getOutputDir()));
-	bfAlg[0]->load();
+	bfAlg[0] = alg_runner_ptr_t(new AlgRunner("BruteForce"));
 
 	for (vector<GraphBreakdown>::const_iterator graphIt = graphs.cbegin(); graphIt != graphs.cend(); ++graphIt)
 	{
@@ -471,7 +470,7 @@ void runGivenAlgorithms(alg_runner_collection_t algorithms, const vector<file_pt
 				{
 					//initialize statistical variables
 					const double InfiniteTime = -1;
-					node_quad_t maxDeltaState;
+					node_combination_t maxDeltaState;
 					delta_t maxDelta = 0;
 					delta_t minDelta = InfiniteDelta;
 					delta_t deltaSum = 0;
@@ -509,8 +508,7 @@ void runGivenAlgorithms(alg_runner_collection_t algorithms, const vector<file_pt
 							//if the best delta is still uninitialized - initialize it now with the current state
 							if (!bestDH.getState().isInitialized())
 							{
-								bestDH.setState(delta.getState());
-								bestDH.setDelta(maxDelta);
+								bestDH.set(maxDelta, delta.getState());
 							}
 
 							//if max delta for current algorithm was improved - update it
@@ -523,8 +521,7 @@ void runGivenAlgorithms(alg_runner_collection_t algorithms, const vector<file_pt
 								//check if best delta was improved by this new finding
 								if (bestDH.getDelta() < maxDelta) 
 								{
-									bestDH.setState(delta.getState());
-									bestDH.setDelta(maxDelta);
+									bestDH.set(maxDelta, delta.getState());
 								}
 							}
 
@@ -689,24 +686,24 @@ void runAlgorithms()
 	//receive input for algorithm names
 	alg_runner_collection_t algorithms;
 	string input;
-	cout << "Enter algorithm dll name/path: ";
+	cout << "Enter algorithm shared library name/path: ";
 	getline(cin, input);
 	while (0 != input.length())
 	{
 		//note: alg runner must be declared *outside* of the try/catch block, because an exception thrown
-		//inside the block may be thrown from the dll itself, in which case having it inside the block would
-		//cause it to be destructed (i.e. the dll freed) before the exception instance is destroyed! When trying
-		//to deallocate the exception instance, an access violation will occur as the dll is no longer loaded.
-		alg_runner_ptr_t alg(new AlgRunner(input, outputDir));
+		//inside the block may be thrown from the shared library itself, in which case having it inside the block would
+		//cause it to be destructed (i.e. the shared library freed) before the exception instance is destroyed! When trying
+		//to deallocate the exception instance, an access violation will occur as the shared library is no longer loaded.
+		alg_runner_ptr_t alg;
 		try
 		{
-			//load the algorithm dll and add it to the algorithm collection
-			alg->load();
+			//load the algorithm shared library and add it to the algorithm collection
+			alg.reset(new AlgRunner(input));
 			algorithms.push_back(alg);
 		}
 		catch (const exception& ex)
 		{
-			//loading/adding of dll failed
+			//loading/adding of shared library failed
 			cout << "An error occurred while loading the algorithm: " << ex.what() << endl;
 		}
 
@@ -719,7 +716,7 @@ void runAlgorithms()
 		sumFiles.push_back(createSummaryFile(fileNameStr.substr(0, fileNameStr.length()-1) + "_sum.csv"));
 
 		//get next algorithm input
-		cout << "Enter algorithm dll name/path (leave empty if done): ";
+		cout << "Enter algorithm shared library name/path (leave empty if done): ";
 		getline(cin, input);
 	}
 
@@ -761,7 +758,7 @@ nodes[i] = g->getNode( boost::lexical_cast<int>(*it) );
 ++it;
 }
 
-node_quad_t state(nodes[0], nodes[1], nodes[2], nodes[3]);
+node_combination_t state(nodes[0], nodes[1], nodes[2], nodes[3]);
 cout << "The delta value for this state is: " << GraphAlgorithms::CalculateDelta(g, state) << endl;
 }
 
@@ -888,19 +885,19 @@ void commandLineExecution(int argc, char** argv)
 	for (vector<string>::const_iterator it = algs.cbegin(); it != algs.cend(); ++it)
 	{
 		//note: alg runner must be declared *outside* of the try/catch block, because an exception thrown
-		//inside the block may be thrown from the dll itself, in which case having it inside the block would
-		//cause it to be destructed (i.e. the dll freed) before the exception instance is destroyed! When trying
-		//to deallocate the exception instance, an access violation will occur as the dll is no longer loaded.
-		alg_runner_ptr_t alg(new AlgRunner(*it, outputDir));
+		//inside the block may be thrown from the shared library itself, in which case having it inside the block would
+		//cause it to be destructed (i.e. the shared library freed) before the exception instance is destroyed! When trying
+		//to deallocate the exception instance, an access violation will occur as the shared library is no longer loaded.
+		alg_runner_ptr_t alg;
 		try
 		{
-			//load the algorithm dll and add it to the algorithm collection
-			alg->load();
+			//load the algorithm shared library and add it to the algorithm collection
+			alg.reset(new AlgRunner(*it));
 			algorithms.push_back(alg);
 		}
 		catch (const exception& ex)
 		{
-			//loading/adding of dll failed
+			//loading/adding of shared library failed
 			cout << "An error occurred while loading the algorithm: " << ex.what() << endl;
 		}
 

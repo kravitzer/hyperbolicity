@@ -29,7 +29,22 @@ public:
 	 * @param	nodes	The nodes that convey the delta value.
 	 * @note	No check is made to make sure the nodes given in face produce the given delta value.
 	 */
-	DeltaHyperbolicity(delta_t delta, node_quad_t nodes);
+	DeltaHyperbolicity(delta_t delta, const node_combination_t& nodes);
+
+	/*
+	 * @brief	Copy ctor - leave compiler's default implementation.
+	 */
+	//DeltaHyperbolicity(const DeltaHyperbolicity& other);
+
+	/*
+	 * @brief	Move ctor.
+	 */
+	DeltaHyperbolicity(DeltaHyperbolicity&& other);
+
+	/*
+	 * @brief	Assignment operator. Makes use of copy ctor and copy-and-swap idiom (therefore parameter is not const-reference).
+	 */
+	DeltaHyperbolicity& operator=(DeltaHyperbolicity other);
 
 	/*
 	 * @returns	The delta value represented by this instance.
@@ -37,35 +52,31 @@ public:
 	delta_t getDelta() const;
 
 	/*
-	 * @brief	Sets the current instance's delta.
-	 */
-	void setDelta(delta_t delta);
-
-	/*
 	 * @returns	The state that produces this instance's delta value.
 	 * @throws	DataUnavailableException	If this instance was created without specifying these nodes.
 	 */
-	const node_quad_t& getState() const;
+	const node_combination_t& getState() const;
 
 	/*
-	 * @brief	Sets the current instance's state.
+	 * @brief	Sets the current instance's delta & state.
 	 */
-	void setState(const node_quad_t& state);
+	void set(delta_t delta, const node_combination_t& state);
 
 	/*
 	 * @returns	A textual representation of the nodes this delta represents, e.g.: "3, 110, 166, 201".
 	 */
 	std::string printNodes() const;
 
-	//allow default copy ctor / assignment operator
-	//DeltaHyperbolicity(const DeltaHyperbolicity&);
-	//DeltaHyperbolicity& operator=(const DeltaHyperbolicity&);
+	/*
+	 * @brief	Swaps the contents of the two given instances.
+	 */
+	friend void swap(DeltaHyperbolicity& first, DeltaHyperbolicity& second);
 
 private:
 	//the delta hyperbolicity value
 	delta_t _delta;
 	//the nodes that give the current delta hyperbolicity value
-	node_quad_t _nodes;
+	node_combination_t _nodes;
 	//were the nodes specified upon construction? if not, this value will be false, and an exception
 	//will be thrown if the user tries to access these nodes.
 	bool _nodesAvailable;

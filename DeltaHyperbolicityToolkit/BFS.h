@@ -67,7 +67,7 @@ private:
 	} bfs_entry_t;
 
     /*
-     * @brief   Runs the BFS algorithm based on the queue's current situation.
+     * @brief   Runs the BFS algorithm based on the queue's current state.
      */
     void runBfsLoop();
 

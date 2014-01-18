@@ -72,7 +72,7 @@ namespace dhtoolkit
 		 * @param	isFinal				When true - this is the last call to the callback function (i.e. process has ended). The values passed are not
 		 *								the "current", but the optimal ones observed in the process.
 		 */
-		virtual void callback(const graph_ptr_t graph, const node_quad_t& currentState, delta_t currentDelta, sa_temp_t currentTemperature, bool isFinal) = 0;
+		virtual void callback(const graph_ptr_t graph, const node_combination_t& currentState, delta_t currentDelta, sa_temp_t currentTemperature, bool isFinal) = 0;
 
 		/*
 		 * @brief	Resets any internal state the instance might have, in order to start over when necessary.
@@ -88,12 +88,11 @@ namespace dhtoolkit
 	public:
 		/*
 		 * @brief	Ctor, initializes the SA process.
-		 * @param	outputDir				The dir into which outputs are to be written.
 		 * @param	probabilityFunction		The probability method to be used in the process.
 		 * @param	tempFunction			The temperature method to be used in the process.
 		 * @param	callbackFunction		The callback method to be called on every step of the SA (may be null).
 		 */
-		SimulatedAnnealing(const std::string& outputDir, sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction, sa_callback_func_ptr callbackFunction);
+		SimulatedAnnealing(sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction, sa_callback_func_ptr callbackFunction);
 
 		/*
 		 * @brief	Default dtor.
@@ -118,7 +117,7 @@ namespace dhtoolkit
 		/*
 		 * @brief	Resets any internal state the instance might have, in order to run the algorithm again from scratch.
 		 */
-		virtual void initImpl(const node_quad_t& initialState);
+		virtual void initImpl(const node_combination_t& initialState);
 
 		/*
 		 * @brief	Calculates the 6 distances for the current state.
@@ -132,7 +131,7 @@ namespace dhtoolkit
 		 * @param	initialState	The initial state of the SA process.
 		 * @returns	The result of the SA process (i.e. best delta found in the process).
 		 */
-		DeltaHyperbolicity startSA(const graph_ptr_t graph, const node_quad_t& initialState);
+		DeltaHyperbolicity startSA(const graph_ptr_t graph, const node_combination_t& initialState);
 
 		/*
 		 * @brief	Calculates a "neighboring" state to the current state. I.e. selects a random neighbor of one of the nodes in the quad (also selected
@@ -143,10 +142,10 @@ namespace dhtoolkit
          * @returns The index of the node in the state structure that changed (NOTE: not the index of the node,
          *          but the index in the state collection! e.g. b/w 0 to 3!!).
 		 */
-		unsigned int getNeighbor(const graph_ptr_t graph, const node_quad_t& curState, node_quad_t* newState) const;
+		unsigned int getNeighbor(const graph_ptr_t graph, const node_combination_t& curState, node_combination_t* newState) const;
 
 		//current state & delta
-		node_quad_t _curState;
+		node_combination_t _curState;
 		delta_t _curDelta;
 
 		//is this the first step after initialization

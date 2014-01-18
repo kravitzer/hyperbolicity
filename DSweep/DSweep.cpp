@@ -10,7 +10,7 @@ using namespace std;
 
 namespace dhtoolkit
 {
-	DSweep::DSweep(const string& outputDir) : IGraphAlg(outputDir) 
+	DSweep::DSweep() : IGraphAlg() 
 	{
 		//empty
 	}
@@ -89,11 +89,11 @@ namespace dhtoolkit
 			}
 		}
 
-		node_quad_t state(v1, v2, v3, v4);
+		node_combination_t state(v1, v2, v3, v4);
 		return DeltaHyperbolicity(maxDelta, state);
 	}
 
-	void DSweep::initImpl(const node_quad_t&)
+	void DSweep::initImpl(const node_combination_t&)
 	{
 		//empty
 	}
@@ -106,12 +106,12 @@ namespace dhtoolkit
 
 
 
-	IGraphAlg* CreateAlgorithm(const string& outputDir)
+	IGraphAlg* CreateAlgorithm()
 	{
 		//initialize random seed (necessary before calling DoubleSweep() ).
 		srand(static_cast<unsigned int>(time(nullptr)));
 
-		IGraphAlg* alg = new DSweep(outputDir);
+		IGraphAlg* alg = new DSweep();
 		return alg;
 	}
 

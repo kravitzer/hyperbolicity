@@ -21,9 +21,8 @@ namespace dhtoolkit
 	public:
 		/*
 		 * @brief	Default ctor.
-		 * @param	outputDir	The folder into which outputs are to be written (if there are any).
 		 */
-		IGraphAlg(const std::string& outputDir);
+		IGraphAlg();
 
 		/*
 		 * @brief	Default dtor.
@@ -32,11 +31,11 @@ namespace dhtoolkit
 
 		/*
 		 * @brief	Calls the derived class' implementation for initializing the run.
-		 * @param	graph		The graph to run on.
+		 * @param	graph			The graph to run on.
 		 * @param	initialState	A state to start from. May be irrelevant for some algorithms, in which case it is ignored.
 		 *							This parameter is optional.
 		 */
-		void initialize(const graph_ptr_t graph, const node_quad_t& initialState = node_quad_t());
+		void initialize(const graph_ptr_t graph, const node_combination_t& initialState = node_combination_t());
 
 		/*
 		 * @brief	Runs a single step of the implementation for the algorithm.
@@ -56,16 +55,13 @@ namespace dhtoolkit
 		/*
 		 * @brief	Derived implementation should perform initialization steps here.
 		 */
-		virtual void initImpl(const node_quad_t& initialState) = 0;
+		virtual void initImpl(const node_combination_t& initialState) = 0;
 
 		/*
 		 * @brief	The implementation of this method should contain the algorithm logic for a single step, to run on the graph.
 		 * @throws	The implementation may throw standard std::exception upon error.
 		 */
 		virtual DeltaHyperbolicity stepImpl() = 0;
-
-		//the output dir into which any output files are to be written
-		std::string _outputDir;
 
 		//the graph to run on
 		graph_ptr_t _graph;

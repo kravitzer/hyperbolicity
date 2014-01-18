@@ -18,7 +18,7 @@ namespace dhtoolkit
 		State();
 
 		/*
-		 * @brief	Ctor receiving the state's details.
+		 * @brief	Ctor receiving the state's nodes.
 		 * @param	n_i		The i-th node.
 		 * @throws	std::exception If the same node is inserted twice (or more).
 		 */
@@ -38,13 +38,13 @@ namespace dhtoolkit
 		//State& operator=(const State& other);
 
 		/*
-		 * @returns	The node at position index (rvalue).
+		 * @returns	The node at position index.
 		 * @throws	OutOfBoundsException	If the given index is out of bounds.
 		 */
 		const node_ptr_t& operator[](const int index) const;
 
 		/*
-		 * @returns	The node at position index (lvalue).
+		 * @returns	The node at position index.
 		 * @throws	OutOfBoundsException	If the given index is out of bounds.
 		 */
 		node_ptr_t& operator[](const int index);

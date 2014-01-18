@@ -141,7 +141,7 @@ namespace dhtoolkit
 		return g;
 	}
 
-	void GraphAlgorithms::drawGraph(const string& fileName, const graph_ptr_t graph, const node_quad_t* nodesToMark)
+	void GraphAlgorithms::drawGraph(const string& fileName, const graph_ptr_t graph, const node_combination_t* nodesToMark)
 	{
 		shared_ptr<FILE> file(_fsopen(fileName.c_str(), "wb", _SH_DENYRW), &fclose);
 		if (nullptr == file.get())
@@ -186,7 +186,7 @@ namespace dhtoolkit
 		}
 	}
 
-	delta_t GraphAlgorithms::CalculateDelta(const graph_ptr_t graph, const node_quad_t& state)
+	delta_t GraphAlgorithms::CalculateDelta(const graph_ptr_t graph, const node_combination_t& state)
 	{
 		node_ptr_collection_t nodeCollection;
 		nodeCollection.push_back(state[1]);
@@ -270,11 +270,11 @@ namespace dhtoolkit
 		return res;
 	}
 
-	node_quad_t GraphAlgorithms::getRandomState(const graph_ptr_t graph)
+	node_combination_t GraphAlgorithms::getRandomState(const graph_ptr_t graph)
 	{
 		//choose initial state at random
-		node_quad_t randomState;
-		for (unsigned int i = 0; i < node_quad_t::size(); ++i)
+		node_combination_t randomState;
+		for (unsigned int i = 0; i < node_combination_t::size(); ++i)
 		{
 			bool isUnique = true;
 
@@ -584,7 +584,7 @@ namespace dhtoolkit
 		}
 	}
 
-    bool GraphAlgorithms::isNodeToBeMarked(node_ptr_t node, const node_quad_t* nodesToMark)
+    bool GraphAlgorithms::isNodeToBeMarked(node_ptr_t node, const node_combination_t* nodesToMark)
 	{
 		if (nullptr == nodesToMark) return false;
 

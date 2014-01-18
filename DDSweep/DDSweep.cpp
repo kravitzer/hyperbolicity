@@ -10,7 +10,7 @@ using namespace std;
 
 namespace dhtoolkit
 {
-	DDSweep::DDSweep(const string& outputDir) : IGraphAlg(outputDir) 
+	DDSweep::DDSweep() : IGraphAlg() 
 	{
 		//empty
 	}
@@ -34,7 +34,7 @@ namespace dhtoolkit
 			++numOfTrials;
 		}
 
-		node_quad_t state(ds1.u, ds1.v, ds2.u, ds2.v);
+		node_combination_t state(ds1.u, ds1.v, ds2.u, ds2.v);
 		//at this point we have the distances from ds1.u and ds2.u to all other nodes in the graph
 		//all we need to calculate the delta is the distance from ds1.v to ds2.v
 		NodeDistances distanceFromDs1v(_graph, ds1.v);
@@ -49,7 +49,7 @@ namespace dhtoolkit
 		return DeltaHyperbolicity(delta, state);
 	}
 
-	void DDSweep::initImpl(const node_quad_t&)
+	void DDSweep::initImpl(const node_combination_t&)
 	{
 		//empty
 	}
@@ -62,12 +62,12 @@ namespace dhtoolkit
 
 
 
-	IGraphAlg* CreateAlgorithm(const string& outputDir)
+	IGraphAlg* CreateAlgorithm()
 	{
 		//initialize random seed (necessary before calling DoubleSweep() )
 		srand(static_cast<unsigned int>(time(nullptr)));
 
-		IGraphAlg* alg = new DDSweep(outputDir);
+		IGraphAlg* alg = new DDSweep();
 		return alg;
 	}
 

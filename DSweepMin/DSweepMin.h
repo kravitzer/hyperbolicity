@@ -19,7 +19,7 @@ namespace dhtoolkit
 	class DSweepMin : public IDSweepMinExt
 	{
 	public:
-		DSweepMin(const std::string& outputDir);
+		DSweepMin();
 		virtual ~DSweepMin();
 
 	private:

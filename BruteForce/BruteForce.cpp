@@ -12,7 +12,7 @@ using namespace std;
 
 namespace dhtoolkit
 {
-	BruteForce::BruteForce(const string& outputDir) : IGraphAlg(outputDir)
+	BruteForce::BruteForce() : IGraphAlg()
 	{
 		//empty
 	}
@@ -24,13 +24,13 @@ namespace dhtoolkit
 
 	bool BruteForce::isComplete() const
 	{
-		return ( (_v4 == _graph->size() - node_quad_t::size() + 3) &&
-				 (_v3 == _graph->size() - node_quad_t::size() + 2) &&
-				 (_v2 == _graph->size() - node_quad_t::size() + 1) &&
-				 (_v1 == _graph->size() - node_quad_t::size() + 0) );
+		return ( (_v4 == _graph->size() - node_combination_t::size() + 3) &&
+				 (_v3 == _graph->size() - node_combination_t::size() + 2) &&
+				 (_v2 == _graph->size() - node_combination_t::size() + 1) &&
+				 (_v1 == _graph->size() - node_combination_t::size() + 0) );
 	}
 
-	void BruteForce::initImpl(const node_quad_t&)
+	void BruteForce::initImpl(const node_combination_t&)
 	{
 		_v1 = 0;
 		_v2 = 1;
@@ -48,7 +48,7 @@ namespace dhtoolkit
         node_index_t tmpv2 = _v2;
         node_index_t tmpv3 = _v3;
 
-		node_quad_t curState = advanceState();
+		node_combination_t curState = advanceState();
         if (tmpv3 != _v3) _v3Distances = getDistancesForRemainingNodes(_v3);
         if (tmpv1 != _v2) _v2Distances = getDistancesForRemainingNodes(_v2);
         if (tmpv1 != _v1) _v1Distances = getDistancesForRemainingNodes(_v1);
@@ -61,7 +61,7 @@ namespace dhtoolkit
 		return DeltaHyperbolicity(curDelta, curState);
 	}
 
-	node_quad_t BruteForce::advanceState()
+	node_combination_t BruteForce::advanceState()
 	{
 		do
 		{
@@ -87,9 +87,9 @@ namespace dhtoolkit
 				}
 				_v4 = _v3 + 1;
 			}
-		} while (!node_quad_t::isStateValid( _graph->getNode(_v1), _graph->getNode(_v2), _graph->getNode(_v3), _graph->getNode(_v4) ) );
+		} while (!node_combination_t::isStateValid( _graph->getNode(_v1), _graph->getNode(_v2), _graph->getNode(_v3), _graph->getNode(_v4) ) );
 
-		return node_quad_t( _graph->getNode(_v1), _graph->getNode(_v2), _graph->getNode(_v3), _graph->getNode(_v4) );
+		return node_combination_t( _graph->getNode(_v1), _graph->getNode(_v2), _graph->getNode(_v3), _graph->getNode(_v4) );
 	}
 
     distance_dict_t BruteForce::getDistancesForRemainingNodes(node_index_t curIndex)
@@ -106,9 +106,9 @@ namespace dhtoolkit
 
 
 
-	IGraphAlg* CreateAlgorithm(const string& outputDir)
+	IGraphAlg* CreateAlgorithm()
 	{
-		IGraphAlg* alg = new BruteForce(outputDir);
+		IGraphAlg* alg = new BruteForce();
 		return alg;
 	}
 

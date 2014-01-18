@@ -112,7 +112,7 @@ namespace dhtoolkit
 		 * @param	currentTemperature	The SA process' current temperature (will appear in file name).
 		 * @param	isFinal				When this flag is on - this is the final step of the SA process. File name will end with "_final".
 		 */
-		void callback(const graph_ptr_t graph, const node_quad_t& currentState, delta_t currentDelta, sa_temp_t currentTemperature, bool isFinal);
+		void callback(const graph_ptr_t graph, const node_combination_t& currentState, delta_t currentDelta, sa_temp_t currentTemperature, bool isFinal);
 
 		/*
 		 * @brief	Resets any internal state the instance might have, in order to start over when necessary.

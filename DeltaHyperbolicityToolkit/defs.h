@@ -9,35 +9,32 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
-#include <unordered_set>
 
 namespace dhtoolkit
 {
+	//forward declarations
 	class Graph;
 	class Node;
 	class State;
-	struct NodeHasher;
 
-	typedef size_t      						node_index_t;
-	typedef std::shared_ptr<Node>				node_ptr_t;
-	typedef std::vector<node_ptr_t>				node_ptr_collection_t;
-	typedef std::weak_ptr<Node>					node_weak_ptr_t;
-	typedef std::vector<node_weak_ptr_t>		node_weak_ptr_collection_t;
+	//definitions
+	typedef size_t      									node_index_t;
+	typedef std::shared_ptr<Node>							node_ptr_t;
+	typedef std::vector<node_ptr_t>							node_ptr_collection_t;
+	typedef std::weak_ptr<Node>								node_weak_ptr_t;
+	typedef std::vector<node_weak_ptr_t>					node_weak_ptr_collection_t;
 
-	typedef double								delta_t;
-	const delta_t								InfiniteDelta = -1;
-	typedef State								node_quad_t;
-	typedef std::shared_ptr<Graph>				graph_ptr_t;
-	typedef std::vector<graph_ptr_t>			graph_ptr_collection_t;
+	typedef double											delta_t;
+	typedef State											node_combination_t;
+	typedef std::shared_ptr<Graph>							graph_ptr_t;
+	typedef std::vector<graph_ptr_t>						graph_ptr_collection_t;
 
-	typedef	int									distance_t;
-	const distance_t							InfiniteDistance = -1;
-	typedef std::unordered_map<node_index_t, 
-							distance_t>			distance_dict_t;
+	typedef	int												distance_t;
+	typedef std::unordered_map<node_index_t, distance_t>	distance_dict_t;
 
-	typedef std::unordered_set<node_ptr_t, 
-								NodeHasher>		node_unordered_set_t;
-	typedef std::shared_ptr<node_unordered_set_t>	node_unordered_set_ptr_t;
+	//constants
+	const delta_t											InfiniteDelta = -1;
+	const distance_t										InfiniteDistance = -1;
 }
 
 #endif

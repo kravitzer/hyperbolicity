@@ -35,6 +35,7 @@ namespace dhtoolkit
 
 	node_ptr_t& State::operator[](int index)
 	{
+		if ( (index < 0) || (index >= static_cast<int>(size())) ) throw OutOfBoundsException();
 		return _nodes[index];
 	}
 

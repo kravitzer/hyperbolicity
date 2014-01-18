@@ -1,7 +1,6 @@
 #include "Graph.h"
 #include "defs.h"
 #include "Node.h"
-#include "NodeHasher.h"
 #include "Except.h"
 #include <string>
 #include <unordered_map>

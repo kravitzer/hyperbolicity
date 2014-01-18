@@ -169,7 +169,6 @@
     <ClCompile Include="AlgRunner.cpp" />
     <ClCompile Include="BFS.cpp" />
     <ClCompile Include="GraphBuilder.cpp" />
-    <ClCompile Include="NodeHasher.h" />
     <ClCompile Include="DeltaHyperbolicity.cpp" />
     <ClCompile Include="FurthestNode.cpp" />
     <ClCompile Include="Graph.cpp" />

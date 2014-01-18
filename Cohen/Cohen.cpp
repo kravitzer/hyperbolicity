@@ -12,7 +12,7 @@ using namespace std;
 
 namespace dhtoolkit
 {
-	Cohen::Cohen(const string& outputDir) : IGraphAlg(outputDir), _bestDelta(0)
+	Cohen::Cohen() : IGraphAlg(), _bestDelta(0)
 	{
 		//empty
 	}
@@ -27,7 +27,7 @@ namespace dhtoolkit
         return (_end >= _l1);
 	}
 
-	void Cohen::initImpl(const node_quad_t&)
+	void Cohen::initImpl(const node_combination_t&)
 	{
 		_distances.clear();
 		_pairs.clear();
@@ -55,7 +55,7 @@ namespace dhtoolkit
 
 	DeltaHyperbolicity Cohen::stepImpl()
 	{
-        node_quad_t nodes(_graph->getNode(_pairs[_l1].at(_l1Pos).first), _graph->getNode(_pairs[_l1].at(_l1Pos).second), _graph->getNode(_pairs[_l2].at(_l2Pos).first), _graph->getNode(_pairs[_l2].at(_l2Pos).second));
+        node_combination_t nodes(_graph->getNode(_pairs[_l1].at(_l1Pos).first), _graph->getNode(_pairs[_l1].at(_l1Pos).second), _graph->getNode(_pairs[_l2].at(_l2Pos).first), _graph->getNode(_pairs[_l2].at(_l2Pos).second));
         distance_t d1 = static_cast<distance_t>(_l1 + _l2);
         distance_t d2 = _distances[_pairs[_l1].at(_l1Pos).first][_pairs[_l2].at(_l2Pos).first] + _distances[_pairs[_l1].at(_l1Pos).second][_pairs[_l2].at(_l2Pos).second];
         distance_t d3 = _distances[_pairs[_l1].at(_l1Pos).first][_pairs[_l2].at(_l2Pos).second] + _distances[_pairs[_l1].at(_l1Pos).second][_pairs[_l2].at(_l2Pos).first];
@@ -141,9 +141,9 @@ namespace dhtoolkit
 
 
 
-	IGraphAlg* CreateAlgorithm(const string& outputDir)
+	IGraphAlg* CreateAlgorithm()
 	{
-		IGraphAlg* alg = new Cohen(outputDir);
+		IGraphAlg* alg = new Cohen();
 		return alg;
 	}
 

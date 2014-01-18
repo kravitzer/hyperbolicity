@@ -21,7 +21,7 @@ namespace dhtoolkit
 	class MDSweep : public IGraphAlg
 	{
 	public:
-		MDSweep(const std::string& outputDir);
+		MDSweep();
 		virtual ~MDSweep();
 
 	private:
@@ -29,7 +29,7 @@ namespace dhtoolkit
 		 * @brief	See documentation in IGraphAlg and in the class description above.
 		 */
 		virtual DeltaHyperbolicity stepImpl();
-		virtual void initImpl(const node_quad_t& initialState);
+		virtual void initImpl(const node_combination_t& initialState);
 		virtual bool isComplete() const;
 
 		/*

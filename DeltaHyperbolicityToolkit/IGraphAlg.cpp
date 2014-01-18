@@ -10,7 +10,7 @@ using namespace std;
 namespace dhtoolkit
 {
 
-	IGraphAlg::IGraphAlg(const string& outputDir) : _outputDir(outputDir)
+	IGraphAlg::IGraphAlg()
 	{
 		//empty
 	}
@@ -20,7 +20,7 @@ namespace dhtoolkit
 		//empty
 	}
 
-	void IGraphAlg::initialize(const graph_ptr_t graph, const node_quad_t& initialState /* = node_quad_t() */)
+	void IGraphAlg::initialize(const graph_ptr_t graph, const node_combination_t& initialState /* = node_combination_t() */)
 	{
 		validateGraphInput(graph);
 		_graph = graph;
@@ -40,7 +40,7 @@ namespace dhtoolkit
 	void IGraphAlg::validateGraphInput(const graph_ptr_t graph) const
 	{
 		if (nullptr == graph.get()) throw std::exception("Graph pointer is invalid");
-		if (graph->size() < node_quad_t::size()) throw std::exception("Graph does not contain enough nodes");
+		if (graph->size() < node_combination_t::size()) throw std::exception("Graph does not contain enough nodes");
 	}
 
 } // namespace dhtoolkit

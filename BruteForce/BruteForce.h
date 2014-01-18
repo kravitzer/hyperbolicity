@@ -20,7 +20,7 @@ namespace dhtoolkit
 	class BruteForce : public IGraphAlg
 	{
 	public:
-		BruteForce(const std::string& outputDir);
+		BruteForce();
 		virtual ~BruteForce();
 		bool isComplete() const;
 
@@ -28,13 +28,13 @@ namespace dhtoolkit
 		/*
 		 * @brief	See documentation in IGraphAlg and in the class description above.
 		 */
-		virtual void initImpl(const node_quad_t&);
+		virtual void initImpl(const node_combination_t&);
 		virtual DeltaHyperbolicity stepImpl();
 
 		/*
 		 * @brief	Advances the current state to the next.
 		 */
-		node_quad_t advanceState();
+		node_combination_t advanceState();
 
         /*
          * @returns The distances from the node whose index is given, to every node with an index higher than its own.

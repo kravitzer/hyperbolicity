@@ -91,7 +91,7 @@ namespace dhtoolkit
 		//empty
 	}
 
-	void DrawingCallback::callback(const graph_ptr_t graph, const node_quad_t& currentState, delta_t currentDelta, sa_temp_t currentTemperature, bool isFinal)
+	void DrawingCallback::callback(const graph_ptr_t graph, const node_combination_t& currentState, delta_t currentDelta, sa_temp_t currentTemperature, bool isFinal)
 	{
         //TODO: patch... Remove next line to get drawings
         return;
@@ -126,15 +126,15 @@ namespace dhtoolkit
 	}
 
 
-	IGraphAlg* CreateAlgorithm(const string& outputDir)
+	IGraphAlg* CreateAlgorithm()
 	{
 		//initialize random seed (necessary before calling DoubleSweep() ).
 		srand( static_cast<unsigned int>(time(nullptr)) );
 
 		sa_prob_func_ptr probFunc(new ExpProbability);
 		sa_temp_func_ptr tempFunc(new IntervalTemperature);
-		sa_callback_func_ptr callbackFunc(new DrawingCallback(outputDir));
-		IGraphAlg* alg = new SimulatedAnnealing(outputDir, probFunc, tempFunc, callbackFunc);
+		sa_callback_func_ptr callbackFunc(new DrawingCallback("."));
+		IGraphAlg* alg = new SimulatedAnnealing(probFunc, tempFunc, callbackFunc);
 		return alg;
 	}
 
