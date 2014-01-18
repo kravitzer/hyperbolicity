@@ -396,9 +396,9 @@ namespace dhtoolkit
 
 			//remove cycle!
 			graph->unmarkNodes();
-			origin->mark();
-			for (auto it = chain1.begin(); it != chain1.cend(); ++it) (*it)->mark();
-			for (auto it = chain2.begin(); it != chain2.cend(); ++it) (*it)->mark();
+			origin->setMarked(true);
+			for (auto it = chain1.begin(); it != chain1.cend(); ++it) (*it)->setMarked(true);
+			for (auto it = chain2.begin(); it != chain2.cend(); ++it) (*it)->setMarked(true);
 			graph->deleteMarkedNodes();
 
 			delta = cycleDelta(cycleSize);
@@ -411,7 +411,77 @@ namespace dhtoolkit
 		}
 	}
 
-	string GraphAlgorithms::shortPath(const string& path)
+	void GraphAlgorithms::pruneTrees(graph_ptr_t graph)
+    {
+        //unmark all nodes
+        graph->unmarkNodes();
+
+        unsigned int removed = 0;
+
+        //run on all nodes, mark the ones that need to be removed
+        for (unsigned int i = 0; i < graph->size(); ++i)
+        {
+			node_ptr_t curNode = graph->getNode(i);
+            //check if current node needs to be pruned & not already pruned
+            if ( (countUnmarkedNeighbors(curNode) <= 1) && (!curNode->isMarked()) )
+            {
+                //prune node recursively
+                removed += pruneTreesRecursion(curNode);
+            }
+        }
+
+        //instead of deleting a ton of unnecessary nodes (deletion is VERY expensive!), we create
+        //a new collection and copy only the necessary nodes into it, while setting their index appropriately
+        //tests: using deletion, pruning of a large graph (1M+ nodes) took ~310 seconds. with this method - 0.238 seconds!!!
+
+        graph->deleteMarkedNodes();
+    }
+
+    unsigned int GraphAlgorithms::countUnmarkedNeighbors(const node_ptr_t node)
+    {
+        unsigned int unmarkedNodes = 0;
+        const node_weak_ptr_collection_t& neighbors = node->getEdges();
+        for (node_weak_ptr_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
+        {
+            if (!it->lock()->isMarked()) ++unmarkedNodes;
+        }
+
+        return unmarkedNodes;
+    }
+
+	unsigned int GraphAlgorithms::pruneTreesRecursion(node_ptr_t curNode)
+    {
+        unsigned int edgesLen = countUnmarkedNeighbors(curNode);
+        
+        //assert degree is <= 1
+        if (edgesLen > 1) throw std::exception("Pruned node degree is > 1");
+
+        //if node has a neighbor (can have only 1, if any), remember it before we remove the edge
+        node_ptr_t neighbor(nullptr);
+        if (1 == edgesLen) neighbor = getUnmarkedNeighbor(curNode);
+
+        //mark node for pruning
+        curNode->setMarked(true);
+        unsigned int marked = 1;
+
+        //if the pruned node had a neighbor, and it has now become a leaf, prune it recursively
+        if ( (nullptr != neighbor.get()) && (countUnmarkedNeighbors(neighbor)) <= 1) marked += pruneTreesRecursion(neighbor);
+
+        return marked;
+    }
+
+    node_ptr_t GraphAlgorithms::getUnmarkedNeighbor(const node_ptr_t node)
+    {
+        const node_weak_ptr_collection_t& neighbors = node->getEdges();
+        for (node_weak_ptr_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
+        {
+            if (!it->lock()->isMarked()) return it->lock();
+        }
+
+        throw std::exception("No unmarked neighbor found!");
+    }
+
+    string GraphAlgorithms::shortPath(const string& path)
 	{
 		//find the 3rd to last path separator
 		size_t slashIndex = path.size();

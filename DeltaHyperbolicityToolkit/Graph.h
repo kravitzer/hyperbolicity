@@ -40,11 +40,11 @@ public:
 	 * @param	label	Node's label. If empty, it will be set to the node's index.
 	 * @returns	A pointer to the newly created node.
 	 */
-	node_ptr_t insertNode(std::string label = std::string());
+	node_ptr_t insertNode(const std::string& label = std::string());
 
 	/*
 	 * @returns	The node whose index is given.
-	 * @throws	OutOfBoundsException	Upon an invalid index.
+	 * @note	In favor of performance, this method does not verify input validity.
 	 */
 	node_ptr_t getNode(node_index_t index) const;
 
@@ -62,15 +62,16 @@ public:
 	/*
 	 * @brief	Removes a node from the graph, based on the given index.
 	 * @param	index	The index of the node to be removed.
-	 * @throws	OutOfBoundsException	Upon an index that does not exist in the graph.
+	 * @note	In favor of performance, this method does not verify input validity.
+	 * @note	This operation is very expensive - if you need to remove a large number of nodes, consider marking them and calling deleteMarkedNodes() instead.
 	 */
 	void removeNode(node_index_t index);
 
 	/*
 	 * @brief	Removes a node from the graph.
 	 * @param	node	The node to be removed.
-	 * @throws	InvalidParamException	The node parameter is null or points to a node that is
-	 *									not in the current graph instance.
+	 * @note	In favor of performance, this method does not verify input validity.
+	 * @note	This operation is very expensive - if you need to remove a large number of nodes, consider marking them and calling deleteMarkedNodes() instead.
 	 */
 	void removeNode(node_ptr_t node);
 
@@ -80,18 +81,13 @@ public:
 	void unmarkNodes() const;
 
 	/*
-	 * @brief	Deletes all nodes that are currently marked from the graph.
+	 * @brief	Deletes all nodes that are currently marked from the graph. 
+	 * @note	This method is much more efficient than calling removeNode() multiple times, when intending to remove a *large* number of nodes.
 	 */
 	void deleteMarkedNodes();
 
-    /*
- 	 * @brief	Prunes trees from the graph. I.e. removes all nodes with degree 0 or 1 (and those that become of this degree as a result
-	 *			of these deletions, recursively).
-	 */
-    void pruneTrees();
-
 	/*
-	 * @brief	Swaps the contents of the given graph with that of the current instance.
+	 * @brief	Swaps the contents of the given graphs.
 	 */
 	friend void swap(Graph& first, Graph& second);
 
@@ -101,34 +97,15 @@ private:
      */
     void removeNodeEdges(node_ptr_t node);
 
-    /*
-     * @returns The first unmarked neighbor of the node given.
-     * @throws  std::exception if there is none.
-     */
-    node_ptr_t getUnmarkedNeighbor(const node_ptr_t node) const;
-    /*
-     * @returns The number of edges pointing to unmarked nodes.
-     */
-    unsigned int countUnmarkedNeighbors(node_ptr_t node) const;
-
-    /*
-	 * @brief	Marks the given current leaf node and recursively calls itself on its neighbor (if exists).
-	 * @param	curNode			The current node to mark for deletion. Must have degree 0 or 1.
-     * @returns The number of nodes marked for deletion.
-	 * @throws	std::exception	If the current node's degree is greater than 1.
-	 */
-    unsigned int pruneTreesRecursion(node_ptr_t curNode);
-
-	/*
-	 * @brief	Sets this graph to equal the other graph.
-	 */
-	void reset(const Graph& other);
 	/*
 	 * @brief	Asserts that the given index represents a valid node (i.e. the index is valid in the nodes collection).
 	 * @param	index	The index to assert.
 	 * @throws	OutOfBoundsException	Upon an index that breaks the assertion.
 	 */
 	void assertIndexInBounds(node_index_t index) const;
+
+
+	//---------- local variables ----------
 
 	std::string _title;
 	node_ptr_collection_t _nodes;

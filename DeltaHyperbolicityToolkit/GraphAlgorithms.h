@@ -131,6 +131,13 @@ namespace dhtoolkit
 		 */
 		static bool removeCycle(graph_ptr_t graph, node_ptr_t origin, delta_t& delta, std::unordered_set<std::string>& processedNodes);
 
+		/*
+ 		 * @brief	Prunes trees from the graph. I.e. removes all nodes with degree 0 or 1 (and those that become of this degree as a result
+		 *			of these deletions, recursively).
+		 * @param	graph	The graph to run on.
+		 */
+		static void pruneTrees(graph_ptr_t graph);
+
 	private:
 		static const int NodeIndexMaxNumOfDigits;
 		static const char* EdgeMarker;
@@ -145,6 +152,26 @@ namespace dhtoolkit
 			node_index_t src;
 			node_index_t dst;
 		};
+		
+		/*
+		 * @param node	The node for which to perform the count.
+		 * @returns The number of outgoing edges from the given node, pointing to unmarked nodes.
+		 */
+		static unsigned int countUnmarkedNeighbors(node_ptr_t node);
+
+		/*
+		 * @brief	Marks the given current leaf node and recursively calls itself on its neighbor (if exists).
+		 * @param	curNode			The current node to mark for deletion. Must have degree 0 or 1.
+		 * @returns The number of nodes marked for deletion.
+		 * @throws	std::exception	If the current node's degree is greater than 1.
+		 */
+		static unsigned int pruneTreesRecursion(node_ptr_t curNode);
+
+		/*
+		 * @returns The first unmarked neighbor of the node given.
+		 * @throws  std::exception if there is none.
+		 */
+		static node_ptr_t getUnmarkedNeighbor(const node_ptr_t node);
 
 		/*
 		 * @returns	Shortens the path given such that it contains only the last three parts (e.g. "C:\dir1\dir2\dir3\dir4\dir5\file.txt" --> "dir4\dir5\file.txt").

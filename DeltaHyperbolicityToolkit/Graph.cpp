@@ -60,11 +60,20 @@ namespace dhtoolkit
 		return _title;
 	}
 
-	node_ptr_t Graph::insertNode(string label)
+	node_ptr_t Graph::insertNode(const string& label)
 	{
-		//create new node whose index is the next avilable number (0-based)
-		if (label.empty()) label = (boost::format("%1%") % _nodes.size()).str();
-		node_ptr_t newNode(new Node(_nodes.size(), label));
+		node_ptr_t newNode = nullptr;
+		if (!label.empty())
+		{
+			//use given parameter as label
+			newNode.reset(new Node(_nodes.size(), label));
+		}
+		else
+		{
+			//create a label that's simply the index of the node about to be created
+			string indexLabel = (boost::format("%1%") % _nodes.size()).str();
+			newNode.reset(new Node(_nodes.size(), indexLabel));
+		}
 		_nodes.push_back(newNode);
 
 		return newNode;
@@ -72,7 +81,8 @@ namespace dhtoolkit
 
 	node_ptr_t Graph::getNode(node_index_t index) const
 	{
-		assertIndexInBounds(index);
+		//uncommenting the next line is safer, but also slower... don't write bugs and you'll be fine!
+		//assertIndexInBounds(index);
 		return _nodes[index];
 	}
 
@@ -95,9 +105,13 @@ namespace dhtoolkit
 
 	void Graph::removeNode(node_index_t index)
 	{
+		//assert input validity (here we do prefer safety over performance, since this method shouldn't be called very often, and
+		//even if it is - removing a node is already very expensive - this additional check is fairly negligible)
 		assertIndexInBounds(index);
-		node_ptr_t node = *(_nodes.begin() + index);
-		_nodes.erase(_nodes.begin()+index);
+
+		node_ptr_collection_t::const_iterator nodeIt = (_nodes.begin() + index);
+		node_ptr_t node = *nodeIt;
+		_nodes.erase(nodeIt);
 
 		removeNodeEdges(node);
 
@@ -128,7 +142,7 @@ namespace dhtoolkit
 	{
 		for (node_ptr_collection_t::const_iterator it = _nodes.cbegin(); it != _nodes.cend(); ++it)
 		{
-			(*it)->unmark();
+			(*it)->setMarked(false);
 		}
     }
 
@@ -136,18 +150,20 @@ namespace dhtoolkit
 	{
         node_ptr_collection_t newCollection;
         unsigned int index = 0;
+
+		//iterate over the nodes and insert only unmarked nodes to new collection
         for (node_ptr_collection_t::const_iterator it = _nodes.cbegin(); it != _nodes.cend(); ++it)
         {
             //check if node is marked for deletion or not
             if (!(*it)->isMarked())
             {
-                //not marked - copy to new array, and set index
+                //not marked - copy to new collection, and set index accordingly
 				newCollection.push_back(*it);
 				(*it)->setIndex(index++);
             }
             else
             {
-                //marked for deletion - remove its incoming & outgoing edges
+                //marked for deletion - remove its incoming & outgoing edges (and obviously, do *not* add to new collection)
                 removeNodeEdges(*it);
             }
         }
@@ -172,92 +188,12 @@ namespace dhtoolkit
         }
     }
 
-	void Graph::pruneTrees()
-    {
-        //unmark all nodes
-        unmarkNodes();
-
-        unsigned int removed = 0;
-
-        //run on all nodes, mark the ones that need to be removed
-        for (node_ptr_collection_t::const_iterator it = _nodes.cbegin(); it != _nodes.cend(); ++it)
-        {
-            //check if current node needs to be pruned & not already pruned
-            if ( (countUnmarkedNeighbors(*it) <= 1) && (!(*it)->isMarked()) )
-            {
-                //prune node recursively
-                removed += pruneTreesRecursion(*it);
-            }
-        }
-
-        //instead of deleting a ton of unnecessary nodes (deletion is VERY expensive!), we create
-        //a new collection and copy only the necessary nodes into it, while setting their index appropriately
-        //tests: using deletion, pruning of a large graph (1M+ nodes) took ~310 seconds. with this method - 0.238 seconds!!!
-
-        deleteMarkedNodes();
-    }
-
-    unsigned int Graph::pruneTreesRecursion(node_ptr_t curNode)
-    {
-        unsigned int edgesLen = countUnmarkedNeighbors(curNode);
-        
-        //assert degree is <= 1
-        if (edgesLen > 1) throw std::exception("Pruned node degree is > 1");
-
-        //if node has a neighbor (can have only 1, if any), remember it before we remove the edge
-        node_ptr_t neighbor(nullptr);
-        if (1 == edgesLen) neighbor = getUnmarkedNeighbor(curNode);
-
-        //mark node for pruning
-        curNode->mark();
-        unsigned int marked = 1;
-
-        //if the pruned node had a neighbor, and it has now become a leaf, prune it recursively
-        if ( (nullptr != neighbor.get()) && (countUnmarkedNeighbors(neighbor)) <= 1) marked += pruneTreesRecursion(neighbor);
-
-        return marked;
-    }
-
-    node_ptr_t Graph::getUnmarkedNeighbor(const node_ptr_t node) const
-    {
-        const node_weak_ptr_collection_t& neighbors = node->getEdges();
-        for (node_weak_ptr_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
-        {
-            if (!it->lock()->isMarked()) return it->lock();
-        }
-
-        throw std::exception("No unmarked neighbor found!");
-    }
-
-    unsigned int Graph::countUnmarkedNeighbors(const node_ptr_t node) const
-    {
-        unsigned int unmarkedNodes = 0;
-        const node_weak_ptr_collection_t& neighbors = node->getEdges();
-        for (node_weak_ptr_collection_t::const_iterator it = neighbors.cbegin(); it != neighbors.cend(); ++it)
-        {
-            if (!it->lock()->isMarked()) ++unmarkedNodes;
-        }
-
-        return unmarkedNodes;
-    }
-
 	void Graph::assertIndexInBounds(node_index_t index) const
 	{
-		//check assertion
 		if (index >= _nodes.size())
 		{
-			//index out of bounds
-			const int ErrMsgBufLen = 100;
-			char errMsg[ErrMsgBufLen];
-			//format error message
-			if (-1 == sprintf_s(errMsg, ErrMsgBufLen, "Node index %d requested is out of bounds (# of items: %d)", index, _nodes.size()))
-			{
-				//formatting failed - throw a "simple" exception without the formatted details
-				throw OutOfBoundsException("Node index requested is out of bounds");
-			}
-			
 			//throw exception with formatted message
-			throw OutOfBoundsException(errMsg);
+			throw OutOfBoundsException((boost::format("Node index %1% requested is out of bounds (# of nodes in graph: %2%)") % index % _nodes.size()).str().c_str());
 		}
 	}
 

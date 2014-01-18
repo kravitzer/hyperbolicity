@@ -26,7 +26,7 @@ void BFS::run(const node_ptr_t origin)
 
 	//unmark all nodes except for origin
 	_graph->unmarkNodes();
-	_graph->getNode( origin->getIndex() )->mark();
+	_graph->getNode( origin->getIndex() )->setMarked(true);
 
     //start running BFS
 	runBfsLoop();
@@ -71,7 +71,7 @@ void BFS::runBfsLoop()
             if (it->lock()->isMarked()) continue;
 
             //mark neighbor
-            it->lock()->mark();
+            it->lock()->setMarked(true);
             //add neighbor to queue
             bfs_entry_t newEntry = {it->lock(), entry.node, entry.distance+1};
             _bfsQueue.push(newEntry);

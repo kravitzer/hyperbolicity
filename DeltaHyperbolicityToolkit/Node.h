@@ -19,18 +19,17 @@ class Graph;
  */
 class Node : public std::enable_shared_from_this<Node>
 {
-	friend Graph;
+	friend Graph;	//only a graph can create a new node instance (i.e. access its ctor)
 public:
 	/*
-	 * @returns	A read-only vector of the node's pointed to by this node.
+	 * @returns	A read-only collection of the nodes pointed to by the current node.
 	 */
 	const node_weak_ptr_collection_t& getEdges() const;
 
 	/*
-	 * @brief	Adds an edge from this instance's node to the given node.
+	 * @brief	Adds a bidirectional edge from this instance's node to the given node.
 	 * @param	otherNode	The node to which the edge is drawn.
-	 * @note	The edge is bidirectional - e.g. otherNode will have a new edge to
-	 *			this node as well.
+	 * @note	The edge is bidirectional - e.g. otherNode will have a new edge to this node as well.
 	 * @throws	InvalidParamException	Upon null pointer or nodes not belonging to the same graph.
 	 */
 	void insertBidirectionalEdgeTo(node_ptr_t otherNode);
@@ -52,8 +51,8 @@ public:
 
 	/*
 	 * @brief	Checks whether there's an edge to the given node.
-	 * @param	otherNode	The node that is the destination of the edge searched.
-	 * @returns	True if an edge exists to or from other node, false otherwise.
+	 * @param	otherNode	The destination node of the edge to be looked for.
+	 * @returns	True if an edge exists to or from another node, false otherwise.
 	 * @throws	InvalidParamException	Upon null pointer or nodes not belonging to the same graph.
 	 */
 	bool hasEdge(const node_ptr_t otherNode) const;
@@ -64,19 +63,15 @@ public:
 	node_index_t getIndex() const;
 
 	/*
-	 * @returns	Whether or not the node is currently  marked.
+	 * @returns	Whether or not the node is currently marked.
 	 */
 	bool isMarked() const;
 
 	/*
-	 * @brief	Marks the current node.
+	 * @brief	Marks/unmarks the current node.
+	 * @param	isMarked	Whether to set or unset the given node.
 	 */
-	void mark() const;
-
-	/*
-	 * @brief	Unmarks the current node.
-	 */
-	void unmark() const;
+	void setMarked(bool isMarked) const;
 
 	/*
 	 * @returns	The node's label
@@ -84,36 +79,38 @@ public:
 	std::string getLabel() const;
 
 private:
-	//do *not* allow copy ctor / assignment operator
+	//do *not* allow copy ctor / move ctor / assignment operator - as a node must be assigned to a graph, and we cannot have two identical nodes in the same graph
+	//so copying has no practical meaning
 	Node(const Node&);
+	Node(const Node&&);
 	Node& operator=(const Node&);
 
 	/*
-	 * @brief	Ctor receiving the node's index. A node may only be created by a Graph instace.
-	 * @param	index	Node's index - must be unique in the graph!
+	 * @brief	Ctor for creating a new node.
+	 * @param	index	Node's index.
+	 * @param	label	The node's textual description.
 	 */
 	Node(node_index_t index, std::string label);
 
 	/*
-	 * @brief	A node's index may need to change (if a node is removed, for example). This
-	 *			methods allows such a change. It is private so that it may only be called from
-	 *			within the instance or from a friend class (the graph).
-	 * @param	newIndex	The index to be set.
+	 * @brief	Resets the index of the node (node indices must remain consecutive in a graph, therefore a node's index may change, 
+	 *			if for example, another node was removed from the graph).
+	 * @param	newIndex	The node's new index.
 	 */
 	void setIndex(node_index_t newIndex);
 
-	//node's index (0-based)
+	//the node's index (0-based)
 	node_index_t _index;
 
-	//collection of node's incoming & outgoing nodes. NOTE: must be a weak pointer, otherwise when freeing
+	//collection of the node's incoming & outgoing nodes. NOTE: must be a weak pointer, otherwise when freeing
 	//a graph, the nodes won't be released, as they will have cyclic references to each other!
 	node_weak_ptr_collection_t _outgoingEdges;
 	node_weak_ptr_collection_t _incomingEdges;
 
-	//node's label - doesn't change even when the index changes
+	//the node's label - remains unchanged throughout the life of the instance
 	std::string _label;
 
-	//is node marked or not
+	//is the node marked or not
 	mutable bool _isMarked;
 };
 
