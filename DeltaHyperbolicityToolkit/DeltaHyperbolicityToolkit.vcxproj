@@ -152,7 +152,6 @@
     <ClInclude Include="BFS.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="DeltaHyperbolicity.h" />
-    <ClInclude Include="Except.h" />
     <ClInclude Include="FurthestNode.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphAlgorithms.h" />

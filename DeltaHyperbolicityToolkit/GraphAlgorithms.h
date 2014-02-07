@@ -42,8 +42,7 @@ namespace dhtoolkit
 		 * @brief	Loads the graph from the given file.
 		 * @param	path	The file path to be loaded.
 		 * @returns	A graph instance loaded from the file.
-		 * @throws	InvalidFormatException	Upon an invalid file format.
-		 * @throws	std::exception			Upon an I/O failure.
+		 * @throws	std::exception	Upon a failure (I/O failure, invalid format, etc.).
 		 */
 		static graph_ptr_t LoadGraphFromFile(const std::string& path);
 
@@ -54,8 +53,7 @@ namespace dhtoolkit
 		 * @param	path			The file path to be loaded.
 		 * @param	isBidirectional	True if each line represents a bidirectional edge, false otherwise.
 		 * @returns	A graph instance loaded from the file.
-		 * @throws	InvalidFormatException	Upon an invalid file format.
-		 * @throws	std::exception			Upon an I/O failure.
+		 * @throws	std::exception	Upon a failure (I/O failure, invalid format, etc.).
 		 */
 		static graph_ptr_t LoadGraphFromEdgeListFile(const std::string& path, bool isBidirectional);
 
@@ -91,7 +89,6 @@ namespace dhtoolkit
 		 * @param	graph	The graph to run on.
 		 * @param	origin	The node from which the double-sweep process starts. Optional. If not specified, the origin node is randomly selected.
 		 * @returns	A DoubleSweepResult structure, holding the result of this process.
-		 * @throws	InvalidParamException	If any of the nodes is invalid (i.e. null) or if they are not part of the graph.
 		 * @note	IMPORTANT! You must initialize a random seed (by calling srand() with some random seed) before calling this method, otherwise
 		 *			you might get the same results each run!
 		 */

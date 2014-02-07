@@ -1,8 +1,7 @@
 #include "State.h"
-#include "Except.h"
 #include "Node.h"
 #include <string>
-#include <boost\format.hpp>
+#include <boost/format.hpp>
 
 using namespace std;
 
@@ -28,14 +27,14 @@ namespace dhtoolkit
 
 	const node_ptr_t& State::operator[](int index) const
 	{
-		if ( (index < 0) || (index >= static_cast<int>(size())) ) throw OutOfBoundsException();
+		if ( (index < 0) || (index >= static_cast<int>(size())) ) throw std::out_of_range((boost::format("State index %1% is out of bounds") % index).str().c_str());
 		if (nullptr == _nodes[index].get()) throw std::exception("State node is not initialized");
 		return _nodes[index];
 	}
 
 	node_ptr_t& State::operator[](int index)
 	{
-		if ( (index < 0) || (index >= static_cast<int>(size())) ) throw OutOfBoundsException();
+		if ( (index < 0) || (index >= static_cast<int>(size())) ) throw std::out_of_range((boost::format("State index %1% is out of bounds") % index).str().c_str());
 		return _nodes[index];
 	}
 

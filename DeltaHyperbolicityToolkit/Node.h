@@ -30,7 +30,7 @@ public:
 	 * @brief	Adds a bidirectional edge from this instance's node to the given node.
 	 * @param	otherNode	The node to which the edge is drawn.
 	 * @note	The edge is bidirectional - e.g. otherNode will have a new edge to this node as well.
-	 * @throws	InvalidParamException	Upon null pointer or nodes not belonging to the same graph.
+	 * @throws	std::invalid_argument	Upon null pointer or nodes not belonging to the same graph.
 	 */
 	void insertBidirectionalEdgeTo(node_ptr_t otherNode);
 
@@ -38,7 +38,7 @@ public:
 	 * @brief	Adds an edge from this instance's node to the given node.
 	 * @param	otherNode	The node to which the edge is drawn.
 	 * @note	The other node will not be changed as this is a unidirectional edge!
-	 * @throws	InvalidParamException	Upon null pointer or nodes not belonging to the same graph.
+	 * @throws	std::invalid_argument	Upon null pointer or nodes not belonging to the same graph.
 	 */
 	void insertUnidirectionalEdgeTo(const node_ptr_t otherNode);
 
@@ -53,7 +53,7 @@ public:
 	 * @brief	Checks whether there's an edge to the given node.
 	 * @param	otherNode	The destination node of the edge to be looked for.
 	 * @returns	True if an edge exists to or from another node, false otherwise.
-	 * @throws	InvalidParamException	Upon null pointer or nodes not belonging to the same graph.
+	 * @throws	std::invalid_argument	Upon null pointer or nodes not belonging to the same graph.
 	 */
 	bool hasEdge(const node_ptr_t otherNode) const;
 

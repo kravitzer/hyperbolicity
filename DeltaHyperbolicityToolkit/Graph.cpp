@@ -1,7 +1,6 @@
 #include "Graph.h"
 #include "defs.h"
 #include "Node.h"
-#include "Except.h"
 #include <string>
 #include <unordered_map>
 #include <algorithm>
@@ -125,13 +124,13 @@ namespace dhtoolkit
 	void Graph::removeNode(node_ptr_t node)
 	{
 		//check for null pointer
-		if (nullptr == node.get()) throw InvalidParamException("Trying to remove a null node pointer");
+		if (nullptr == node.get()) throw std::invalid_argument("Trying to remove a null node pointer");
 
 		//get node index and make sure it is in bounds, and really is a member of *this* graph
 		node_index_t nodeIndex = (*node)._index;
 		if ((nodeIndex >= _nodes.size()) || (node.get() != _nodes[(*node)._index].get()))
 		{
-			throw InvalidParamException("Given node to remove is not a member of this graph");
+			throw std::invalid_argument("Given node to remove is not a member of this graph");
 		}
 
 		removeNode(nodeIndex);
@@ -192,7 +191,7 @@ namespace dhtoolkit
 		if (index >= _nodes.size())
 		{
 			//throw exception with formatted message
-			throw OutOfBoundsException((boost::format("Node index %1% requested is out of bounds (# of nodes in graph: %2%)") % index % _nodes.size()).str().c_str());
+			throw std::out_of_range((boost::format("Node index %1% requested is out of bounds (# of nodes in graph: %2%)") % index % _nodes.size()).str().c_str());
 		}
 	}
 

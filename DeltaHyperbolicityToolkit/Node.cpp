@@ -1,5 +1,4 @@
 #include "Node.h"
-#include "Except.h"
 #include <string>
 
 using namespace std;
@@ -24,7 +23,7 @@ namespace dhtoolkit
 
 	void Node::insertUnidirectionalEdgeTo(const node_ptr_t otherNode)
 	{
-		if (nullptr == otherNode.get()) throw InvalidParamException("Trying to insert a unidirectional edge to a null node pointer");
+		if (nullptr == otherNode.get()) throw std::invalid_argument("Trying to insert a unidirectional edge to a null node pointer");
 
 		_outgoingEdges.push_back(otherNode);
 		otherNode->_incomingEdges.push_back(this->shared_from_this());
@@ -58,7 +57,7 @@ namespace dhtoolkit
 	bool Node::hasEdge(const node_ptr_t otherNode) const
 	{
 		//assert input validity
-		if (nullptr == otherNode.get()) throw InvalidParamException("Null pointer when checking if edge exists");
+		if (nullptr == otherNode.get()) throw std::invalid_argument("Null pointer when checking if edge exists");
 		
 		//search for an incoming edge from other node
 		for (node_weak_ptr_collection_t::const_iterator it = _incomingEdges.cbegin(); it != _incomingEdges.cend(); ++it)

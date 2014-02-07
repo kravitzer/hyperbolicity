@@ -99,8 +99,8 @@ private:
 
 	/*
 	 * @brief	Asserts that the given index represents a valid node (i.e. the index is valid in the nodes collection).
-	 * @param	index	The index to assert.
-	 * @throws	OutOfBoundsException	Upon an index that breaks the assertion.
+	 * @param	index				The index to assert.
+	 * @throws	std::out_of_range	Upon an index that breaks the assertion.
 	 */
 	void assertIndexInBounds(node_index_t index) const;
 

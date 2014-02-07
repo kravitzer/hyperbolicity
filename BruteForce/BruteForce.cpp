@@ -3,7 +3,6 @@
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
 #include "DeltaHyperbolicityToolkit\State.h"
-#include "DeltaHyperbolicityToolkit\Except.h"
 #include "DeltaHyperbolicityToolkit\NodeDistances.h"
 #include <time.h>
 #include <string>
@@ -80,7 +79,7 @@ namespace dhtoolkit
 						//v2 overlapped, increment v3
 						_v1 = (_v1 + 1) % (_graph->size() - 3);
 						//it's impossible for v1 to overlap as well - just make sure
-						if (0 == _v1) throw AlgorithmCompletedException("Brute force algorithm completed, yet another step was required");
+						if (0 == _v1) throw std::logic_error("Brute force algorithm completed, yet another step was required");
 						_v2 = _v1 + 1;
 					}
 					_v3 = _v2 + 1;

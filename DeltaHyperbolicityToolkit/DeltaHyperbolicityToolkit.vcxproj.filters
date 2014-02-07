@@ -36,9 +36,6 @@
     <ClInclude Include="GraphAlgorithms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Except.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DeltaHyperbolicity.h">
       <Filter>Header Files</Filter>
     </ClInclude>

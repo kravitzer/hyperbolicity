@@ -1,5 +1,4 @@
 #include "GraphAlgorithms.h"
-#include "Except.h"
 #include "defs.h"
 #include "FurthestNode.h"
 #include "NodeDistances.h"
@@ -733,7 +732,7 @@ namespace dhtoolkit
 			//if the entire buffer is occupied, it means that we couldn't find a single edge
 			//marker in the entire buffer. Assuming the buffer is large enough to hold at least
 			//one edge (which obviously it is), this means the file has an invalid format.
-			if (0 == bytesToRead) throw InvalidFormatException("Invalid graph file format");
+			if (0 == bytesToRead) throw std::runtime_error("Invalid graph file format");
 
 			//read the data to buffer (to complete to BufSize)
 			size_t bytesRead = fread(buf + bufDataSize, sizeof(char), bytesToRead, filePtr.get());
@@ -776,9 +775,9 @@ namespace dhtoolkit
 	GraphAlgorithms::Edge GraphAlgorithms::ReadSingleEdge(const char* buf, bool delimiterPresent, size_t* dataReadFromBuffer)
 	{
 		const char* edgeMarker = strstr(buf, EdgeMarker);
-		if (!edgeMarker) throw InvalidFormatException("Edge marker not found");
+		if (!edgeMarker) throw std::runtime_error("Edge marker not found");
 		const char* delimiter = strstr(edgeMarker + EdgeMarkerLen, Delimiter);
-		if (delimiterPresent && !delimiter) throw InvalidFormatException("No delimiter found");
+		if (delimiterPresent && !delimiter) throw std::runtime_error("No delimiter found");
 		
 		//calculate length of each node (e.g. length of node index "123" is 3, as in 3 characters)
 		size_t node1len = edgeMarker - buf;

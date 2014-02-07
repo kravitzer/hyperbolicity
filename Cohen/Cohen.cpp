@@ -3,7 +3,6 @@
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
 #include "DeltaHyperbolicityToolkit\State.h"
-#include "DeltaHyperbolicityToolkit\Except.h"
 #include "DeltaHyperbolicityToolkit\NodeDistances.h"
 #include <string>
 #include <vector>

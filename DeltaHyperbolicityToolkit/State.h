@@ -39,13 +39,13 @@ namespace dhtoolkit
 
 		/*
 		 * @returns	The node at position index.
-		 * @throws	OutOfBoundsException	If the given index is out of bounds.
+		 * @throws	std::out_of_range	If the given index is out of bounds.
 		 */
 		const node_ptr_t& operator[](const int index) const;
 
 		/*
 		 * @returns	The node at position index.
-		 * @throws	OutOfBoundsException	If the given index is out of bounds.
+		 * @throws	std::out_of_range	If the given index is out of bounds.
 		 */
 		node_ptr_t& operator[](const int index);
 
