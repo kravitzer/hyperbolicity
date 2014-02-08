@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4FE837FE-AC12-42B9-9275-72691CAE5D27}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>DeltaHyperbolicityToolkit</RootNamespace>
-    <ProjectName>DeltaHyperbolicityToolkit</ProjectName>
+    <RootNamespace>Graph</RootNamespace>
+    <ProjectName>Graph</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -94,7 +94,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\DeltaHyperbolicityToolkit;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\Graph;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -108,7 +108,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\DeltaHyperbolicityToolkit;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\Graph;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,7 +124,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\DeltaHyperbolicityToolkit;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\Graph;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,7 +142,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\DeltaHyperbolicityToolkit;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\Graph;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,38 +152,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\AlgRunner.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\BFS.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\defs.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\DeltaHyperbolicity.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\FurthestNode.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\Graph.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\GraphAlgorithms.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\GraphBuilder.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\IDSS.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\IGraphAlg.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\Node.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\NodeDistances.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\SADefs.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\SimulatedAnnealing.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\SpanningTree.h" />
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\State.h" />
+    <ClInclude Include="..\..\..\include\Graph\AlgRunner.h" />
+    <ClInclude Include="..\..\..\include\Graph\BFS.h" />
+    <ClInclude Include="..\..\..\include\Graph\defs.h" />
+    <ClInclude Include="..\..\..\include\Graph\DeltaHyperbolicity.h" />
+    <ClInclude Include="..\..\..\include\Graph\FurthestNode.h" />
+    <ClInclude Include="..\..\..\include\Graph\Graph.h" />
+    <ClInclude Include="..\..\..\include\Graph\GraphAlgorithms.h" />
+    <ClInclude Include="..\..\..\include\Graph\GraphBuilder.h" />
+    <ClInclude Include="..\..\..\include\Graph\IDSS.h" />
+    <ClInclude Include="..\..\..\include\Graph\IGraphAlg.h" />
+    <ClInclude Include="..\..\..\include\Graph\Node.h" />
+    <ClInclude Include="..\..\..\include\Graph\NodeDistances.h" />
+    <ClInclude Include="..\..\..\include\Graph\SADefs.h" />
+    <ClInclude Include="..\..\..\include\Graph\SimulatedAnnealing.h" />
+    <ClInclude Include="..\..\..\include\Graph\SpanningTree.h" />
+    <ClInclude Include="..\..\..\include\Graph\State.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\AlgRunner.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\BFS.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\GraphBuilder.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\DeltaHyperbolicity.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\FurthestNode.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\Graph.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\GraphAlgorithms.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\IDSS.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\IGraphAlg.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\Node.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\NodeDistances.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\SimulatedAnnealing.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\SpanningTree.cpp" />
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\State.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\AlgRunner.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\BFS.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\GraphBuilder.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\DeltaHyperbolicity.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\FurthestNode.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\Graph.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\GraphAlgorithms.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\IDSS.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\IGraphAlg.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\Node.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\NodeDistances.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\SimulatedAnnealing.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\SpanningTree.cpp" />
+    <ClCompile Include="..\..\..\src\Graph\State.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

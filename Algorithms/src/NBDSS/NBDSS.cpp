@@ -1,7 +1,7 @@
 #include "NBDSS.h"
-#include "DeltaHyperbolicityToolkit\IGraphAlg.h"
-#include "DeltaHyperbolicityToolkit\defs.h"
-#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
+#include "Graph\IGraphAlg.h"
+#include "Graph\defs.h"
+#include "Graph\DeltaHyperbolicity.h"
 #include <string>
 #include <time.h>
 

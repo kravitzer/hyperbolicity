@@ -1,9 +1,9 @@
-#include <DeltaHyperbolicityToolkit\Graph.h>
-#include <DeltaHyperbolicityToolkit\GraphAlgorithms.h>
-#include <DeltaHyperbolicityToolkit\defs.h>
-#include <DeltaHyperbolicityToolkit\FurthestNode.h>
-#include <DeltaHyperbolicityToolkit\NodeDistances.h>
-#include <DeltaHyperbolicityToolkit\SpanningTree.h>
+#include <Graph\Graph.h>
+#include <Graph\GraphAlgorithms.h>
+#include <Graph\defs.h>
+#include <Graph\FurthestNode.h>
+#include <Graph\NodeDistances.h>
+#include <Graph\SpanningTree.h>
 #include <iostream>
 #include <time.h>
 

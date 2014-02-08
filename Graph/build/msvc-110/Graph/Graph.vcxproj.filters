@@ -21,96 +21,96 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\Node.h">
+    <ClInclude Include="..\..\..\include\Graph\Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\defs.h">
+    <ClInclude Include="..\..\..\include\Graph\defs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\Graph.h">
+    <ClInclude Include="..\..\..\include\Graph\Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\IGraphAlg.h">
+    <ClInclude Include="..\..\..\include\Graph\IGraphAlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\GraphAlgorithms.h">
+    <ClInclude Include="..\..\..\include\Graph\GraphAlgorithms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\DeltaHyperbolicity.h">
+    <ClInclude Include="..\..\..\include\Graph\DeltaHyperbolicity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\SADefs.h">
+    <ClInclude Include="..\..\..\include\Graph\SADefs.h">
       <Filter>Header Files\SA</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\SimulatedAnnealing.h">
+    <ClInclude Include="..\..\..\include\Graph\SimulatedAnnealing.h">
       <Filter>Header Files\SA</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\State.h">
+    <ClInclude Include="..\..\..\include\Graph\State.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\BFS.h">
+    <ClInclude Include="..\..\..\include\Graph\BFS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\FurthestNode.h">
+    <ClInclude Include="..\..\..\include\Graph\FurthestNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\NodeDistances.h">
+    <ClInclude Include="..\..\..\include\Graph\NodeDistances.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\SpanningTree.h">
+    <ClInclude Include="..\..\..\include\Graph\SpanningTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\AlgRunner.h">
+    <ClInclude Include="..\..\..\include\Graph\AlgRunner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\GraphBuilder.h">
+    <ClInclude Include="..\..\..\include\Graph\GraphBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\DeltaHyperbolicityToolkit\IDSS.h">
+    <ClInclude Include="..\..\..\include\Graph\IDSS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\Graph.cpp">
+    <ClCompile Include="..\..\..\src\Graph\Graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\Node.cpp">
+    <ClCompile Include="..\..\..\src\Graph\Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\GraphAlgorithms.cpp">
+    <ClCompile Include="..\..\..\src\Graph\GraphAlgorithms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\DeltaHyperbolicity.cpp">
+    <ClCompile Include="..\..\..\src\Graph\DeltaHyperbolicity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\IGraphAlg.cpp">
+    <ClCompile Include="..\..\..\src\Graph\IGraphAlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\SimulatedAnnealing.cpp">
+    <ClCompile Include="..\..\..\src\Graph\SimulatedAnnealing.cpp">
       <Filter>Source Files\SA</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\State.cpp">
+    <ClCompile Include="..\..\..\src\Graph\State.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\BFS.cpp">
+    <ClCompile Include="..\..\..\src\Graph\BFS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\FurthestNode.cpp">
+    <ClCompile Include="..\..\..\src\Graph\FurthestNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\NodeDistances.cpp">
+    <ClCompile Include="..\..\..\src\Graph\NodeDistances.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\SpanningTree.cpp">
+    <ClCompile Include="..\..\..\src\Graph\SpanningTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\AlgRunner.cpp">
+    <ClCompile Include="..\..\..\src\Graph\AlgRunner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\GraphBuilder.cpp">
+    <ClCompile Include="..\..\..\src\Graph\GraphBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicityToolkit\IDSS.cpp">
+    <ClCompile Include="..\..\..\src\Graph\IDSS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

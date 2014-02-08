@@ -6,8 +6,8 @@
 #ifndef DELTAHYPER_COHEN_H
 #define DELTAHYPER_COHEN_H
 
-#include "DeltaHyperbolicityToolkit\IGraphAlg.h"
-#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
+#include "Graph\IGraphAlg.h"
+#include "Graph\DeltaHyperbolicity.h"
 #include <string>
 #include <vector>
 
@@ -51,7 +51,7 @@ namespace dhtoolkit
         delta_t _bestDelta;
 	};
 
-	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm(const std::string& outputDir);
+	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
 } // namespace dhtoolkit
 

@@ -76,7 +76,7 @@ namespace dhtoolkit
 		std::unordered_set<std::string> _irremovableNodes;
 	};
 
-	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm(const std::string& outputDir);
+	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
 } // namespace dhtoolkit
 

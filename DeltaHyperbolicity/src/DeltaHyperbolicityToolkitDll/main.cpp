@@ -1,5 +1,5 @@
-#include "DeltaHyperbolicityToolkit\defs.h"
-#include "DeltaHyperbolicityToolkit\Graph.h"
+#include "Graph\defs.h"
+#include "Graph\Graph.h"
 
 using namespace dhtoolkit;
 

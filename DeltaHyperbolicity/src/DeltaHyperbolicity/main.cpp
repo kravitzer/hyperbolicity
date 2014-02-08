@@ -11,13 +11,14 @@
 #include <boost\filesystem.hpp>
 #include <boost\tokenizer.hpp>
 #include <boost\lexical_cast.hpp>
-#include "DeltaHyperbolicityToolkit\AlgRunner.h"
-#include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
-#include "DeltaHyperbolicityToolkit\defs.h"
-#include "DeltaHyperbolicityToolkit\IGraphAlg.h"
-#include "DeltaHyperbolicityToolkit\NodeDistances.h"
-#include "DeltaHyperbolicityToolkit\FurthestNode.h"
-#include "DeltaHyperbolicityToolkit\SpanningTree.h"
+#include <boost\format.hpp>
+#include "Graph\AlgRunner.h"
+#include "Graph\GraphAlgorithms.h"
+#include "Graph\defs.h"
+#include "Graph\IGraphAlg.h"
+#include "Graph\NodeDistances.h"
+#include "Graph\FurthestNode.h"
+#include "Graph\SpanningTree.h"
 
 using namespace std;
 using namespace dhtoolkit;
@@ -257,11 +258,12 @@ void writeStringToFile(file_ptr_t f, const string& str)
 file_ptr_t createRawDataFile(const string& filePath)
 {
 	//create output file
-	file_ptr_t f(_fsopen(filePath.c_str(), "w", _SH_DENYWR), &fclose);
-	if (nullptr == f.get())
+	FILE* fileHandle = _fsopen(filePath.c_str(), "w", _SH_DENYWR);
+	if (nullptr == fileHandle)
 	{
-		throw exception("Failed opening file");
+		throw runtime_error((boost::format("Failed opening raw file: %1%") % filePath).str().c_str());
 	}	
+	file_ptr_t f(fileHandle, &fclose);
 
 	//write file header
 	writeStringToFile(f, "file, Delta, Run Time, Nodes\n");
@@ -272,11 +274,12 @@ file_ptr_t createRawDataFile(const string& filePath)
 file_ptr_t createSummaryFile(const string& filePath)
 {
 	//create output file
-	file_ptr_t f(_fsopen(filePath.c_str(), "w", _SH_DENYWR), &fclose);
-	if (nullptr == f.get())
+	FILE* fileHandle = _fsopen(filePath.c_str(), "w", _SH_DENYWR);
+	if (nullptr == fileHandle)
 	{
-		throw exception("Failed opening file");
+		throw runtime_error((boost::format("Failed opening summary file: %1%") % filePath).str().c_str());
 	}
+	file_ptr_t f(fileHandle, &fclose);
 
 	//write file headers
 	writeStringToFile(f, "file, Number of Iterations, Iterations to Max Delta, Best Delta, Avg Delta, Worst Delta, Delta Distribution, Sample State, Best Time, Avg Time, Worst Time, Time Variance, Is Brute Force?, Upper Bound\n");

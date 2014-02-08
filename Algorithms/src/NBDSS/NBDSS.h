@@ -6,9 +6,9 @@
 #ifndef DELTAHYPER_DSWEEPMINNONBALANCED_H
 #define DELTAHYPER_DSWEEPMINNONBALANCED_H
 
-#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
-#include "DeltaHyperbolicityToolkit\IGraphAlg.h"
-#include "DeltaHyperbolicityToolkit\IDSS.h"
+#include "Graph\DeltaHyperbolicity.h"
+#include "Graph\IGraphAlg.h"
+#include "Graph\IDSS.h"
 #include <string>
 
 namespace dhtoolkit
@@ -30,7 +30,7 @@ namespace dhtoolkit
 		distance_t _minDistance;
 	};
 
-	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm(const std::string& outputDir);
+	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
 } // namespace dhtoolkit
 

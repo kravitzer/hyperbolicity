@@ -1,8 +1,8 @@
 #include "DDS.h"
-#include "DeltaHyperbolicityToolkit\defs.h"
-#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
-#include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
-#include "DeltaHyperbolicityToolkit\NodeDistances.h"
+#include "Graph\defs.h"
+#include "Graph\DeltaHyperbolicity.h"
+#include "Graph\GraphAlgorithms.h"
+#include "Graph\NodeDistances.h"
 #include <time.h>
 #include <string>
 

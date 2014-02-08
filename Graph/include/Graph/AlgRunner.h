@@ -58,8 +58,18 @@ private:
 	AlgRunner(const AlgRunner&);
 	AlgRunner& operator=(const AlgRunner&);
 
+	/*
+	 * @brief	Extracts the file name from its path, e.g. "C:\algorithms\alg1.dll" returns "alg1".
+	 * @param	path	The path to the algorithm name (either relative or full).
+	 * @returns	The file name only, no extension or path.
+	 */
+	std::string getNameFromPath(const std::string& path) const;
+
 	//the shared library to be loaded
 	std::string _libraryPath;
+
+	//a descriptive name of the algorithm
+	std::string _algName;
 
 	//handle to the loaded algorithm library
 	std::shared_ptr<HINSTANCE__> _libraryHandle;

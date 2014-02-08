@@ -6,9 +6,9 @@
 #ifndef DELTAHYPER_LARGEDISTANCES_H
 #define DELTAHYPER_LARGEDISTANCES_H
 
-#include "DeltaHyperbolicityToolkit\IGraphAlg.h"
-#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
-#include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
+#include "Graph\IGraphAlg.h"
+#include "Graph\DeltaHyperbolicity.h"
+#include "Graph\GraphAlgorithms.h"
 #include <string>
 #include <unordered_set>
 
@@ -53,7 +53,7 @@ namespace dhtoolkit
 		bool _isComplete;
 	};
 
-	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm(const std::string& outputDir);
+	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
 } // namespace dhtoolkit
 

@@ -1,9 +1,9 @@
 #include "Cohen.h"
-#include "DeltaHyperbolicityToolkit\defs.h"
-#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
-#include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
-#include "DeltaHyperbolicityToolkit\State.h"
-#include "DeltaHyperbolicityToolkit\NodeDistances.h"
+#include "Graph\defs.h"
+#include "Graph\DeltaHyperbolicity.h"
+#include "Graph\GraphAlgorithms.h"
+#include "Graph\State.h"
+#include "Graph\NodeDistances.h"
 #include <string>
 #include <vector>
 

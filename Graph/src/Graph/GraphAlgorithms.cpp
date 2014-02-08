@@ -388,7 +388,7 @@ namespace dhtoolkit
 			delta = cycleDelta(cycleSize);
 			return false;
 		}
-		else if (stDist < chain1.size() + chain2.size() + 2)
+		else if (static_cast<size_t>(stDist) < chain1.size() + chain2.size() + 2)
 		{
 			//calculate cycle size
 			size_t cycleSize = chain1.size() + chain2.size() + 2 + stDist;

@@ -1,8 +1,8 @@
 #include "SAExpProbIntervalTemp.h"
-#include "DeltaHyperbolicityToolkit\SADefs.h"
-#include "DeltaHyperbolicityToolkit\SimulatedAnnealing.h"
-#include "DeltaHyperbolicityToolkit\IGraphAlg.h"
-#include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
+#include "Graph\SADefs.h"
+#include "Graph\SimulatedAnnealing.h"
+#include "Graph\IGraphAlg.h"
+#include "Graph\GraphAlgorithms.h"
 #include "boost\format.hpp"
 #include <math.h>
 #include <time.h>

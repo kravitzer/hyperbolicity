@@ -9,7 +9,7 @@
 using namespace std;
 using namespace dhtoolkit;
 
-AlgRunner::AlgRunner(const string& libraryPath) : _libraryPath(libraryPath), _libraryHandle(nullptr), _algorithm(nullptr), _createAlg(nullptr), _releaseAlg(nullptr)
+AlgRunner::AlgRunner(const string& libraryPath) : _libraryPath(libraryPath), _libraryHandle(nullptr), _algName(getNameFromPath(libraryPath)), _algorithm(nullptr), _createAlg(nullptr), _releaseAlg(nullptr)
 {
 	//load the shared library
 	_libraryHandle.reset(LoadLibraryA(_libraryPath.c_str()), &FreeLibrary);
@@ -61,5 +61,25 @@ void AlgRunner::initialize(const graph_ptr_t graph, const node_combination_t& in
 
 string AlgRunner::getName() const
 {
-	return _libraryPath;
+	return _algName;
 }	
+
+string AlgRunner::getNameFromPath(const string& path) const
+{
+#ifdef _WIN32
+	const char PathSeparator = '\\';
+#else
+	const char PathSeparator = '/';
+#endif
+
+	//remove path (i.e. everything up to last path separator, if any exists)
+	string name = path;
+	int lastSlash = name.find_last_of(PathSeparator);
+	if (string::npos != lastSlash) name = name.substr(lastSlash + 1);
+
+	//remove extension (i.e. everything after last '.', if any exists)
+	int ext = name.find_last_of('.');
+	if (string::npos != ext) name = name.substr(0, ext);
+
+	return name;
+}

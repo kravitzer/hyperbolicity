@@ -6,8 +6,8 @@
 #ifndef DELTAHYPER_DDSWEEP_H
 #define DELTAHYPER_DDSWEEP_H
 
-#include "DeltaHyperbolicityToolkit\IGraphAlg.h"
-#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
+#include "Graph\IGraphAlg.h"
+#include "Graph\DeltaHyperbolicity.h"
 #include <string>
 
 namespace dhtoolkit
@@ -35,7 +35,7 @@ namespace dhtoolkit
 		static const unsigned int MaxNumOfTrials = 50;
 	};
 
-	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm(const std::string& outputDir);
+	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
 } // namespace dhtoolkit
 

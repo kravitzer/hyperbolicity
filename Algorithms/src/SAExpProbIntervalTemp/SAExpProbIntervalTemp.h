@@ -6,8 +6,8 @@
 #ifndef DELTAHYPER_SA_EXP_PROB_INTERVAL_TEMP_H
 #define DELTAHYPER_SA_EXP_PROB_INTERVAL_TEMP_H
 
-#include "DeltaHyperbolicityToolkit\SimulatedAnnealing.h"
-#include "DeltaHyperbolicityToolkit\SADefs.h"
+#include "Graph\SimulatedAnnealing.h"
+#include "Graph\SADefs.h"
 
 namespace dhtoolkit
 {
@@ -131,7 +131,7 @@ namespace dhtoolkit
 	};
 
 
-	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm(const std::string& outputDir);
+	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
 } // namespace dhtoolkit
 

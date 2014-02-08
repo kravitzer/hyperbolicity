@@ -1,22 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeltaHyperbolicityToolkit", "DeltaHyperbolicityToolkit\DeltaHyperbolicityToolkit.vcxproj", "{4FE837FE-AC12-42B9-9275-72691CAE5D27}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeltaHyperbolicity", "DeltaHyperbolicity\DeltaHyperbolicity.vcxproj", "{9EBCE805-2A98-433C-8732-6BA496134AA0}"
-	ProjectSection(ProjectDependencies) = postProject
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27} = {4FE837FE-AC12-42B9-9275-72691CAE5D27}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tester", "Tester\Tester.vcxproj", "{E83371DF-1C7C-41A1-868E-6472B7A47938}"
-	ProjectSection(ProjectDependencies) = postProject
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27} = {4FE837FE-AC12-42B9-9275-72691CAE5D27}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeltaHyperbolicityToolkitDll", "DeltaHyperbolicityToolkitDll\DeltaHyperbolicityToolkitDll.vcxproj", "{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}"
-	ProjectSection(ProjectDependencies) = postProject
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27} = {4FE837FE-AC12-42B9-9275-72691CAE5D27}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,18 +15,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Debug|Win32.Build.0 = Debug|Win32
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Debug|x64.ActiveCfg = Debug|x64
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Debug|x64.Build.0 = Debug|x64
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Release|Win32.ActiveCfg = Release|Win32
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Release|Win32.Build.0 = Release|Win32
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Release|x64.ActiveCfg = Release|x64
-		{4FE837FE-AC12-42B9-9275-72691CAE5D27}.Release|x64.Build.0 = Release|x64
 		{9EBCE805-2A98-433C-8732-6BA496134AA0}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{9EBCE805-2A98-433C-8732-6BA496134AA0}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{9EBCE805-2A98-433C-8732-6BA496134AA0}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -52,18 +27,6 @@ Global
 		{9EBCE805-2A98-433C-8732-6BA496134AA0}.Release|Win32.Build.0 = Release|Win32
 		{9EBCE805-2A98-433C-8732-6BA496134AA0}.Release|x64.ActiveCfg = Release|x64
 		{9EBCE805-2A98-433C-8732-6BA496134AA0}.Release|x64.Build.0 = Release|x64
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Debug|Win32.Build.0 = Debug|Win32
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Debug|x64.ActiveCfg = Debug|x64
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Debug|x64.Build.0 = Debug|x64
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Release|Win32.ActiveCfg = Release|Win32
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Release|Win32.Build.0 = Release|Win32
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Release|x64.ActiveCfg = Release|x64
-		{E83371DF-1C7C-41A1-868E-6472B7A47938}.Release|x64.Build.0 = Release|x64
 		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Debug|Win32.ActiveCfg = Debug|Win32

@@ -6,8 +6,8 @@
 #ifndef DELTAHYPER_BRUTEFORCE_H
 #define DELTAHYPER_BRUTEFORCE_H
 
-#include "DeltaHyperbolicityToolkit\IGraphAlg.h"
-#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
+#include "Graph\IGraphAlg.h"
+#include "Graph\DeltaHyperbolicity.h"
 #include <string>
 
 namespace dhtoolkit
@@ -49,7 +49,7 @@ namespace dhtoolkit
         distance_dict_t _v1Distances, _v2Distances, _v3Distances;
 	};
 
-	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm(const std::string& outputDir);
+	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
 } // namespace dhtoolkit
 
