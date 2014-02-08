@@ -430,8 +430,20 @@ void runGivenAlgorithms(alg_runner_collection_t algorithms, const vector<file_pt
 {
 	const unsigned int BruteForceThreshold = 100;
 	alg_runner_collection_t* algsToRun = &algorithms;
+	
+	//try to load BruteForce algorithm to use on graph below size threshold
+	bool bfAvailable = true;
 	alg_runner_collection_t bfAlg(1);
-	bfAlg[0] = alg_runner_ptr_t(new AlgRunner("BruteForce"));
+	try
+	{
+		bfAlg[0] = alg_runner_ptr_t(new AlgRunner("BruteForce"));
+	}
+	catch (const std::exception& ex)
+	{
+		//failed to load algorithm - print warning and set flag signaling that we cannot use it
+		cout << "Note - failed to load BruteForce algorithm: " << ex.what() << endl;
+		bfAvailable = false;
+	}
 
 	for (vector<GraphBreakdown>::const_iterator graphIt = graphs.cbegin(); graphIt != graphs.cend(); ++graphIt)
 	{
@@ -461,7 +473,7 @@ void runGivenAlgorithms(alg_runner_collection_t algorithms, const vector<file_pt
 				unsigned int algIndex = 0;
 				algsToRun = &algorithms;
 				bool runBf = curGraph->size() < BruteForceThreshold;
-				if (runBf)
+				if (bfAvailable && runBf)
 				{
 					algsToRun = &bfAlg;
 				}
