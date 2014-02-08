@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BC5AE7A6-1064-423D-8AD8-821872CEEA4B}</ProjectGuid>
-    <RootNamespace>DSweepMin</RootNamespace>
+    <RootNamespace>DSS</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -142,10 +142,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\DSweepMin\DSweepMin.h" />
+    <ClInclude Include="..\..\..\src\DSS\DSS.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\DSweepMin\DSweepMin.cpp" />
+    <ClCompile Include="..\..\..\src\DSS\DSS.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

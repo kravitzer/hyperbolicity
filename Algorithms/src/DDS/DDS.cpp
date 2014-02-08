@@ -1,4 +1,4 @@
-#include "DDSweep.h"
+#include "DDS.h"
 #include "DeltaHyperbolicityToolkit\defs.h"
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
@@ -10,17 +10,17 @@ using namespace std;
 
 namespace dhtoolkit
 {
-	DDSweep::DDSweep() : IGraphAlg() 
+	DDS::DDS() : IGraphAlg() 
 	{
 		//empty
 	}
 
-	DDSweep::~DDSweep()
+	DDS::~DDS()
 	{
 		//empty
 	}
 
-	DeltaHyperbolicity DDSweep::stepImpl() 
+	DeltaHyperbolicity DDS::stepImpl() 
 	{
 		GraphAlgorithms::DoubleSweepResult ds1 = GraphAlgorithms::DoubleSweep(_graph);
 		GraphAlgorithms::DoubleSweepResult ds2 = GraphAlgorithms::DoubleSweep(_graph);
@@ -49,12 +49,12 @@ namespace dhtoolkit
 		return DeltaHyperbolicity(delta, state);
 	}
 
-	void DDSweep::initImpl(const node_combination_t&)
+	void DDS::initImpl(const node_combination_t&)
 	{
 		//empty
 	}
 
-	bool DDSweep::isComplete() const
+	bool DDS::isComplete() const
 	{
 		//we can always run one more...
 		return false;
@@ -67,7 +67,7 @@ namespace dhtoolkit
 		//initialize random seed (necessary before calling DoubleSweep() )
 		srand(static_cast<unsigned int>(time(nullptr)));
 
-		IGraphAlg* alg = new DDSweep();
+		IGraphAlg* alg = new DDS();
 		return alg;
 	}
 

@@ -17,11 +17,11 @@ namespace dhtoolkit
 	 *			and then repeatedly runs another double-sweep until receiving 4 total different nodes. It then uses these
 	 *			4 nodes to calculate the delta hyperbolicity, and returns the result.
 	 */
-	class DDSweep : public IGraphAlg
+	class DDS : public IGraphAlg
 	{
 	public:
-		DDSweep();
-		virtual ~DDSweep();
+		DDS();
+		virtual ~DDS();
 
 	private:
 		/*

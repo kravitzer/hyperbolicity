@@ -1,4 +1,4 @@
-#include "MDSweep.h"
+#include "MDS.h"
 #include "DeltaHyperbolicityToolkit\defs.h"
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
@@ -12,17 +12,17 @@ using namespace std;
 
 namespace dhtoolkit
 {
-	MDSweep::MDSweep() : IGraphAlg(), _isCompleted(false)
+	MDS::MDS() : IGraphAlg(), _isCompleted(false)
 	{
 		//empty
 	}
 
-	MDSweep::~MDSweep()
+	MDS::~MDS()
 	{
 		//empty
 	}
 
-	DeltaHyperbolicity MDSweep::stepImpl()
+	DeltaHyperbolicity MDS::stepImpl()
 	{	
 		GraphAlgorithms::DoubleSweepResult curDS = _sweeps[_sweeps.size()-1];
 		delta_t maxDelta = 0;
@@ -54,7 +54,7 @@ namespace dhtoolkit
 		return DeltaHyperbolicity(maxDelta, maxState);
 	}
 	
-	void MDSweep::prepareNextStep()
+	void MDS::prepareNextStep()
 	{
 		GraphAlgorithms::DoubleSweepResult curDS = GraphAlgorithms::DoubleSweep(_graph);
 		unsigned int numOfTrials = 1;
@@ -76,12 +76,12 @@ namespace dhtoolkit
 		_vDists.push_back( NodeDistances(_graph, _sweeps[_sweeps.size()-2].v).getDistances() );
 	}
 
-	bool MDSweep::areSweepsUnique(GraphAlgorithms::DoubleSweepResult& res1, GraphAlgorithms::DoubleSweepResult& res2)
+	bool MDS::areSweepsUnique(GraphAlgorithms::DoubleSweepResult& res1, GraphAlgorithms::DoubleSweepResult& res2)
 	{
 		return ( (res1.u != res2.u) && (res1.v != res2.u) && (res1.u != res2.v) && (res1.v != res2.v) && (res1.u != res1.v) && (res2.u != res2.v) );
 	}
 
-	bool MDSweep::isNewSweep(const GraphAlgorithms::DoubleSweepResult& ds) const
+	bool MDS::isNewSweep(const GraphAlgorithms::DoubleSweepResult& ds) const
 	{
 		for (vector<GraphAlgorithms::DoubleSweepResult>::const_iterator it = _sweeps.cbegin(); it != _sweeps.cend(); ++it)
 		{
@@ -91,7 +91,7 @@ namespace dhtoolkit
 		return true;
 	}
 
-	void MDSweep::initImpl(const node_combination_t&)
+	void MDS::initImpl(const node_combination_t&)
 	{
 		_isCompleted = false;
 		_vDists.clear();
@@ -102,7 +102,7 @@ namespace dhtoolkit
 		prepareNextStep();
 	}
 
-	bool MDSweep::isComplete() const
+	bool MDS::isComplete() const
 	{
 		//we can always run one more...
 		return _isCompleted;
@@ -115,7 +115,7 @@ namespace dhtoolkit
 		//initialize random seed (necessary before calling DoubleSweep() )
 		srand(static_cast<unsigned int>(time(nullptr)));
 
-		IGraphAlg* alg = new MDSweep();
+		IGraphAlg* alg = new MDS();
 		return alg;
 	}
 

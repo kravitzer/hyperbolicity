@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\DDSweep\DDSweep.h">
+    <ClInclude Include="..\..\..\src\MDS\MDS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\DDSweep\DDSweep.cpp">
+    <ClCompile Include="..\..\..\src\MDS\MDS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

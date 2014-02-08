@@ -18,11 +18,11 @@ namespace dhtoolkit
 	 *			graph, and then calculates the delta hyperbolicity resulting from each pair of sweep results. It takes
 	 *			the best pair as the result.
 	 */
-	class MDSweep : public IGraphAlg
+	class MDS : public IGraphAlg
 	{
 	public:
-		MDSweep();
-		virtual ~MDSweep();
+		MDS();
+		virtual ~MDS();
 
 	private:
 		/*

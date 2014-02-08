@@ -1,4 +1,4 @@
-#include "DSweepMin.h"
+#include "DSS.h"
 #include "DeltaHyperbolicityToolkit\defs.h"
 #include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
 #include "DeltaHyperbolicityToolkit\GraphAlgorithms.h"
@@ -12,23 +12,23 @@ namespace dhtoolkit
 {
     const distance_t MaxDistance = INT_MAX;
 
-	DSweepMin::DSweepMin() : IDSweepMinExt(), _minDistance(MaxDistance)
+	DSS::DSS() : IDSweepMinExt(), _minDistance(MaxDistance)
 	{
 		//empty
 	}
 
-	DSweepMin::~DSweepMin()
+	DSS::~DSS()
 	{
 		//empty
 	}
 
-	void DSweepMin::initStep()
+	void DSS::initStep()
 	{
 		_v3Candidates.clear();
 		_minDistance = MaxDistance;
 	}
 
-	void DSweepMin::processV3Candidate(node_ptr_t v3Candidate, distance_t distFromV1, distance_t distFromV2)
+	void DSS::processV3Candidate(node_ptr_t v3Candidate, distance_t distFromV1, distance_t distFromV2)
 	{
 		if ( (distFromV1 <= distFromV2 && distFromV2 <= distFromV1 + 1) || (distFromV2 <= distFromV1 && distFromV1 <= distFromV2 + 1) )
 		{
@@ -54,7 +54,7 @@ namespace dhtoolkit
 		//initialize random seed (necessary before calling DoubleSweep() ).
 		srand(static_cast<unsigned int>(time(nullptr)));
 
-		IGraphAlg* alg = new DSweepMin();
+		IGraphAlg* alg = new DSS();
 		return alg;
 	}
 

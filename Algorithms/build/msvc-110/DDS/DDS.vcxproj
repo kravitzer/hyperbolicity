@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C1B84FAB-FD7E-45E9-9E4D-A571CA440A30}</ProjectGuid>
-    <RootNamespace>DDSweep</RootNamespace>
+    <RootNamespace>DDS</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -142,10 +142,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\DDSweep\DDSweep.h" />
+    <ClInclude Include="..\..\..\src\DDS\DDS.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\DDSweep\DDSweep.cpp" />
+    <ClCompile Include="..\..\..\src\DDS\DDS.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

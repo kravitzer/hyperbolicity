@@ -3,10 +3,11 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_DSWEEPMIN_H
-#define DELTAHYPER_DSWEEPMIN_H
+#ifndef DELTAHYPER_DSWEEPMINNONBALANCED_H
+#define DELTAHYPER_DSWEEPMINNONBALANCED_H
 
-#include "DeltaHyperbolicityToolkit\defs.h"
+#include "DeltaHyperbolicityToolkit\DeltaHyperbolicity.h"
+#include "DeltaHyperbolicityToolkit\IGraphAlg.h"
 #include "DeltaHyperbolicityToolkit\IDSS.h"
 #include <string>
 
@@ -14,13 +15,14 @@ namespace dhtoolkit
 {
 	/*
 	 * @brief	Implementation for the IDSweepMinExt algorithm with v3 candidates being the ones that have the minimxal total
-	 *			distance from both v1 and v2 (i.e. d(v1, v3) + d(v2, v3) is minimal).
+	 *			distance from both v1 and v2 (i.e. d(v1, v3) + d(v2, v3) is minimal) AND abs(d(v1, v3) - d(v2, v3)) <= 1 (i.e.
+	 *			distances must be balanced).
 	 */
-	class DSweepMin : public IDSweepMinExt
+	class NBDSS : public IDSweepMinExt
 	{
 	public:
-		DSweepMin();
-		virtual ~DSweepMin();
+		NBDSS();
+		virtual ~NBDSS();
 
 	private:
 		void initStep();
@@ -32,4 +34,4 @@ namespace dhtoolkit
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
 } // namespace dhtoolkit
 
-#endif //DELTAHYPER_DSWEEPMIN_H
+#endif //DELTAHYPER_DSWEEPMINNONBALANCED_H
