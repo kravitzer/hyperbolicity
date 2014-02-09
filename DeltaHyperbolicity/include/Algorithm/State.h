@@ -1,10 +1,14 @@
-#ifndef DELTAHYPER_STATE_H
-#define DELTAHYPER_STATE_H
+/*
+ * Written by Eran Kravitz
+ * Email: kravitzer@gmail.com
+ */
+
+#pragma once
 
 #include "defs.h"
 #include <string>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	A class representing a given state from which a delta hyperbolicity value may be calculated.
@@ -73,6 +77,4 @@ namespace dhtoolkit
 		static const int NumberOfNodes = 4;
 		node_ptr_t _nodes[NumberOfNodes];
 	};
-} // namespace dhtoolkit
-
-#endif // DELTAHYPER_STATE_H
+} // namespace hyperbolicity

@@ -3,8 +3,7 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_MDSWEEP_H
-#define DELTAHYPER_MDSWEEP_H
+#pragma once
 
 #include "Algorithm\IGraphAlg.h"
 #include "Algorithm\DeltaHyperbolicity.h"
@@ -12,7 +11,7 @@
 #include "Algorithm\HyperbolicityAlgorithms.h"
 #include <string>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	Implementation for the multi-double-sweep algorithm. This algorithm runs multiple double-sweeps on the
@@ -63,6 +62,4 @@ namespace dhtoolkit
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
-} // namespace dhtoolkit
-
-#endif //DELTAHYPER_DDSWEEP_H
+} // namespace hyperbolicity

@@ -2,7 +2,7 @@
 
 #include "defs.h"
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 /*
@@ -19,4 +19,4 @@ private:
 	static unsigned int calculateNextM(double m);
 };
 
-} // namespace dhtoolkit
+} // namespace hyperbolicity

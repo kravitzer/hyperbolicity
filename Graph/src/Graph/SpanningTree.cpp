@@ -2,7 +2,7 @@
 #include "Graph.h"
 #include "Node.h"
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 SpanningTree::SpanningTree(const graph_ptr_t graph, const node_ptr_t root) : BFS(graph), _tree( new Graph(graph->getTitle()) )
@@ -37,4 +37,4 @@ bool SpanningTree::nodeTraversal(const node_ptr_t curNode, const node_ptr_t prev
 	return true;
 }
 
-} // namespace dhtoolkit
+} // namespace hyperbolicity

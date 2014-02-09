@@ -3,14 +3,13 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_DSWEEP_H
-#define DELTAHYPER_DSWEEP_H
+#pragma once
 
 #include "Algorithm\IGraphAlg.h"
 #include "Algorithm\DeltaHyperbolicity.h"
 #include <string>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	Implementation for the single-double-sweep algorithm. It performs a single double sweep to obtain the first 2 nodes. Then
@@ -39,6 +38,4 @@ namespace dhtoolkit
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
-} // namespace dhtoolkit
-
-#endif //DELTAHYPER_DSWEEP_H
+} // namespace hyperbolicity

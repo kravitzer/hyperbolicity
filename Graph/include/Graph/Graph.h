@@ -3,14 +3,13 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_GRAPH_H
-#define DELTAHYPER_GRAPH_H
+#pragma once
 
 #include "Node.h"
 #include "defs.h"
 #include <string>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 /*
@@ -111,6 +110,4 @@ private:
 	node_ptr_collection_t _nodes;
 };
 
-} // namespace dhtoolkit
-
-#endif
+} // namespace hyperbolicity

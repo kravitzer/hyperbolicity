@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
     const distance_t MaxDistance = INT_MAX;
 
@@ -58,4 +58,4 @@ namespace dhtoolkit
 	{
 		if (alg) delete alg;
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

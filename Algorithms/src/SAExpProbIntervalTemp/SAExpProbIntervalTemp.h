@@ -3,13 +3,12 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_SA_EXP_PROB_INTERVAL_TEMP_H
-#define DELTAHYPER_SA_EXP_PROB_INTERVAL_TEMP_H
+#pragma once
 
 #include "SimulatedAnnealing.h"
 #include "SADefs.h"
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	Implementation for a simulated annealing probability function that is exponential in the delta-difference
@@ -133,6 +132,4 @@ namespace dhtoolkit
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
-} // namespace dhtoolkit
-
-#endif // DELTAHYPER_SA_EXP_PROB_INTERVAL_TEMP_H
+} // namespace hyperbolicity

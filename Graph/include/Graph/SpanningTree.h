@@ -3,13 +3,12 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_SPANNING_TREE_H
-#define DELTAHYPER_SPANNING_TREE_H
+#pragma once
 
 #include "BFS.h"
 #include "defs.h"
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	This class generates a spanning tree on a given graph & starting node.
@@ -44,6 +43,4 @@ namespace dhtoolkit
 		//holds the spanning tree calculated
 		graph_ptr_t _tree;
 	};
-} // namespace dhtoolkit
-
-#endif // DELTAHYPER_SPANNING_TREE_H
+} // namespace hyperbolicity

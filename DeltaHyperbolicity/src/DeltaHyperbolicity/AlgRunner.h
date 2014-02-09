@@ -3,8 +3,7 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_ALGRUNNER_H
-#define DELTAHYPER_ALGRUNNER_H
+#pragma once
 
 #include <string>
 #include <Windows.h>
@@ -12,8 +11,8 @@
 #include "DeltaHyperbolicity.h"
 #include "IGraphAlg.h"
 
-typedef dhtoolkit::IGraphAlg* (*AlgCreationMethod)();
-typedef void (*AlgReleaseMethod)(dhtoolkit::IGraphAlg*);
+typedef hyperbolicity::IGraphAlg* (*AlgCreationMethod)();
+typedef void (*AlgReleaseMethod)(hyperbolicity::IGraphAlg*);
 
 class AlgRunner
 {
@@ -36,12 +35,12 @@ public:
 	 * @param	initialState	The initial state for the algorithm to start running from (relevant only to some algortihms, others will ignore this parameter).
 	 *							May be left unspecified.
 	 */
-	void initialize(const dhtoolkit::graph_ptr_t graph, const dhtoolkit::node_combination_t& initialState = dhtoolkit::node_combination_t());
+	void initialize(const hyperbolicity::graph_ptr_t graph, const hyperbolicity::node_combination_t& initialState = hyperbolicity::node_combination_t());
 
 	/*
 	 * @brief	Wrapper for running a single step of the algorithm. See IGraphAlg documentation for details.
 	 */
-	dhtoolkit::DeltaHyperbolicity step() const;
+	hyperbolicity::DeltaHyperbolicity step() const;
 
 	/*
 	 * @returns	True if the algorithm has completed its run, false otherwise.
@@ -79,8 +78,5 @@ private:
 	AlgReleaseMethod _releaseAlg;
 
 	//algorithm instance
-	dhtoolkit::IGraphAlg* _algorithm;
+	hyperbolicity::IGraphAlg* _algorithm;
 };
-
-#endif // DELTAHYPER_ALGRUNNER_H
-

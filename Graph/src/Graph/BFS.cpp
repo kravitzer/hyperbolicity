@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 BFS::BFS(graph_ptr_t graph) : _graph(graph), _isCompleted(false)
@@ -82,4 +82,4 @@ void BFS::runBfsLoop()
     _isCompleted = _bfsQueue.empty();
 }
 
-} // namespace dhtoolkit
+} // namespace hyperbolicity

@@ -14,7 +14,7 @@ using namespace std;
 
 const unsigned int MinDistanceDifferenceFromDistanceFound = 4;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	LargeDistances::LargeDistances() : IGraphAlg(), _minDistance(0), _isComplete(false), _minNumberOfPairs(0)
 	{
@@ -157,4 +157,4 @@ namespace dhtoolkit
 	{
 		if (alg) delete alg;
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

@@ -3,8 +3,7 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_LARGEDISTANCES_H
-#define DELTAHYPER_LARGEDISTANCES_H
+#pragma once
 
 #include "Algorithm\IGraphAlg.h"
 #include "Algorithm\DeltaHyperbolicity.h"
@@ -12,7 +11,7 @@
 #include <string>
 #include <unordered_set>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	Implementation that randomly chooses a vector and performs a double sweep. It then keeps the DS result as well as
@@ -55,6 +54,4 @@ namespace dhtoolkit
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
-} // namespace dhtoolkit
-
-#endif //DELTAHYPER_LARGEDISTANCES_H
+} // namespace hyperbolicity

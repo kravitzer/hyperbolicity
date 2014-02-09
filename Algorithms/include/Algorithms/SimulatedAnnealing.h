@@ -3,14 +3,13 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_SA_H
-#define DELTAHYPER_SA_H
+#pragma once
 
 #include "SADefs.h"
 #include "Algorithm\IGraphAlg.h"
 #include <string>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 	/*
@@ -163,6 +162,4 @@ namespace dhtoolkit
 		sa_callback_func_ptr _callbackFunc;
 	};
 
-} // namespace dhtoolkit
-
-#endif // DELTAHYPER_SA_H
+} // namespace hyperbolicity

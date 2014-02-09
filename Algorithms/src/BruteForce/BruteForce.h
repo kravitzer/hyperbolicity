@@ -3,14 +3,13 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_BRUTEFORCE_H
-#define DELTAHYPER_BRUTEFORCE_H
+#pragma once
 
 #include "Algorithm\IGraphAlg.h"
 #include "Algorithm\DeltaHyperbolicity.h"
 #include <string>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	Implementation for the brute-force solution for finding delta hyperbolicity. Obviously takes a significant amount of time
@@ -51,6 +50,4 @@ namespace dhtoolkit
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
-} // namespace dhtoolkit
-
-#endif //DELTAHYPER_BRUTEFORCE_H
+} // namespace hyperbolicity

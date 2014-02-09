@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	DDS::DDS() : IGraphAlg() 
 	{
@@ -76,4 +76,4 @@ namespace dhtoolkit
 	{
 		if (alg) delete alg;
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

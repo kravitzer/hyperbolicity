@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	BruteForce::BruteForce() : IGraphAlg()
 	{
@@ -116,4 +116,4 @@ namespace dhtoolkit
 	{
 		if (alg) delete alg;
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

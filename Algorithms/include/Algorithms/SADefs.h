@@ -3,13 +3,12 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_SADEFS_H
-#define DELTAHYPER_SADEFS_H
+#pragma once
 
 #include "Graph\defs.h"
 #include <memory>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	class ISaProbabilityFunction;
 	class ISaTempPolicyFunction;
@@ -22,6 +21,4 @@ namespace dhtoolkit
 	typedef double			sa_temp_t;
 	typedef double			sa_probability_t;
 
-} // namespace dhtoolkit
-
-#endif // DELTAHYPER_SADEFS_H
+} // namespace hyperbolicity

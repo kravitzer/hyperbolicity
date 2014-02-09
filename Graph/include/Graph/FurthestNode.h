@@ -3,13 +3,12 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_FURTHEST_NODE_H
-#define DELTAHYPER_FURTHEST_NODE_H
+#pragma once
 
 #include "BFS.h"
 #include "defs.h"
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 	class FurthestNode : public BFS
@@ -47,6 +46,4 @@ namespace dhtoolkit
 		distance_t _distance;
 	};
 
-} // namespace dhtoolkit
-
-#endif // DELTAHYPER_FURTHEST_NODE_H
+} // namespace hyperbolicity

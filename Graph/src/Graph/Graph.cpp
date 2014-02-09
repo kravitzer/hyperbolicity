@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	Graph::Graph(const string& title) : _nodes(), _title(title)
 	{

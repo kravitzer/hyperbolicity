@@ -22,7 +22,7 @@
 #include "HyperbolicityAlgorithms.h"
 
 using namespace std;
-using namespace dhtoolkit;
+using namespace hyperbolicity;
 namespace fs = boost::filesystem;
 
 typedef vector<graph_ptr_t>			graph_collection_t;

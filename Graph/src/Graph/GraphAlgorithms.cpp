@@ -13,7 +13,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	const int GraphAlgorithms::NodeIndexMaxNumOfDigits = 20;		//including null-terminator
 	const char* GraphAlgorithms::EdgeMarker = "->";
@@ -445,4 +445,4 @@ namespace dhtoolkit
 
 		return (i == strlen(p));
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

@@ -3,14 +3,13 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_IGRAPHALG_H
-#define DELTAHYPER_IGRAPHALG_H
+#pragma once
 
 #include "Graph\defs.h"
 #include "Algorithm\DeltaHyperbolicity.h"
 #include <string>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	This is the general interface for a graph algorithm. When implementing a new algorithm logic,
@@ -73,6 +72,4 @@ namespace dhtoolkit
 		void validateGraphInput(const graph_ptr_t graph) const;
 	};
 
-} // namespace dhtoolkit
-
-#endif
+} // namespace hyperbolicity

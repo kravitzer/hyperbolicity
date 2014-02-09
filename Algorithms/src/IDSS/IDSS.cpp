@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
     const distance_t MaxDistance = INT_MAX;
 	const unsigned int DoubleSweepCacheSize = 500;
@@ -162,4 +162,4 @@ namespace dhtoolkit
 		node = bestNode;
 		return bestDelta;
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

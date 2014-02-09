@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 	SimulatedAnnealing::SimulatedAnnealing(sa_prob_func_ptr probabilityFunction, sa_temp_func_ptr tempFunction, sa_callback_func_ptr callback) : IGraphAlg(),
@@ -213,4 +213,4 @@ namespace dhtoolkit
 
         return replacedNodeIndexInState;
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

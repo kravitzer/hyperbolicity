@@ -3,15 +3,14 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_DSWEEPMINNONBALANCED_H
-#define DELTAHYPER_DSWEEPMINNONBALANCED_H
+#pragma once
 
 #include "Algorithm\DeltaHyperbolicity.h"
 #include "Algorithm\IGraphAlg.h"
 #include "IDSS.h"
 #include <string>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	Implementation for the IDSweepMinExt algorithm with v3 candidates being the ones that have the minimxal total
@@ -32,6 +31,4 @@ namespace dhtoolkit
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
-} // namespace dhtoolkit
-
-#endif //DELTAHYPER_DSWEEPMINNONBALANCED_H
+} // namespace hyperbolicity

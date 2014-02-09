@@ -3,13 +3,12 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_BFS_H
-#define DELTAHYPER_BFS_H
+#pragma once
 
 #include "defs.h"
 #include <queue>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 /*
@@ -93,6 +92,4 @@ private:
     bool _isCompleted;
 };
 
-} // namespace dhtoolkit
-
-#endif //DELTAHYPER_BFS_H
+} // namespace hyperbolicity

@@ -3,14 +3,13 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_DEFS_H
-#define DELTAHYPER_DEFS_H
+#pragma once
 
 #include <memory>
 #include <vector>
 #include <unordered_map>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	//forward declarations
 	class Graph;
@@ -32,5 +31,3 @@ namespace dhtoolkit
 	//constants
 	const distance_t										InfiniteDistance = -1;
 }
-
-#endif

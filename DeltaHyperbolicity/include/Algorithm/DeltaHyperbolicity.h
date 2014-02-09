@@ -3,14 +3,13 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_DELTA_HYPERBOLICITY_H
-#define DELTAHYPER_DELTA_HYPERBOLICITY_H
+#pragma once
 
 #include "defs.h"
 #include "State.h"
 #include <string>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 /*
@@ -82,6 +81,4 @@ private:
 	bool _nodesAvailable;
 };
 
-} // namespace dhtoolkit
-
-#endif
+} // namespace hyperbolicity

@@ -3,13 +3,12 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_NODE_H
-#define DELTAHYPER_NODE_H
+#pragma once
 
 #include <memory>
 #include "defs.h"
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 class Graph;
@@ -114,6 +113,4 @@ private:
 	mutable bool _isMarked;
 };
 
-} // namespace dhtoolkit
-
-#endif
+} // namespace hyperbolicity

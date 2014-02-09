@@ -3,7 +3,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	Node::Node(node_index_t index, string label) : _index(index), _outgoingEdges(), _incomingEdges(), _isMarked(false), _label(label)
 	{
@@ -100,4 +100,4 @@ namespace dhtoolkit
 		_index = newIndex;
 	}
 
-} // namespace dhtoolkit
+} // namespace hyperbolicity

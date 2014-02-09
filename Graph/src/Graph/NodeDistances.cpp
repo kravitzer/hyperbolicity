@@ -2,7 +2,7 @@
 #include "Graph.h"
 #include "Node.h"
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 NodeDistances::NodeDistances(const graph_ptr_t graph, const node_ptr_t origin) : BFS(graph), _origin(origin), _runStarted(false)
@@ -128,4 +128,4 @@ void NodeDistances::startTraversalForNodes(const node_ptr_collection_t& dests)
     }
 }
 
-} // namespace dhtoolkit
+} // namespace hyperbolicity

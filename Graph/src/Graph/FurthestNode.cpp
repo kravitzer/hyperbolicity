@@ -3,7 +3,7 @@
 #include "Graph.h"
 #include "Node.h"
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 	FurthestNode::FurthestNode(graph_ptr_t graph, node_ptr_t origin) : BFS(graph), _distance(0)
@@ -46,4 +46,4 @@ namespace dhtoolkit
 		return true;
 	}
 
-} // namespace dhtoolkit
+} // namespace hyperbolicity

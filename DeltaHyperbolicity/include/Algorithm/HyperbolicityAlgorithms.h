@@ -9,7 +9,7 @@
  #include "Graph\defs.h"
 #include <unordered_set>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	A collection of some useful hyperbolicity-related methods in graphs.
@@ -142,4 +142,4 @@ private:
 		 */
 		static bool isNodeToBeMarked(node_ptr_t node, const node_combination_t* nodesToMark);
 	};
-} // namespace dhtoolkit
+} // namespace hyperbolicity

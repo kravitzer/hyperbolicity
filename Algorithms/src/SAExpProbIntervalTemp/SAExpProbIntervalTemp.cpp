@@ -15,7 +15,7 @@ using namespace std;
 const char SlashReplacement = '~';
 const string DrawingExtension = "net";
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	ExpProbability::ExpProbability()
 	{
@@ -143,4 +143,4 @@ namespace dhtoolkit
 	{
 		if (alg) delete alg;
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

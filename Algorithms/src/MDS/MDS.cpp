@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	MDS::MDS() : IGraphAlg(), _isCompleted(false)
 	{
@@ -123,4 +123,4 @@ namespace dhtoolkit
 	{
 		if (alg) delete alg;
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

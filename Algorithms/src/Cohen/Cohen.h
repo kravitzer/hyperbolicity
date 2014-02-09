@@ -3,15 +3,14 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_COHEN_H
-#define DELTAHYPER_COHEN_H
+#pragma once
 
 #include "Algorithm\IGraphAlg.h"
 #include "Algorithm\DeltaHyperbolicity.h"
 #include <string>
 #include <vector>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	Implementation for the Cohen, Coudert, Lancin solution for finding delta hyperbolicity. Calculates the distances for every pair
@@ -53,6 +52,4 @@ namespace dhtoolkit
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
-} // namespace dhtoolkit
-
-#endif //DELTAHYPER_COHEN_H
+} // namespace hyperbolicity

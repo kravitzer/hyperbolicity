@@ -7,7 +7,7 @@
 #include <iostream>
 
 using namespace std;
-using namespace dhtoolkit;
+using namespace hyperbolicity;
 
 AlgRunner::AlgRunner(const string& libraryPath) : _libraryPath(libraryPath), _libraryHandle(nullptr), _algName(getNameFromPath(libraryPath)), _algorithm(nullptr), _createAlg(nullptr), _releaseAlg(nullptr)
 {
@@ -54,7 +54,7 @@ bool AlgRunner::isComplete() const
 	return _algorithm->isComplete();
 }
 
-void AlgRunner::initialize(const graph_ptr_t graph, const node_combination_t& initialState /* = dhtoolkit::node_combination_t() */)
+void AlgRunner::initialize(const graph_ptr_t graph, const node_combination_t& initialState /* = hyperbolicity::node_combination_t() */)
 {
 	_algorithm->initialize(graph, initialState);
 }

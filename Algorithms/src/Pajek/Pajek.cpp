@@ -11,7 +11,7 @@ using namespace std;
 const string FileExtension = ".net";
 const char SlashReplacement = '~';
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	Pajek::Pajek(const string& outputDir) : IGraphAlg(outputDir) 
 	{
@@ -63,4 +63,4 @@ namespace dhtoolkit
 	{
 		if (alg) delete alg;
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

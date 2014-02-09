@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 minstd_rand randEngine(static_cast<unsigned int>(time(NULL)) + GetCurrentProcessId());
@@ -175,4 +175,4 @@ graph_ptr_t GraphBuilder::createBAExtendedGraph(unsigned int n, double m, double
 	return g;
 }
 
-} //namespace dhtoolkit
+} //namespace hyperbolicity

@@ -3,8 +3,7 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_IDSWEEPMINEXT_H
-#define DELTAHYPER_IDSWEEPMINEXT_H
+#pragma once
 
 #include "Algorithm\IGraphAlg.h"
 #include "Algorithm\DeltaHyperbolicity.h"
@@ -13,7 +12,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	Abstract implementation for a single-double-sweep with minimum distance: It performs a single double sweep
@@ -78,6 +77,4 @@ namespace dhtoolkit
 
 	extern "C" __declspec(dllexport) IGraphAlg* CreateAlgorithm();
 	extern "C" __declspec(dllexport) void ReleaseAlgorithm(IGraphAlg* alg);
-} // namespace dhtoolkit
-
-#endif //DELTAHYPER_IDSWEEPMINEXT_H
+} // namespace hyperbolicity

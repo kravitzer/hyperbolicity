@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	Cohen::Cohen() : IGraphAlg(), _bestDelta(0)
 	{
@@ -151,4 +151,4 @@ namespace dhtoolkit
 	{
 		if (alg) delete alg;
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	delta_t HyperbolicityAlgorithms::calculateDelta(const graph_ptr_t graph, const node_combination_t& state)
 	{
@@ -385,4 +385,4 @@ namespace dhtoolkit
 		return false;
 	}
 
-} // namespace dhtoolkit
+} // namespace hyperbolicity

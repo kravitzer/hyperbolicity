@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	DeltaHyperbolicity::DeltaHyperbolicity() : _delta(0), _nodesAvailable(false), _nodes() 
 	{
@@ -59,4 +59,4 @@ namespace dhtoolkit
 		swap(first._nodesAvailable, second._nodesAvailable);
 		swap(first._nodes, second._nodes);
 	}
-} // namespace dhtoolkit
+} // namespace hyperbolicity

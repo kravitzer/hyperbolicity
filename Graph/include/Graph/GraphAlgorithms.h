@@ -3,8 +3,7 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_GRAPH_ALGORITHMS_H
-#define DELTAHYPER_GRAPH_ALGORITHMS_H
+#pragma once
 
 #include "Graph.h"
 #include <vector>
@@ -12,7 +11,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	A collection of some useful graph methods.
@@ -134,6 +133,4 @@ namespace dhtoolkit
 		 */
 		static bool StringStartsWith(const char* s, const char *p);
 	};
-} // namespace dhtoolkit
-
-#endif
+} // namespace hyperbolicity

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	State::State()
 	{
@@ -72,4 +72,4 @@ namespace dhtoolkit
 		return res.substr(0, res.size()-1);
 	}
 
-} // namespace dhtoolkit
+} // namespace hyperbolicity

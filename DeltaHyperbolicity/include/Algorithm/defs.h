@@ -7,7 +7,7 @@
 
 #include "Graph\defs.h"
  
- namespace dhtoolkit
+ namespace hyperbolicity
 {
 	//forward declarations
 	class State;

@@ -3,13 +3,12 @@
  * Email: kravitzer@gmail.com
  */
 
-#ifndef DELTAHYPER_NODE_DISTANCES_H
-#define DELTAHYPER_NODE_DISTANCES_H
+#pragma once
 
 #include "BFS.h"
 #include "defs.h"
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 	/*
 	 * @brief	This class calculates the distance of every node from the given origin node.
@@ -77,4 +76,3 @@ namespace dhtoolkit
 	};
 
 }
-#endif DELTAHYPER_NODE_DISTANCES_H

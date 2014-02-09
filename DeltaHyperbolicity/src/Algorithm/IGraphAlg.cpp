@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace dhtoolkit
+namespace hyperbolicity
 {
 
 	IGraphAlg::IGraphAlg()
@@ -42,4 +42,4 @@ namespace dhtoolkit
 		if (graph->size() < node_combination_t::size()) throw std::exception("Graph does not contain enough nodes");
 	}
 
-} // namespace dhtoolkit
+} // namespace hyperbolicity
