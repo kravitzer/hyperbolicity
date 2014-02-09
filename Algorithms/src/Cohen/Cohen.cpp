@@ -75,7 +75,7 @@ namespace hyperbolicity
 
     void Cohen::addToArray(const node_index_t origin, const distance_dict_t::const_iterator& it)
     {
-        if (_pairs.size() <= it->second)
+        if (_pairs.size() <= static_cast<size_t>(it->second))
         {
             _pairs.resize(it->second + 1);
         }
