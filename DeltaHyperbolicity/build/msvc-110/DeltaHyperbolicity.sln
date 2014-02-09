@@ -6,11 +6,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeltaHyperbolicity", "Delta
 		{1FD59457-3CFF-4BE1-A386-4E5F5AE26A46} = {1FD59457-3CFF-4BE1-A386-4E5F5AE26A46}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeltaHyperbolicityToolkitDll", "DeltaHyperbolicityToolkitDll\DeltaHyperbolicityToolkitDll.vcxproj", "{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1FD59457-3CFF-4BE1-A386-4E5F5AE26A46} = {1FD59457-3CFF-4BE1-A386-4E5F5AE26A46}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Algorithm", "Algorithm\Algorithm.vcxproj", "{1FD59457-3CFF-4BE1-A386-4E5F5AE26A46}"
 EndProject
 Global
@@ -35,18 +30,6 @@ Global
 		{9EBCE805-2A98-433C-8732-6BA496134AA0}.Release|Win32.Build.0 = Release|Win32
 		{9EBCE805-2A98-433C-8732-6BA496134AA0}.Release|x64.ActiveCfg = Release|x64
 		{9EBCE805-2A98-433C-8732-6BA496134AA0}.Release|x64.Build.0 = Release|x64
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Debug|Win32.ActiveCfg = Debug|Win32
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Debug|Win32.Build.0 = Debug|Win32
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Debug|x64.ActiveCfg = Debug|x64
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Debug|x64.Build.0 = Debug|x64
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Release|Win32.ActiveCfg = Release|Win32
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Release|Win32.Build.0 = Release|Win32
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Release|x64.ActiveCfg = Release|x64
-		{9559F0C4-E1F2-41D7-ACE7-567AA322FE35}.Release|x64.Build.0 = Release|x64
 		{1FD59457-3CFF-4BE1-A386-4E5F5AE26A46}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{1FD59457-3CFF-4BE1-A386-4E5F5AE26A46}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{1FD59457-3CFF-4BE1-A386-4E5F5AE26A46}.Debug|Win32.ActiveCfg = Debug|Win32
