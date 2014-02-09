@@ -1,6 +1,6 @@
 #include "AlgRunner.h"
 #include "Graph\defs.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "DeltaHyperbolicity.h"
 #include <Windows.h>
 #include <memory>
 #include <string>

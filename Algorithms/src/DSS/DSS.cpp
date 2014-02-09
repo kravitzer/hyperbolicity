@@ -1,6 +1,6 @@
 #include "DSS.h"
 #include "Graph\defs.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "Algorithm\DeltaHyperbolicity.h"
 #include "Graph\GraphAlgorithms.h"
 #include "Graph\NodeDistances.h"
 #include <time.h>
@@ -51,7 +51,7 @@ namespace dhtoolkit
 
 	IGraphAlg* CreateAlgorithm()
 	{
-		//initialize random seed (necessary before calling DoubleSweep() ).
+		//initialize random seed (necessary before calling doubleSweep() ).
 		srand(static_cast<unsigned int>(time(nullptr)));
 
 		IGraphAlg* alg = new DSS();

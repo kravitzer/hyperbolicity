@@ -7,8 +7,9 @@
 #define DELTAHYPER_MDSWEEP_H
 
 #include "Algorithm\IGraphAlg.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "Algorithm\DeltaHyperbolicity.h"
 #include "Graph\GraphAlgorithms.h"
+#include "Algorithm\HyperbolicityAlgorithms.h"
 #include <string>
 
 namespace dhtoolkit
@@ -41,18 +42,18 @@ namespace dhtoolkit
 		/*
 		 * @returns true iff the two double sweep results have no nodes in common.
 		 */
-		bool areSweepsUnique(GraphAlgorithms::DoubleSweepResult& res1, GraphAlgorithms::DoubleSweepResult& res2);
+		bool areSweepsUnique(HyperbolicityAlgorithms::DoubleSweepResult& res1, HyperbolicityAlgorithms::DoubleSweepResult& res2);
 
 		/*
 		 * @returns	True if the given double-sweep is not already present in the _sweeps collection, false otherwise.
 		 */
-		bool isNewSweep(const GraphAlgorithms::DoubleSweepResult& ds) const;
+		bool isNewSweep(const HyperbolicityAlgorithms::DoubleSweepResult& ds) const;
 
 		//The maximal number of trials to get 4 different nodes out of separate double-sweeps
 		static const unsigned int MaxNumOfTrials = 500;
 
 		//sweeps collected so far
-		std::vector<GraphAlgorithms::DoubleSweepResult> _sweeps;
+		std::vector<HyperbolicityAlgorithms::DoubleSweepResult> _sweeps;
 		//the distances from the "other" vertex of the double sweep to the rest of the nodes
 		//i.e. _vDists[i] has the distances from _sweeps[i]'s second vertex to the rest of the graph
 		std::vector<distance_dict_t> _vDists;

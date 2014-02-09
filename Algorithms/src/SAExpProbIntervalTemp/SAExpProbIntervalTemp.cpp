@@ -2,6 +2,7 @@
 #include "SADefs.h"
 #include "SimulatedAnnealing.h"
 #include "Algorithm\IGraphAlg.h"
+#include "Algorithm\HyperbolicityAlgorithms.h"
 #include "Graph\GraphAlgorithms.h"
 #include "boost\format.hpp"
 #include <math.h>
@@ -112,7 +113,7 @@ namespace dhtoolkit
 			}
 		
 			//draw graph
-			GraphAlgorithms::drawGraph(fileName, graph, &currentState);
+			HyperbolicityAlgorithms::drawGraph(fileName, graph, &currentState);
 		}
 
 		//increment step count
@@ -128,7 +129,7 @@ namespace dhtoolkit
 
 	IGraphAlg* CreateAlgorithm()
 	{
-		//initialize random seed (necessary before calling DoubleSweep() ).
+		//initialize random seed (necessary before calling doubleSweep() ).
 		srand( static_cast<unsigned int>(time(nullptr)) );
 
 		sa_prob_func_ptr probFunc(new ExpProbability);

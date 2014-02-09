@@ -3,6 +3,7 @@
 #include "Graph\Graph.h"
 #include "Graph\GraphAlgorithms.h"
 #include "Graph\NodeDistances.h"
+#include "Algorithm\HyperbolicityAlgorithms.h"
 #include <random>
 #include <string>
 
@@ -42,7 +43,7 @@ namespace dhtoolkit
 		_isFirstStep = true;
 
 		//set current state to state given, or a random state if no state is given
-		_curState = ( initialState.isInitialized() ? initialState : GraphAlgorithms::getRandomState(_graph) );
+		_curState = ( initialState.isInitialized() ? initialState : HyperbolicityAlgorithms::getRandomState(_graph) );
 	}
 
 	delta_t SimulatedAnnealing::calculateCurrentDelta()
@@ -77,7 +78,7 @@ namespace dhtoolkit
         distance_t d1 = _nodeDistances[0] + _nodeDistances[5];
         distance_t d2 = _nodeDistances[1] + _nodeDistances[4];
         distance_t d3 = _nodeDistances[2] + _nodeDistances[3];
-		return GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
+		return HyperbolicityAlgorithms::calculateDeltaFromDistances(d1, d2, d3);
 	}
 
 	DeltaHyperbolicity SimulatedAnnealing::stepImpl()
@@ -146,7 +147,7 @@ namespace dhtoolkit
         distance_t d3 = newNodeDistances[2] + newNodeDistances[3];
 
         //calculate new step's new delta
-		delta_t newDelta = GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
+		delta_t newDelta = HyperbolicityAlgorithms::calculateDeltaFromDistances(d1, d2, d3);
 
 		//run the probability method to see if we accept the new state
 		sa_probability_t prob = _probFunc->ProbabilityToAcceptChange(_curDelta, newDelta, _temp);

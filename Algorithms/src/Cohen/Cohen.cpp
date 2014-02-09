@@ -1,9 +1,10 @@
 #include "Cohen.h"
 #include "Graph\defs.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "Algorithm\DeltaHyperbolicity.h"
 #include "Graph\GraphAlgorithms.h"
-#include "Graph\State.h"
 #include "Graph\NodeDistances.h"
+#include "Algorithm\State.h"
+#include "Algorithm\HyperbolicityAlgorithms.h"
 #include <string>
 #include <vector>
 
@@ -58,7 +59,7 @@ namespace dhtoolkit
         distance_t d1 = static_cast<distance_t>(_l1 + _l2);
         distance_t d2 = _distances[_pairs[_l1].at(_l1Pos).first][_pairs[_l2].at(_l2Pos).first] + _distances[_pairs[_l1].at(_l1Pos).second][_pairs[_l2].at(_l2Pos).second];
         distance_t d3 = _distances[_pairs[_l1].at(_l1Pos).first][_pairs[_l2].at(_l2Pos).second] + _distances[_pairs[_l1].at(_l1Pos).second][_pairs[_l2].at(_l2Pos).first];
-        delta_t delta = GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
+        delta_t delta = HyperbolicityAlgorithms::calculateDeltaFromDistances(d1, d2, d3);
 
         if (delta > _bestDelta)
         {

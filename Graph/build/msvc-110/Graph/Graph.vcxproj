@@ -154,7 +154,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\Graph\BFS.h" />
     <ClInclude Include="..\..\..\include\Graph\defs.h" />
-    <ClInclude Include="..\..\..\include\Graph\DeltaHyperbolicity.h" />
     <ClInclude Include="..\..\..\include\Graph\FurthestNode.h" />
     <ClInclude Include="..\..\..\include\Graph\Graph.h" />
     <ClInclude Include="..\..\..\include\Graph\GraphAlgorithms.h" />
@@ -162,19 +161,16 @@
     <ClInclude Include="..\..\..\include\Graph\Node.h" />
     <ClInclude Include="..\..\..\include\Graph\NodeDistances.h" />
     <ClInclude Include="..\..\..\include\Graph\SpanningTree.h" />
-    <ClInclude Include="..\..\..\include\Graph\State.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Graph\BFS.cpp" />
     <ClCompile Include="..\..\..\src\Graph\GraphBuilder.cpp" />
-    <ClCompile Include="..\..\..\src\Graph\DeltaHyperbolicity.cpp" />
     <ClCompile Include="..\..\..\src\Graph\FurthestNode.cpp" />
     <ClCompile Include="..\..\..\src\Graph\Graph.cpp" />
     <ClCompile Include="..\..\..\src\Graph\GraphAlgorithms.cpp" />
     <ClCompile Include="..\..\..\src\Graph\Node.cpp" />
     <ClCompile Include="..\..\..\src\Graph\NodeDistances.cpp" />
     <ClCompile Include="..\..\..\src\Graph\SpanningTree.cpp" />
-    <ClCompile Include="..\..\..\src\Graph\State.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -23,7 +23,7 @@ int main()
         cout << "# of vertices: " << graph->size() << endl;
         cout << "# of edges: " << (graph->edgeCount() / 2) << endl << endl;
 		t1 = clock();
-		GraphAlgorithms::pruneTrees(graph);
+		//GraphAlgorithms::pruneTrees(graph);
 		timeElapsed = (clock() - t1) / static_cast<double>(CLOCKS_PER_SEC);
 		cout << "Pruning took " << timeElapsed << " seconds" << endl;
         cout << "# of vertices: " << graph->size() << endl;
@@ -106,7 +106,7 @@ int main()
 		graph_ptr_t tree = st.getTree();
 		cout << "Tree node count: " << tree->size() << endl;
 		cout << "Tree edge count: " << (tree->edgeCount() / 2) << endl;
-		GraphAlgorithms::pruneTrees(tree);
+		//GraphAlgorithms::pruneTrees(tree);
 		cout << "After pruning, original has: " << st.getTree()->size() << " nodes" << endl;
 		cout << "After pruning: " << tree->size() << ", " << (tree->edgeCount() / 2) << endl << endl;
 	}

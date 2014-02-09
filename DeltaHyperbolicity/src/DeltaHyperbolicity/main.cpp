@@ -19,6 +19,7 @@
 #include "Graph\NodeDistances.h"
 #include "Graph\FurthestNode.h"
 #include "Graph\SpanningTree.h"
+#include "HyperbolicityAlgorithms.h"
 
 using namespace std;
 using namespace dhtoolkit;
@@ -774,7 +775,7 @@ nodes[i] = g->getNode( boost::lexical_cast<int>(*it) );
 }
 
 node_combination_t state(nodes[0], nodes[1], nodes[2], nodes[3]);
-cout << "The delta value for this state is: " << GraphAlgorithms::CalculateDelta(g, state) << endl;
+cout << "The delta value for this state is: " << GraphAlgorithms::calculateDelta(g, state) << endl;
 }
 
 void calculateDistance()
@@ -1023,7 +1024,7 @@ void uiExecution()
 
 						string path = outputDir + title;
 						cout << "Saving graph to path: " << path.c_str() << endl;
-						GraphAlgorithms::drawGraph(path, *graphIt, nullptr);
+						HyperbolicityAlgorithms::drawGraph(path, *graphIt, nullptr);
 					}
 				}
 				break;

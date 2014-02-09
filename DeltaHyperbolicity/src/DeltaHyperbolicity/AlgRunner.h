@@ -9,7 +9,7 @@
 #include <string>
 #include <Windows.h>
 #include "Graph\defs.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "DeltaHyperbolicity.h"
 #include "IGraphAlg.h"
 
 typedef dhtoolkit::IGraphAlg* (*AlgCreationMethod)();

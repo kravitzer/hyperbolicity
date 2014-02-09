@@ -97,7 +97,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\$(ProjectName);$(SolutionDir)..\..\include\Algorithm;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\$(ProjectName);$(SolutionDir)..\..\include;$(SolutionDir)..\..\include\Algorithm;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\$(ProjectName);$(SolutionDir)..\..\include\Algorithm;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\$(ProjectName);$(SolutionDir)..\..\include;$(SolutionDir)..\..\include\Algorithm;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
@@ -126,7 +126,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\$(ProjectName);$(SolutionDir)..\..\include\Algorithm;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\$(ProjectName);$(SolutionDir)..\..\include;$(SolutionDir)..\..\include\Algorithm;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
@@ -143,7 +143,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\$(ProjectName);$(SolutionDir)..\..\include\Algorithm;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\$(ProjectName);$(SolutionDir)..\..\include;$(SolutionDir)..\..\include\Algorithm;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>

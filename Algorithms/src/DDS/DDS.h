@@ -7,7 +7,7 @@
 #define DELTAHYPER_DDSWEEP_H
 
 #include "Algorithm\IGraphAlg.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "Algorithm\DeltaHyperbolicity.h"
 #include <string>
 
 namespace dhtoolkit

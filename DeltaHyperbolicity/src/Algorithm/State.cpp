@@ -1,5 +1,5 @@
 #include "State.h"
-#include "Node.h"
+#include "Graph\Node.h"
 #include <string>
 #include <boost/format.hpp>
 

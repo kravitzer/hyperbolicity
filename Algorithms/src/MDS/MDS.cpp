@@ -1,6 +1,6 @@
 #include "MDS.h"
 #include "Graph\defs.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "Algorithm\DeltaHyperbolicity.h"
 #include "Graph\GraphAlgorithms.h"
 #include "Graph\NodeDistances.h"
 #include <time.h>
@@ -24,7 +24,7 @@ namespace dhtoolkit
 
 	DeltaHyperbolicity MDS::stepImpl()
 	{	
-		GraphAlgorithms::DoubleSweepResult curDS = _sweeps[_sweeps.size()-1];
+		HyperbolicityAlgorithms::DoubleSweepResult curDS = _sweeps[_sweeps.size()-1];
 		delta_t maxDelta = 0;
 		node_combination_t maxState;
 		for (unsigned int i = 0; i < _sweeps.size()-1; ++i)
@@ -38,7 +38,7 @@ namespace dhtoolkit
 				distance_t d1 = _sweeps[i].dist + curDS.dist;
 				distance_t d2 = _sweeps[i].uDistances[curDS.u->getIndex()] + _vDists[i][curDS.v->getIndex()];
 				distance_t d3 = _sweeps[i].uDistances[curDS.v->getIndex()] + _vDists[i][curDS.u->getIndex()];
-				curDelta = GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
+				curDelta = HyperbolicityAlgorithms::calculateDeltaFromDistances(d1, d2, d3);
 			}
 				
 			//if we've reached a better delta value, keep it
@@ -56,12 +56,12 @@ namespace dhtoolkit
 	
 	void MDS::prepareNextStep()
 	{
-		GraphAlgorithms::DoubleSweepResult curDS = GraphAlgorithms::DoubleSweep(_graph);
+		HyperbolicityAlgorithms::DoubleSweepResult curDS = HyperbolicityAlgorithms::doubleSweep(_graph);
 		unsigned int numOfTrials = 1;
 		for (; numOfTrials < MaxNumOfTrials && !isNewSweep(curDS); ++numOfTrials)
 		{
 			//calculate another double-sweep
-			curDS = GraphAlgorithms::DoubleSweep(_graph);
+			curDS = HyperbolicityAlgorithms::doubleSweep(_graph);
 		}
 
 		//if couldn't find another double-sweep before exceeding maximal number of trials, we're done
@@ -76,14 +76,14 @@ namespace dhtoolkit
 		_vDists.push_back( NodeDistances(_graph, _sweeps[_sweeps.size()-2].v).getDistances() );
 	}
 
-	bool MDS::areSweepsUnique(GraphAlgorithms::DoubleSweepResult& res1, GraphAlgorithms::DoubleSweepResult& res2)
+	bool MDS::areSweepsUnique(HyperbolicityAlgorithms::DoubleSweepResult& res1, HyperbolicityAlgorithms::DoubleSweepResult& res2)
 	{
 		return ( (res1.u != res2.u) && (res1.v != res2.u) && (res1.u != res2.v) && (res1.v != res2.v) && (res1.u != res1.v) && (res2.u != res2.v) );
 	}
 
-	bool MDS::isNewSweep(const GraphAlgorithms::DoubleSweepResult& ds) const
+	bool MDS::isNewSweep(const HyperbolicityAlgorithms::DoubleSweepResult& ds) const
 	{
-		for (vector<GraphAlgorithms::DoubleSweepResult>::const_iterator it = _sweeps.cbegin(); it != _sweeps.cend(); ++it)
+		for (vector<HyperbolicityAlgorithms::DoubleSweepResult>::const_iterator it = _sweeps.cbegin(); it != _sweeps.cend(); ++it)
 		{
 			if ( (it->u == ds.u && it->v == ds.v) || (it->u == ds.v && it->v == ds.u) ) return false;
 		}
@@ -98,7 +98,7 @@ namespace dhtoolkit
 		_sweeps.clear();
 
 		//we need at least one double-sweep before each step
-		_sweeps.push_back(GraphAlgorithms::DoubleSweep(_graph));
+		_sweeps.push_back(HyperbolicityAlgorithms::doubleSweep(_graph));
 		prepareNextStep();
 	}
 
@@ -112,7 +112,7 @@ namespace dhtoolkit
 
 	IGraphAlg* CreateAlgorithm()
 	{
-		//initialize random seed (necessary before calling DoubleSweep() )
+		//initialize random seed (necessary before calling doubleSweep() )
 		srand(static_cast<unsigned int>(time(nullptr)));
 
 		IGraphAlg* alg = new MDS();

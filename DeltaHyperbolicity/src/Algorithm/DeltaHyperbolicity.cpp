@@ -1,6 +1,6 @@
 #include "DeltaHyperbolicity.h"
 #include "defs.h"
-#include "GraphAlgorithms.h"
+#include "Graph\GraphAlgorithms.h"
 #include <string>
 
 using namespace std;

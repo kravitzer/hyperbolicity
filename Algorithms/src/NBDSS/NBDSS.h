@@ -6,7 +6,7 @@
 #ifndef DELTAHYPER_DSWEEPMINNONBALANCED_H
 #define DELTAHYPER_DSWEEPMINNONBALANCED_H
 
-#include "Graph\DeltaHyperbolicity.h"
+#include "Algorithm\DeltaHyperbolicity.h"
 #include "Algorithm\IGraphAlg.h"
 #include "IDSS.h"
 #include <string>

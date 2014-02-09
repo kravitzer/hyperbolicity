@@ -1,6 +1,7 @@
 #include "DSweep.h"
 #include "Graph\defs.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "Algorithm\DeltaHyperbolicity.h"
+#include "Algorithm\HyperbolicityAlgorithms.h"
 #include "Graph\GraphAlgorithms.h"
 #include "Graph\NodeDistances.h"
 #include <time.h>
@@ -23,7 +24,7 @@ namespace dhtoolkit
 	DeltaHyperbolicity DSweep::stepImpl() 
 	{
 		//first perform a double sweep
-		GraphAlgorithms::DoubleSweepResult ds = GraphAlgorithms::DoubleSweep(_graph);
+		HyperbolicityAlgorithms::DoubleSweepResult ds = HyperbolicityAlgorithms::doubleSweep(_graph);
 
 		node_ptr_t& v1 = ds.u;
 		node_ptr_t& v2 = ds.v;
@@ -81,7 +82,7 @@ namespace dhtoolkit
 			distance_t d2 = distV1V3 + distFromV2;
 			distance_t d3 = distV2V3 + distFromV1;
 
-			delta_t curDelta = GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
+			delta_t curDelta = HyperbolicityAlgorithms::calculateDeltaFromDistances(d1, d2, d3);
 			if (curDelta > maxDelta)
 			{
 				maxDelta = curDelta;
@@ -108,7 +109,7 @@ namespace dhtoolkit
 
 	IGraphAlg* CreateAlgorithm()
 	{
-		//initialize random seed (necessary before calling DoubleSweep() ).
+		//initialize random seed (necessary before calling doubleSweep() ).
 		srand(static_cast<unsigned int>(time(nullptr)));
 
 		IGraphAlg* alg = new DSweep();

@@ -1,9 +1,10 @@
 #include "BruteForce.h"
 #include "Graph\defs.h"
-#include "Graph\DeltaHyperbolicity.h"
 #include "Graph\GraphAlgorithms.h"
-#include "Graph\State.h"
 #include "Graph\NodeDistances.h"
+#include "Algorithm\DeltaHyperbolicity.h"
+#include "Algorithm\State.h"
+#include "Algorithm\HyperbolicityAlgorithms.h"
 #include <time.h>
 #include <string>
 
@@ -55,7 +56,7 @@ namespace dhtoolkit
         distance_t d1 = _v1Distances[_v2] + _v3Distances[_v4];
         distance_t d2 = _v1Distances[_v3] + _v2Distances[_v4];
         distance_t d3 = _v1Distances[_v4] + _v2Distances[_v3];
-		delta_t curDelta = GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
+		delta_t curDelta = HyperbolicityAlgorithms::calculateDeltaFromDistances(d1, d2, d3);
 
 		return DeltaHyperbolicity(curDelta, curState);
 	}

@@ -7,7 +7,7 @@
 #define DELTAHYPER_LARGEDISTANCES_H
 
 #include "Algorithm\IGraphAlg.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "Algorithm\DeltaHyperbolicity.h"
 #include "Graph\GraphAlgorithms.h"
 #include <string>
 #include <unordered_set>

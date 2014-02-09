@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DeltaHyperbolicity.h"
+#include "defs.h"
 
 namespace dhtoolkit
 {

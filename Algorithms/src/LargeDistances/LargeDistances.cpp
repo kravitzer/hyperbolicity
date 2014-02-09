@@ -1,9 +1,10 @@
 #include "LargeDistances.h"
 #include "Graph\defs.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "Algorithm\DeltaHyperbolicity.h"
 #include "Graph\GraphAlgorithms.h"
 #include "Graph\NodeDistances.h"
 #include "Graph\FurthestNode.h"
+#include "Algorithm\HyperbolicityAlgorithms.h"
 #include <time.h>
 #include <string>
 #include <vector>
@@ -119,7 +120,7 @@ namespace dhtoolkit
 						unsigned int d1 = _dists[it1->second[i1].first][it1->second[i1].second] + _dists[it2->second[i2].first][it2->second[i2].second];
 						unsigned int d2 = _dists[it1->second[i1].first][it2->second[i2].first] + _dists[it1->second[i1].second][it2->second[i2].second];
 						unsigned int d3 = _dists[it1->second[i1].first][it2->second[i2].second] + _dists[it2->second[i2].first][it1->second[i1].second];
-						delta_t curDelta = GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
+						delta_t curDelta = HyperbolicityAlgorithms::calculateDeltaFromDistances(d1, d2, d3);
 
 						if (curDelta > bestDelta)
 						{
@@ -145,7 +146,7 @@ namespace dhtoolkit
 
 	IGraphAlg* CreateAlgorithm()
 	{
-		//initialize random seed (necessary before calling DoubleSweep() )
+		//initialize random seed (necessary before calling doubleSweep() )
 		srand(static_cast<unsigned int>(time(nullptr)));
 
 		IGraphAlg* alg = new LargeDistances();

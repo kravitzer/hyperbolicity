@@ -7,7 +7,7 @@
 #define DELTAHYPER_IDSWEEPMINEXT_H
 
 #include "Algorithm\IGraphAlg.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "Algorithm\DeltaHyperbolicity.h"
 #include <string>
 #include <boost\circular_buffer.hpp>
 #include <unordered_map>

@@ -1,9 +1,10 @@
 #include "IDSS.h"
 #include "Graph\defs.h"
-#include "Graph\DeltaHyperbolicity.h"
+#include "Algorithm\DeltaHyperbolicity.h"
 #include "Graph\GraphAlgorithms.h"
 #include "Graph\NodeDistances.h"
-#include "Graph\State.h"
+#include "Algorithm\State.h"
+#include "Algorithm\HyperbolicityAlgorithms.h"
 #include <time.h>
 #include <string>
 #include <unordered_map>
@@ -37,7 +38,7 @@ namespace dhtoolkit
 	DeltaHyperbolicity IDSweepMinExt::stepImpl()
 	{
 		//first perform a double sweep
-		GraphAlgorithms::DoubleSweepResult ds = GraphAlgorithms::DoubleSweep(_graph);
+		HyperbolicityAlgorithms::DoubleSweepResult ds = HyperbolicityAlgorithms::doubleSweep(_graph);
 		if (_doubleSweeps.size() + 1 > DoubleSweepCacheSize)
 		{
 			pair<node_index_t, node_index_t> earliestDs = _doubleSweeps.front();
@@ -99,7 +100,7 @@ namespace dhtoolkit
 			distance_t d2 = distV1V3 + distFromV2;
 			distance_t d3 = distV2V3 + distFromV1;
 
-			delta_t curDelta = GraphAlgorithms::CalculateDeltaFromDistances(d1, d2, d3);
+			delta_t curDelta = HyperbolicityAlgorithms::calculateDeltaFromDistances(d1, d2, d3);
 			if (curDelta > maxDelta)
 			{
 				maxDelta = curDelta;
@@ -140,7 +141,7 @@ namespace dhtoolkit
 			{
 				delta_t delta = 0;
 				node_ptr_t curNode = _graph->getNode(it->first);
-				bool isCycleRemoved = GraphAlgorithms::removeCycle(_graph, curNode, delta, _irremovableNodes);
+				bool isCycleRemoved = HyperbolicityAlgorithms::removeCycle(_graph, curNode, delta, _irremovableNodes);
 				
 				if (bestDelta < delta)
 				{
