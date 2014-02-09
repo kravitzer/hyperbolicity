@@ -30,20 +30,11 @@
     <ClInclude Include="..\..\..\include\Graph\Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\Graph\IGraphAlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\Graph\GraphAlgorithms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\Graph\DeltaHyperbolicity.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\Graph\SADefs.h">
-      <Filter>Header Files\SA</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\Graph\SimulatedAnnealing.h">
-      <Filter>Header Files\SA</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\Graph\State.h">
       <Filter>Header Files</Filter>
@@ -60,13 +51,7 @@
     <ClInclude Include="..\..\..\include\Graph\SpanningTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\Graph\AlgRunner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\Graph\GraphBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\Graph\IDSS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,12 +68,6 @@
     <ClCompile Include="..\..\..\src\Graph\DeltaHyperbolicity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\Graph\IGraphAlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\Graph\SimulatedAnnealing.cpp">
-      <Filter>Source Files\SA</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\Graph\State.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -104,13 +83,7 @@
     <ClCompile Include="..\..\..\src\Graph\SpanningTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\Graph\AlgRunner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\Graph\GraphBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\Graph\IDSS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,7 +6,7 @@
 #ifndef DELTAHYPER_LARGEDISTANCES_H
 #define DELTAHYPER_LARGEDISTANCES_H
 
-#include "Graph\IGraphAlg.h"
+#include "Algorithm\IGraphAlg.h"
 #include "Graph\DeltaHyperbolicity.h"
 #include "Graph\GraphAlgorithms.h"
 #include <string>

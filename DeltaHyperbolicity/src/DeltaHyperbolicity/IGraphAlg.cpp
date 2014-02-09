@@ -1,7 +1,7 @@
 #include "IGraphAlg.h"
-#include "defs.h"
-#include "Graph.h"
-#include "GraphAlgorithms.h"
+#include "Graph\defs.h"
+#include "Graph\Graph.h"
+#include "Graph\GraphAlgorithms.h"
 #include <string>
 
 using namespace std;

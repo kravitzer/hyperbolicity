@@ -6,7 +6,7 @@
 #ifndef DELTAHYPER_BRUTEFORCE_H
 #define DELTAHYPER_BRUTEFORCE_H
 
-#include "Graph\IGraphAlg.h"
+#include "Algorithm\IGraphAlg.h"
 #include "Graph\DeltaHyperbolicity.h"
 #include <string>
 

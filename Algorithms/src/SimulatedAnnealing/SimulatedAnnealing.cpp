@@ -1,8 +1,8 @@
 #include "SimulatedAnnealing.h"
 #include "SADefs.h"
-#include "Graph.h"
-#include "GraphAlgorithms.h"
-#include "NodeDistances.h"
+#include "Graph\Graph.h"
+#include "Graph\GraphAlgorithms.h"
+#include "Graph\NodeDistances.h"
 #include <random>
 #include <string>
 

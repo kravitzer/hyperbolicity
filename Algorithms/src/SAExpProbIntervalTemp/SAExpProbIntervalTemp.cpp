@@ -1,7 +1,7 @@
 #include "SAExpProbIntervalTemp.h"
-#include "Graph\SADefs.h"
-#include "Graph\SimulatedAnnealing.h"
-#include "Graph\IGraphAlg.h"
+#include "SADefs.h"
+#include "SimulatedAnnealing.h"
+#include "Algorithm\IGraphAlg.h"
 #include "Graph\GraphAlgorithms.h"
 #include "boost\format.hpp"
 #include <math.h>

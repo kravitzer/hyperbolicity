@@ -6,8 +6,8 @@
 #ifndef DELTAHYPER_IGRAPHALG_H
 #define DELTAHYPER_IGRAPHALG_H
 
-#include "defs.h"
-#include "DeltaHyperbolicity.h"
+#include "Graph\defs.h"
+#include "Graph\DeltaHyperbolicity.h"
 #include <string>
 
 namespace dhtoolkit

@@ -6,7 +6,7 @@
 #ifndef DELTAHYPER_COHEN_H
 #define DELTAHYPER_COHEN_H
 
-#include "Graph\IGraphAlg.h"
+#include "Algorithm\IGraphAlg.h"
 #include "Graph\DeltaHyperbolicity.h"
 #include <string>
 #include <vector>

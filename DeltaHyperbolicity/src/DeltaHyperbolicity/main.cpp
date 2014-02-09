@@ -12,10 +12,10 @@
 #include <boost\tokenizer.hpp>
 #include <boost\lexical_cast.hpp>
 #include <boost\format.hpp>
-#include "Graph\AlgRunner.h"
+#include "AlgRunner.h"
+#include "IGraphAlg.h"
 #include "Graph\GraphAlgorithms.h"
 #include "Graph\defs.h"
-#include "Graph\IGraphAlg.h"
 #include "Graph\NodeDistances.h"
 #include "Graph\FurthestNode.h"
 #include "Graph\SpanningTree.h"

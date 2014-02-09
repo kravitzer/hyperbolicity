@@ -7,7 +7,7 @@
 #define DELTAHYPER_SA_H
 
 #include "SADefs.h"
-#include "IGraphAlg.h"
+#include "Algorithm\IGraphAlg.h"
 #include <string>
 
 namespace dhtoolkit

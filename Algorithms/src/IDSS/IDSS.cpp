@@ -1,9 +1,9 @@
 #include "IDSS.h"
-#include "defs.h"
-#include "DeltaHyperbolicity.h"
-#include "GraphAlgorithms.h"
-#include "NodeDistances.h"
-#include "State.h"
+#include "Graph\defs.h"
+#include "Graph\DeltaHyperbolicity.h"
+#include "Graph\GraphAlgorithms.h"
+#include "Graph\NodeDistances.h"
+#include "Graph\State.h"
 #include <time.h>
 #include <string>
 #include <unordered_map>

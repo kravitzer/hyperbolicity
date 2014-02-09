@@ -89,24 +89,24 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\DeltaHyperbolicity\include;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\Algorithms;$(SolutionDir)..\..\..\DeltaHyperbolicity\include;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Graph.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\..\DeltaHyperbolicity\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\Graph\bin\$(Platform)\$(Configuration)\;$(Code)\Boost\boost_1_53_0\lib\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Graph.lib;Algorithm.lib;IDSS.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\DeltaHyperbolicity\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\Graph\bin\$(Platform)\$(Configuration)\;$(Code)\Boost\boost_1_53_0\lib\$(Platform)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\DeltaHyperbolicity\include;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\Algorithms;$(SolutionDir)..\..\..\DeltaHyperbolicity\include;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Graph.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\..\DeltaHyperbolicity\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\Graph\bin\$(Platform)\$(Configuration)\;$(Code)\Boost\boost_1_53_0\lib\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Graph.lib;Algorithm.lib;IDSS.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\DeltaHyperbolicity\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\Graph\bin\$(Platform)\$(Configuration)\;$(Code)\Boost\boost_1_53_0\lib\$(Platform)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,14 +115,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\DeltaHyperbolicity\include;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\Algorithms;$(SolutionDir)..\..\..\DeltaHyperbolicity\include;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Graph.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\..\DeltaHyperbolicity\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\Graph\bin\$(Platform)\$(Configuration)\;$(Code)\Boost\boost_1_53_0\lib\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Graph.lib;Algorithm.lib;IDSS.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\DeltaHyperbolicity\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\Graph\bin\$(Platform)\$(Configuration)\;$(Code)\Boost\boost_1_53_0\lib\$(Platform)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,14 +131,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\DeltaHyperbolicity\include;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\Algorithms;$(SolutionDir)..\..\..\DeltaHyperbolicity\include;$(SolutionDir)..\..\..\Graph\include;$(Code)\Boost\boost_1_53_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Graph.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\..\DeltaHyperbolicity\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\Graph\bin\$(Platform)\$(Configuration)\;$(Code)\Boost\boost_1_53_0\lib\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Graph.lib;Algorithm.lib;IDSS.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\DeltaHyperbolicity\bin\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\..\Graph\bin\$(Platform)\$(Configuration)\;$(Code)\Boost\boost_1_53_0\lib\$(Platform)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

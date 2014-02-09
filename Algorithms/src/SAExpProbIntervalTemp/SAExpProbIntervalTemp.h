@@ -6,8 +6,8 @@
 #ifndef DELTAHYPER_SA_EXP_PROB_INTERVAL_TEMP_H
 #define DELTAHYPER_SA_EXP_PROB_INTERVAL_TEMP_H
 
-#include "Graph\SimulatedAnnealing.h"
-#include "Graph\SADefs.h"
+#include "SimulatedAnnealing.h"
+#include "SADefs.h"
 
 namespace dhtoolkit
 {

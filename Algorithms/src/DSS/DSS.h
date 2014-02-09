@@ -7,7 +7,7 @@
 #define DELTAHYPER_DSWEEPMIN_H
 
 #include "Graph\defs.h"
-#include "Graph\IDSS.h"
+#include "IDSS.h"
 #include <string>
 
 namespace dhtoolkit

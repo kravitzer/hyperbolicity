@@ -15,15 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicity\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\DeltaHyperbolicity\AlgRunner.cpp">
+    <ClCompile Include="..\..\..\src\DeltaHyperbolicity\IGraphAlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\DeltaHyperbolicity\AlgRunner.h">
+    <ClInclude Include="..\..\..\include\Algorithm\IGraphAlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

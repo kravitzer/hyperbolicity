@@ -6,7 +6,7 @@
 #ifndef DELTAHYPER_MDSWEEP_H
 #define DELTAHYPER_MDSWEEP_H
 
-#include "Graph\IGraphAlg.h"
+#include "Algorithm\IGraphAlg.h"
 #include "Graph\DeltaHyperbolicity.h"
 #include "Graph\GraphAlgorithms.h"
 #include <string>

@@ -8,8 +8,8 @@
 
 #include <string>
 #include <Windows.h>
-#include "defs.h"
-#include "DeltaHyperbolicity.h"
+#include "Graph\defs.h"
+#include "Graph\DeltaHyperbolicity.h"
 #include "IGraphAlg.h"
 
 typedef dhtoolkit::IGraphAlg* (*AlgCreationMethod)();

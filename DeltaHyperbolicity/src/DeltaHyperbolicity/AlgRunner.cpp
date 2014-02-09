@@ -1,6 +1,6 @@
 #include "AlgRunner.h"
-#include "defs.h"
-#include "DeltaHyperbolicity.h"
+#include "Graph\defs.h"
+#include "Graph\DeltaHyperbolicity.h"
 #include <Windows.h>
 #include <memory>
 #include <string>
@@ -74,11 +74,11 @@ string AlgRunner::getNameFromPath(const string& path) const
 
 	//remove path (i.e. everything up to last path separator, if any exists)
 	string name = path;
-	int lastSlash = name.find_last_of(PathSeparator);
+	size_t lastSlash = name.find_last_of(PathSeparator);
 	if (string::npos != lastSlash) name = name.substr(lastSlash + 1);
 
 	//remove extension (i.e. everything after last '.', if any exists)
-	int ext = name.find_last_of('.');
+	size_t ext = name.find_last_of('.');
 	if (string::npos != ext) name = name.substr(0, ext);
 
 	return name;

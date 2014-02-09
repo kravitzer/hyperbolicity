@@ -7,8 +7,8 @@
 #define DELTAHYPER_DSWEEPMINNONBALANCED_H
 
 #include "Graph\DeltaHyperbolicity.h"
-#include "Graph\IGraphAlg.h"
-#include "Graph\IDSS.h"
+#include "Algorithm\IGraphAlg.h"
+#include "IDSS.h"
 #include <string>
 
 namespace dhtoolkit

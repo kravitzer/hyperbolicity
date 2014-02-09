@@ -6,7 +6,7 @@
 #ifndef DELTAHYPER_SADEFS_H
 #define DELTAHYPER_SADEFS_H
 
-#include "defs.h"
+#include "Graph\defs.h"
 #include <memory>
 
 namespace dhtoolkit
